@@ -1,0 +1,34 @@
+services:
+  morarvip:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: morarvip
+    restart: unless-stopped
+    ports:
+      - "8763:80"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_NAME: morarvip
+      DATABASE_USER: nzadba
+      DATABASE_PASSWORD: senhaforte
+      REDIS_HOST: nza_redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_ISSUER: morarvip-api
+      JWT_AUDIENCE: morarvip-app
+      JWT_TTL: 86400
+      MORARVIP_API_KEY: ${MORARVIP_API_KEY:-morarvip-dev-api-key}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-}
+    volumes:
+      - ./cms:/var/www/html
+      - ./docker/apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - redemorar
+
+networks:
+  redemorar:
+    external: true
+    name: nza_nzanet
