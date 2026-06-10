@@ -61,7 +61,7 @@ $conversao = [
                             <td><?=$conversao[$pessoa->atendimentos[0]->conversao];?></td>
                             <td class="actions">
                                 <div class="btn-list">
-                                    <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'view', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
+                                    <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'view', $pessoa->atendimentos[0]->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
                                 </div>                    
                             </td>                            
                         </tr>

@@ -102,4 +102,52 @@ class AtendimentosController extends AppController
 
         return $this->redirect(['controller' => 'Pessoas', 'action' => 'index']);
     }
+
+    public function view($id = null)
+    {
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+
+        $imoveisEmParceria = $this->fetchTable('ImovelParcerias')
+            ->find()
+            ->select(['ImovelParcerias.imovei_id'])
+            ->where(['ImovelParcerias.parceiro_id' => $userId]);
+
+        $imoveisPermitidos = $this->fetchTable('Imoveis')
+            ->find()
+            ->select(['Imoveis.id'])
+            ->where([
+                'OR' => [
+                    'Imoveis.user_id' => $userId,
+                    'Imoveis.id IN' => $imoveisEmParceria,
+                ],
+            ]);
+
+        $escopoPermitido = [
+            'OR' => [
+                ['Atendimentos.imovel_id IN' => $imoveisPermitidos],
+                [
+                    'Atendimentos.imovel_id IS' => null,
+                    'Atendimentos.atendido_por' => $userId,
+                ],
+            ],
+        ];
+
+        $atendimento = $this->Atendimentos->find()
+            ->select(['Atendimentos.id', 'Atendimentos.pessoa_id'])
+            ->where([
+                'Atendimentos.id' => $id,
+                $escopoPermitido,
+            ])
+            ->firstOrFail();
+
+        $atendimentos = $this->Atendimentos->find()
+            ->where([
+                'Atendimentos.pessoa_id' => $atendimento->pessoa_id,
+                $escopoPermitido,
+            ])
+            ->orderBy(['Atendimentos.created' => 'DESC'])
+            ->contain(['Pessoas', 'Users', 'Imoveis']);
+
+        $this->set(compact('atendimentos'));
+    }
 }

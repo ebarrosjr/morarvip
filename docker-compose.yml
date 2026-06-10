@@ -22,7 +22,7 @@ services:
       MORARVIP_API_KEY: ${MORARVIP_API_KEY:-morarvip-dev-api-key}
       FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-}
     volumes:
-      - ./cms:/var/www/html
+      - ./:/var/www/html
       - ./docker/apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
