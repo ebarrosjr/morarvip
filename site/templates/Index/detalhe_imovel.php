@@ -192,8 +192,8 @@ $localizacao = $imovel->chamada ?: trim(($imovel->cep ? 'CEP ' . $imovel->cep : 
 
                     <section>
                         <h2>Guias</h2>
-                        <a class="property-guide-link" href="#"><i class="fas fa-home"></i> Guia de compra <i class="fas fa-angle-right"></i></a>
-                        <a class="property-guide-link" href="#"><i class="fas fa-umbrella"></i> Seguro ideal <i class="fas fa-angle-right"></i></a>
+                        <a class="property-guide-link" href="#"><i class="fas fa-home"></i> Simule seu financiamento <i class="fas fa-angle-right"></i></a>
+                        <a class="property-guide-link" href="#"><i class="fas fa-umbrella"></i> Precisa de ajuda? <i class="fas fa-angle-right"></i></a>
                     </section>
                 </aside>
             </div>
