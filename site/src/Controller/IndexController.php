@@ -37,6 +37,39 @@ class IndexController extends AppController
             ->orderBy(['Imoveis.created' => 'DESC'])
             ->all();
 
-        $this->set(compact('imoveis'));
+        $tipoImoveisTable = $tableLocator->get('TipoImoveis');
+        $quantidadeImoveis = $imoveisTable->find();
+        $quantidadeImoveis
+            ->select(['quantidade' => $quantidadeImoveis->func()->count('*')])
+            ->where(function ($exp) {
+                return $exp->equalFields('Imoveis.tipo_imovel_id', 'TipoImoveis.id');
+            })
+            ->where(['Imoveis.show_site' => 1]);
+
+        $tipoimoveis = $tipoImoveisTable
+            ->find()
+            ->select($tipoImoveisTable)
+            ->select(['quantidade_imoveis' => $quantidadeImoveis])
+            ->orderBy(['TipoImoveis.nome' => 'ASC'])
+            ->all();
+
+        $this->set(compact('imoveis', 'tipoimoveis'));
+    }
+
+    public function corretor($id)
+    {
+            $tableLocator = TableRegistry::getTableLocator();
+            $usersTable = $tableLocator->get('Users');
+            $corretor = $usersTable->get($id);
+
+            $imoveisTable = $tableLocator->get('Imoveis');
+            $imoveis = $imoveisTable
+                ->find()
+                ->where(['user_id' => $id, 'show_site' => 1, 'user_id IN ' => $tableLocator->get('ImovelParcerias')->find()->select(['parceiro_id'])->where(['fim_parceria > NOW()', 'situacao' => 'A'])])
+                ->orderBy(['created' => 'DESC'])
+                ->all();
+
+
+            $this->set(compact('corretor', 'imoveis'));
     }
 }

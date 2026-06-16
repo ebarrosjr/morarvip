@@ -453,128 +453,26 @@
 <div class="col-lg-4">
     <aside class="sidebar ltn__shop-sidebar ltn__right-sidebar">
         <div class="widget ltn__menu-widget">
-            <h4 class="ltn__widget-title">Property Type</h4>
+            <h4 class="ltn__widget-title">Tipo de imóveis</h4>
             <ul>
+                <?php
+                foreach ($tipoimoveis as $tipoimovel) {
+                ?>
                 <li>
-                    <a href="shop-right-sidebar.html">
-                        <label class="checkbox-item">House
-                            <input type="checkbox" checked="checked">
-                            <span class="checkmark"></span>
-                        </label>
-                        <span class="categorey-no">3,924</span>
-                    </a>
-                </li>
-                <li>
-                    <label class="checkbox-item">Single Family
-                        <input type="checkbox">
+                    <label for="imv-<?= $tipoimovel->id ?>" class="checkbox-item"><?= h($tipoimovel->nome) ?>
+                        <input type="checkbox" name="<?= $tipoimovel->id ?>" id="imv-<?= $tipoimovel->id ?>" checked="checked">
                         <span class="checkmark"></span>
                     </label>
-                    <span class="categorey-no">3,610</span>
+                    <span class="categorey-no"><?= (int)$tipoimovel->quantidade_imoveis ?></span>
                 </li>
-                <li>
-                    <label class="checkbox-item">Apartment
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,912</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Office Villa
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,687</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Luxary Home
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">1,853</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Studio
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">893</span>
-                </li>
-            </ul>
-            <hr>
-            <h4 class="ltn__widget-title">Amenities</h4>
-            <ul>
-                <li>
-                    <label class="checkbox-item">Dishwasher
-                        <input type="checkbox" checked="checked">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">3,924</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Floor Coverings
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">3,610</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Internet
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,912</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Build Wardrobes
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,687</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Supermarket
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">1,853</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Kids Zone
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">893</span>
-                </li>
-            </ul>
-            <hr>
-            <h4 class="ltn__widget-title">Price Renge</h4>
-            <ul>
-                <li>
-                    <label class="checkbox-item">Low Budget
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">$5,000 - $10,000</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Medium
-                        <input type="checkbox" checked="checked">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">$10,000 - $30,000</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">High Budget
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">$30,000 Up</span>
-                </li>
+                <?php
+                }
+                ?>
             </ul>
             <hr>
             <!-- Price Filter Widget -->
             <div class="widget--- ltn__price-filter-widget">
-                <h4 class="ltn__widget-title ltn__widget-title-border---">Filter by price</h4>
+                <h4 class="ltn__widget-title ltn__widget-title-border---">Filtro de preço</h4>
                 <div class="price_filter">
                     <div class="price_slider_amount">
                         <input type="submit"  value="Your range:"/> 

@@ -238,9 +238,9 @@
 									<ul class="slide-menu child1">
 										<li class="slide side-menu__label1"><a href="javascript:void(0)">Pessoas</a></li>
 										<li class="slide<?= $this->AdminMenu->activeClass('Users', ['index', 'add', 'edit', 'view']) ?>"><a href="/users" class="side-menu__item<?= $this->AdminMenu->activeClass('Users', ['index', 'add', 'edit']) ?>">Corretores</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', ['index', 'add', 'edit', 'view']) ?>"><a href="/pessoas" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'index') ?>">Clientes</a></li>
+										<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', ['index', 'add', 'edit', 'view']) ?>"><a href="/pessoas" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'index') ?>">Compradores/Locatários</a></li>
 										<li class="slide<?= $this->AdminMenu->activeClass('Users', 'parceiros') ?>"><a href="/users/parceiros" class="side-menu__item<?= $this->AdminMenu->activeClass('Users', 'parceiros') ?>">Parceiros</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>"><a href="/pessoas/proprietarios" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>">Proprietários</a></li>
+										<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>"><a href="/pessoas/proprietarios" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>">Proprietários/Locadores</a></li>
 									</ul>
 								</li>
 									<li class="slide has-sub<?= $this->AdminMenu->openClass(['Imoveis', 'TipoImoveis', 'Categories']) ?>">
