@@ -51,23 +51,26 @@ return function (RouteBuilder $routes): void {
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         $builder->connect('/', ['controller' => 'Index', 'action' => 'index']);
+        $builder->connect('/detalhe-imovel/{id}/{slug}', [
+                'controller' => 'Index',
+                'action' => 'detalheImovel'
+            ])->setPass(['id'])->setPatterns([
+            'id' => '[0-9]+',
+            'slug' => '[^/]+',
+        ]);
         $builder->connect('/corretor/{id}/{name}', [
-            'controller' => 'Index',
-            'action' => 'corretor',
-        ])
-            ->setPass(['id'])
-            ->setPatterns([
-                'id' => '[0-9]+',
-                'name' => '[^/]+',
-            ]);
+                'controller' => 'Index',
+                'action' => 'corretor',
+            ])->setPass(['id'])->setPatterns([
+            'id' => '[0-9]+',
+            'name' => '[^/]+',
+        ]);
         $builder->connect('/corretor/{id}', [
-            'controller' => 'Index',
-            'action' => 'corretor',
-        ])
-            ->setPass(['id'])
-            ->setPatterns([
-                'id' => '[0-9]+',
-            ]);
+                'controller' => 'Index',
+                'action' => 'corretor',
+            ])->setPass(['id'])->setPatterns([
+            'id' => '[0-9]+',
+        ]);
         $builder->connect('/{controller}', ['action' => 'index']);
         $builder->connect('/{controller}/{action}/*', []);
 

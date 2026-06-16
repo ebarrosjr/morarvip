@@ -33,6 +33,13 @@ $corretorUrl = ($corretor?->id && $corretorSlug)
         'name' => $corretorSlug,
     ])
     : '#';
+$imovelSlug = strtolower(Text::slug($imovel->titulo ?: 'imovel'));
+$imovelUrl = $this->Url->build([
+    'controller' => 'Index',
+    'action' => 'detalheImovel',
+    'id' => (int)$imovel->id,
+    'slug' => $imovelSlug,
+]);
 $localizacao = $imovel->chamada ?: 'Consulte a localização';
 ?>
 <div class="property-result-card">
@@ -66,7 +73,9 @@ $localizacao = $imovel->chamada ?: 'Consulte a localização';
         <div class="property-result-kicker">
             <?= h($tipoNome) ?> para <?= h($negocioLabel) ?>
         </div>
-        <h2 class="property-result-title"><?= h($imovel->titulo ?: $tipoNome) ?></h2>
+        <h2 class="property-result-title">
+            <a href="<?= h($imovelUrl) ?>"><?= h($imovel->titulo ?: $tipoNome) ?></a>
+        </h2>
         <div class="property-result-address">
             <i class="flaticon-pin"></i> <?= h($localizacao) ?>
         </div>
@@ -93,7 +102,7 @@ $localizacao = $imovel->chamada ?: 'Consulte a localização';
                     <div class="property-result-meta">IPTU R$ <?= number_format((float)$imovel->iptu, 2, ',', '.') ?></div>
                 <?php endif; ?>
             </div>
-            <a class="property-details-btn" href="#">Mais detalhes</a>
+            <a class="property-details-btn" href="<?= h($imovelUrl) ?>">Mais detalhes</a>
         </div>
     </div>
 </div>

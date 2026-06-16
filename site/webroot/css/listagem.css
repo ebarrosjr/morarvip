@@ -191,6 +191,14 @@
     margin-bottom: 4px;
 }
 
+.property-result-title a {
+    color: inherit;
+}
+
+.property-result-title a:hover {
+    color: var(--ltn__secondary-color);
+}
+
 .property-result-address {
     color: var(--ltn__paragraph-color);
     font-size: 14px;

@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Text;
 
 class IndexController extends AppController
 {
@@ -78,6 +79,88 @@ class IndexController extends AppController
         $tipoimoveis = $this->getTipoImoveisComQuantidade($imoveisTable, $tableLocator->get('TipoImoveis'), $corretorId);
 
         $this->set(compact('corretor', 'imoveis', 'tipoimoveis', 'filtros'));
+    }
+
+    public function detalheImovel($id)
+    {
+        $imovelId = (int)$id;
+        $tableLocator = TableRegistry::getTableLocator();
+        $imoveisTable = $tableLocator->get('Imoveis');
+
+        $imovel = $imoveisTable->get($imovelId, contain: [
+            'FotoImoveis' => function ($q) {
+                return $q->orderBy([
+                    'FotoImoveis.principal' => 'DESC',
+                    'FotoImoveis.id' => 'ASC',
+                ]);
+            },
+            'TipoImoveis',
+            'Users',
+        ]);
+
+        if (!$imovel->show_site) {
+            throw new NotFoundException('Imóvel não encontrado');
+        }
+
+        $slug = strtolower(Text::slug($imovel->titulo ?: 'imovel'));
+        if ($this->request->getParam('slug') !== $slug) {
+            return $this->redirect([
+                'controller' => 'Index',
+                'action' => 'detalheImovel',
+                'id' => $imovelId,
+                'slug' => $slug,
+            ], 301);
+        }
+
+        $imoveisCorretor = $imoveisTable
+            ->find()
+            ->contain([
+                'FotoImoveis' => function ($q) {
+                    return $q->orderBy([
+                        'FotoImoveis.principal' => 'DESC',
+                        'FotoImoveis.id' => 'ASC',
+                    ]);
+                },
+                'TipoImoveis',
+                'Users',
+            ])
+            ->where([
+                'Imoveis.show_site' => 1,
+                'Imoveis.user_id' => $imovel->user_id,
+                'Imoveis.id !=' => $imovelId,
+            ])
+            ->orderBy(['Imoveis.created' => 'DESC'])
+            ->limit(3)
+            ->all();
+
+        $imoveisSimilares = $imoveisTable
+            ->find()
+            ->contain([
+                'FotoImoveis' => function ($q) {
+                    return $q->orderBy([
+                        'FotoImoveis.principal' => 'DESC',
+                        'FotoImoveis.id' => 'ASC',
+                    ]);
+                },
+                'TipoImoveis',
+                'Users',
+            ])
+            ->where([
+                'Imoveis.show_site' => 1,
+                'Imoveis.id !=' => $imovelId,
+            ])
+            ->orderBy(['Imoveis.created' => 'DESC'])
+            ->limit(3);
+
+        if (!empty($imovel->tipo_imovel_id)) {
+            $imoveisSimilares->where(['Imoveis.tipo_imovel_id' => $imovel->tipo_imovel_id]);
+        }
+
+        $this->set([
+            'imovel' => $imovel,
+            'imoveisCorretor' => $imoveisCorretor,
+            'imoveisSimilares' => $imoveisSimilares->all(),
+        ]);
     }
 
     private function getFiltros(array $queryParams): array
