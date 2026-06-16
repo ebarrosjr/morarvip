@@ -1,80 +1,103 @@
+<?= $this->Html->css('listagem') ?>
 <div class="col-lg-8">
+    <div class="advertinsig">
+        <span>PUBLICIDADE</span>
+    </div>
     <div class="tab-content">
         <div class="tab-pane fade active show" id="liton_product_grid">
             <div class="ltn__product-tab-content-inner ltn__product-grid-view">
-                <div class="row">
-                    <?php foreach ($imoveis as $imovel): ?>
-                    <div class="col-xl-6 col-sm-6 col-12">
-                        <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
-                            <div class="product-img">
-                                <a href="product-details.html">
-                                    <?php $fotoPrincipal = $imovel->foto_principal ? IMAGE_BASE_URL . '/' . $imovel->foto_principal : $this->Url->build('/img/no-imovel-photo.png'); ?>
-                                    <img src="<?= h($fotoPrincipal) ?>" alt="<?= h($imovel->titulo) ?>">
-                                </a>
-                                <div class="real-estate-agent">
-                                    <div class="agent-img">
-                                        <a href="team-details.html"><img src="<?= $this->Url->build('/img/no-photo.png') ?>" alt="#"></a>
+                <div class="property-list-summary">
+                    <?= count($imoveis) ?> imóveis encontrados
+                </div>
+                <?php foreach ($imoveis as $imovel): ?>
+                    <?php
+                    $carouselId = 'propertyPhotos' . (int)$imovel->id;
+                    $fotos = [];
+                    foreach ($imovel->foto_imoveis ?? [] as $foto) {
+                        if (!empty($foto->arquivo)) {
+                            $fotos[] = IMAGE_BASE_URL . '/' . $foto->arquivo;
+                        }
+                    }
+                    if (!$fotos && !empty($imovel->foto_principal)) {
+                        $fotos[] = IMAGE_BASE_URL . '/' . $imovel->foto_principal;
+                    }
+                    if (!$fotos) {
+                        $fotos[] = $this->Url->build('/img/no-imovel-photo.png');
+                    }
+
+                    $negocioLabel = match ($imovel->negocio) {
+                        'A' => 'alugar',
+                        'L' => 'lançamento',
+                        default => 'comprar',
+                    };
+                    $tipoNome = $imovel->tipo_imovei->nome ?? 'Imóvel';
+                    $corretorNome = $imovel->user->nome ?? 'Corretor';
+                    $corretorAvatar = $this->Url->build('/img/no-photo.png');
+                    $localizacao = $imovel->chamada ?: 'Consulte a localização';
+                    ?>
+                    <div class="property-result-card">
+                        <div class="property-result-media">
+                            <span class="property-featured-badge"><?= h($imovel->negocio === 'L' ? 'Imóvel novo' : ucfirst($negocioLabel)) ?></span>
+                            <div id="<?= h($carouselId) ?>" class="carousel slide" data-bs-ride="false">
+                                <div class="carousel-inner">
+                                    <?php foreach ($fotos as $index => $fotoUrl): ?>
+                                        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                                            <img class="property-photo" src="<?= h($fotoUrl) ?>" alt="<?= h($imovel->titulo ?: 'Foto do imóvel') ?>">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php if (count($fotos) > 1): ?>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#<?= h($carouselId) ?>" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Anterior</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#<?= h($carouselId) ?>" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Próxima</span>
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                            <div class="property-agent-overlay">
+                                <img src="<?= h($corretorAvatar) ?>" alt="<?= h($corretorNome) ?>">
+                                <span><?= h($corretorNome) ?></span>
+                            </div>
+                        </div>
+                        <div class="property-result-info">
+                            <div class="property-result-kicker">
+                                <?= h($tipoNome) ?> para <?= h($negocioLabel) ?>
+                            </div>
+                            <h2 class="property-result-title"><?= h($imovel->titulo ?: $tipoNome) ?></h2>
+                            <div class="property-result-address">
+                                <i class="flaticon-pin"></i> <?= h($localizacao) ?>
+                            </div>
+                            <div class="property-result-features">
+                                <span class="property-result-feature">
+                                    <i class="flaticon-measure"></i> <?= (int)$imovel->tamanho ?> m<sup>2</sup>
+                                </span>
+                                <span class="property-result-feature">
+                                    <i class="flaticon-bed"></i> <?= (int)$imovel->quartos ?>
+                                </span>
+                                <span class="property-result-feature">
+                                    <i class="flaticon-bathtub"></i> <?= (int)$imovel->banheiros ?>
+                                </span>
+                                <span class="property-result-feature">
+                                    <i class="flaticon-car"></i> <?= (int)$imovel->vaga_garagem ?>
+                                </span>
+                            </div>
+                            <div class="property-result-bottom">
+                                <div>
+                                    <div class="property-result-price">
+                                        <?= $imovel->show_preco_site ? 'R$ ' . number_format((float)$imovel->valor, 2, ',', '.') : 'Consulte o valor' ?>
                                     </div>
+                                    <?php if (!empty($imovel->iptu)): ?>
+                                        <div class="property-result-meta">IPTU R$ <?= number_format((float)$imovel->iptu, 2, ',', '.') ?></div>
+                                    <?php endif; ?>
                                 </div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badg"><?= $imovel->negocio ?></li>
-                                    </ul>
-                                </div>
-                                <h2 class="product-title">
-                                    <a href="#"><?= $imovel->titulo ?></a>
-                                </h2>
-                                <div class="product-img-location">
-                                    <ul>
-                                        <li>
-                                            <a href="locations.html"><i class="flaticon-pin"></i> Belmont Gardens, Chicago</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <ul class="ltn__list-item-2--- ltn__list-item-2-before--- ltn__plot-brief">
-                                    <li><span><?= $imovel->quartos ?> </span>
-                                        Quartos
-                                    </li>
-                                    <li><span><?= $imovel->banheiros ?> </span>
-                                        Banheiros
-                                    </li>
-                                    <li><span><?= $imovel->tamanho ?>m<sup>2</sup> </span>
-                                        Terreno
-                                    </li>
-                                    <li><span> ??? </span>
-                                        Área
-                                    </li>
-                                </ul>
-                                <div class="product-hover-action">
-                                    <ul>
-                                        <li>
-                                            <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
-                                                <i class="flaticon-expand"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
-                                                <i class="flaticon-heart-1"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="product-details.html" title="Product Details">
-                                                <i class="flaticon-add"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="product-info-bottom">
-                                <div class="product-price">
-                                    <span><strong>R$ </strong> <?= number_format($imovel->valor, 2, ',', '.') ?> <label></label></span>
-                                </div>
+                                <a class="property-details-btn" href="#">Mais detalhes</a>
                             </div>
                         </div>
                     </div>
-                    <?php endforeach; ?>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
         <div class="tab-pane fade" id="liton_product_list">
@@ -437,106 +460,132 @@
     <div class="ltn__pagination-area text-center">
         <div class="ltn__pagination">
             <ul>
-                <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                <li><a href="#">1</a></li>
-                <li class="active"><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">...</a></li>
-                <li><a href="#">10</a></li>
-                <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                <?= $this->Paginator->prev('<i class="fas fa-angle-double-left"></i>', [
+                    'escape' => false,
+                    'templates' => [
+                        'prevActive' => '<li><a rel="prev" href="{{url}}">{{text}}</a></li>',
+                        'prevDisabled' => '<li class="disabled"><span>{{text}}</span></li>',
+                    ],
+                ]) ?>
+                <?= $this->Paginator->numbers([
+                    'modulus' => 4,
+                    'templates' => [
+                        'number' => '<li><a href="{{url}}">{{text}}</a></li>',
+                        'current' => '<li class="active"><a href="">{{text}}</a></li>',
+                        'ellipsis' => '<li><a href="">...</a></li>',
+                    ],
+                ]) ?>
+                <?= $this->Paginator->next('<i class="fas fa-angle-double-right"></i>', [
+                    'escape' => false,
+                    'templates' => [
+                        'nextActive' => '<li><a rel="next" href="{{url}}">{{text}}</a></li>',
+                        'nextDisabled' => '<li class="disabled"><span>{{text}}</span></li>',
+                    ],
+                ]) ?>
             </ul>
         </div>
     </div>
 </div>
 <div class="col-lg-4">
     <aside class="sidebar ltn__shop-sidebar ltn__right-sidebar">
-        <div class="widget ltn__menu-widget">
-            <h4 class="ltn__widget-title">Tipo de imóveis</h4>
-            <ul>
-                <?php
-                foreach ($tipoimoveis as $tipoimovel) {
-                ?>
-                <li>
-                    <label for="imv-<?= $tipoimovel->id ?>" class="checkbox-item"><?= h($tipoimovel->nome) ?>
-                        <input type="checkbox" name="<?= $tipoimovel->id ?>" id="imv-<?= $tipoimovel->id ?>" checked="checked">
-                        <span class="checkmark"></span>
+        <?php
+        $filtros = $filtros ?? [];
+        $negocioSelecionado = $filtros['negocio'] ?? 'V';
+        $tiposSelecionados = array_map('intval', $filtros['tipo_imovel'] ?? []);
+        $todosTiposSelecionados = empty($tiposSelecionados);
+        ?>
+        <form class="widget property-filter-card" method="get" action="<?= $this->Url->build('/') ?>">
+            <div class="property-filter-tabs">
+                <?php foreach (['V' => 'Comprar', 'A' => 'Alugar', 'L' => 'Imóvel novo'] as $negocioValor => $negocioLabel): ?>
+                    <label class="property-filter-tab <?= $negocioSelecionado === $negocioValor ? 'active' : '' ?>">
+                        <input type="radio" name="negocio" value="<?= h($negocioValor) ?>" <?= $negocioSelecionado === $negocioValor ? 'checked' : '' ?>>
+                        <span><?= h($negocioLabel) ?></span>
                     </label>
-                    <span class="categorey-no"><?= (int)$tipoimovel->quantidade_imoveis ?></span>
-                </li>
-                <?php
-                }
-                ?>
-            </ul>
-            <hr>
-            <!-- Price Filter Widget -->
-            <div class="widget--- ltn__price-filter-widget">
-                <h4 class="ltn__widget-title ltn__widget-title-border---">Filtro de preço</h4>
-                <div class="price_filter">
-                    <div class="price_slider_amount">
-                        <input type="submit"  value="Your range:"/> 
-                        <input type="text" class="amount" name="price"  placeholder="Add Your Price" /> 
-                    </div>
-                    <div class="slider-range"></div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="property-filter-section">
+                <h4 class="property-filter-title">Tipo de imóvel</h4>
+                <ul class="property-filter-list">
+                    <?php foreach ($tipoimoveis as $tipoimovel): ?>
+                        <li>
+                            <label for="imv-<?= (int)$tipoimovel->id ?>" class="property-filter-check">
+                                <input
+                                    type="checkbox"
+                                    name="tipo_imovel[]"
+                                    value="<?= (int)$tipoimovel->id ?>"
+                                    id="imv-<?= (int)$tipoimovel->id ?>"
+                                    <?= ($todosTiposSelecionados || in_array((int)$tipoimovel->id, $tiposSelecionados, true)) ? 'checked' : '' ?>
+                                >
+                                <span><?= h($tipoimovel->nome) ?></span>
+                            </label>
+                            <span class="property-filter-count"><?= (int)$tipoimovel->quantidade_imoveis ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <div class="property-filter-section">
+                <h4 class="property-filter-title">Quartos</h4>
+                <div class="property-filter-options">
+                    <?php foreach ([1, 2, 3, 4] as $quartos): ?>
+                        <label class="property-filter-pill">
+                            <input type="radio" name="quartos" value="<?= $quartos ?>" <?= (int)($filtros['quartos'] ?? 0) === $quartos ? 'checked' : '' ?>>
+                            <span><?= $quartos ?>+</span>
+                        </label>
+                    <?php endforeach; ?>
                 </div>
             </div>
-            <hr>
-            <h4 class="ltn__widget-title">Bed/bath</h4>
-            <ul>
-                <li>
-                    <label class="checkbox-item">Single
-                        <input type="checkbox" checked="checked">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">3,924</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Double
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">3,610</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Up To 3
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,912</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Up To 5
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,687</span>
-                </li>
-            </ul>
-            <hr>
-            <h4 class="ltn__widget-title">Catagory</h4>
-            <ul>
-                <li>
-                    <label class="checkbox-item">Buying
-                        <input type="checkbox" checked="checked">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">3,924</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Renting
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">3,610</span>
-                </li>
-                <li>
-                    <label class="checkbox-item">Selling
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="categorey-no">2,912</span>
-                </li>
-            </ul>
-        </div>
+
+            <div class="property-filter-section">
+                <h4 class="property-filter-title">Banheiros</h4>
+                <div class="property-filter-options">
+                    <?php foreach ([1, 2, 3, 4] as $banheiros): ?>
+                        <label class="property-filter-pill">
+                            <input type="radio" name="banheiros" value="<?= $banheiros ?>" <?= (int)($filtros['banheiros'] ?? 0) === $banheiros ? 'checked' : '' ?>>
+                            <span><?= $banheiros ?>+</span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="property-filter-section">
+                <h4 class="property-filter-title">Vagas</h4>
+                <div class="property-filter-options">
+                    <?php foreach ([1, 2, 3, 4] as $vagas): ?>
+                        <label class="property-filter-pill">
+                            <input type="radio" name="vagas" value="<?= $vagas ?>" <?= (int)($filtros['vagas'] ?? 0) === $vagas ? 'checked' : '' ?>>
+                            <span><?= $vagas ?>+</span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="property-filter-section">
+                <h4 class="property-filter-title">Preço</h4>
+                <div class="property-price-fields">
+                    <div class="property-price-field">
+                        <label for="preco-minimo">Mínimo</label>
+                        <div class="property-price-input">
+                            <span>R$</span>
+                            <input type="text" name="preco_minimo" id="preco-minimo" value="<?= h($filtros['preco_minimo'] ?? '') ?>" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="property-price-field">
+                        <label for="preco-maximo">Máximo</label>
+                        <div class="property-price-input">
+                            <span>R$</span>
+                            <input type="text" name="preco_maximo" id="preco-maximo" value="<?= h($filtros['preco_maximo'] ?? '') ?>" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="property-filter-actions">
+                <a class="property-filter-clear" href="<?= $this->Url->build('/') ?>">Limpar</a>
+                <button class="property-filter-submit" type="submit">Buscar imóveis</button>
+            </div>
+        </form>
         <!-- Category Widget -->
         <div class="widget ltn__menu-widget d-none">
             <h4 class="ltn__widget-title ltn__widget-title-border">Product categories</h4>
