@@ -217,73 +217,54 @@
 
 					<!-- Start::nav -->
 					<nav class="main-menu-container nav nav-pills flex-column sub-open">
-							<div class="slide-left" id="slide-left">
-								<i class="ri-arrow-left-s-line"></i>
-							</div>
-							<ul class="main-menu">
-								<li class="slide__category"><span class="category-name">Menu</span></li>
+						<div class="slide-left" id="slide-left">
+							<i class="ri-arrow-left-s-line"></i>
+						</div>
+						<ul class="main-menu">
+							<li class="slide__category"><span class="category-name">Menu</span></li>
 
-								<li class="slide<?= $this->AdminMenu->activeClass('Index', 'index') ?>">
-									<a href="<?= $this->Url->build(['controller' => 'Index', 'action' => 'index']) ?>" class="side-menu__item<?= $this->AdminMenu->activeClass('Index', 'index') ?>">
-										<i class="ri-dashboard-line side-menu__icon"></i>
-										<span class="side-menu__label">Dashboard</span>
-									</a>
-								</li>
-								<li class="slide has-sub<?= $this->AdminMenu->openClass(['Clients', 'Clientes', 'Fornecedores', 'Users']) ?>">
-									<a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass(['Clients', 'Clientes', 'Fornecedores', 'Users']) ?>">
-										<i class="ri-group-line side-menu__icon"></i>
-										<span class="side-menu__label">Pessoas</span>
-										<i class="ri-arrow-down-s-line side-menu__angle"></i>
-									</a>
-									<ul class="slide-menu child1">
-										<li class="slide side-menu__label1"><a href="javascript:void(0)">Pessoas</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Users', ['index', 'add', 'edit', 'view']) ?>"><a href="/users" class="side-menu__item<?= $this->AdminMenu->activeClass('Users', ['index', 'add', 'edit']) ?>">Corretores</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', ['index', 'add', 'edit', 'view']) ?>"><a href="/pessoas" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'index') ?>">Compradores/Locatários</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Users', 'parceiros') ?>"><a href="/users/parceiros" class="side-menu__item<?= $this->AdminMenu->activeClass('Users', 'parceiros') ?>">Parceiros</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>"><a href="/pessoas/proprietarios" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>">Proprietários/Locadores</a></li>
-									</ul>
-								</li>
-									<li class="slide has-sub<?= $this->AdminMenu->openClass(['Imoveis', 'TipoImoveis', 'Categories']) ?>">
-										<a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass(['Products', 'Supplies', 'Categories']) ?>">
-										<i class="ri-community-line side-menu__icon"></i>
-										<span class="side-menu__label">Imóveis</span>
-										<i class="ri-arrow-down-s-line side-menu__angle"></i>
-									</a>
-									<ul class="slide-menu child1">
-										<li class="slide side-menu__label1"><a href="javascript:void(0)">Estoque</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('Imoveis', 'index') ?>"><a href="/imoveis" class="side-menu__item<?= $this->AdminMenu->activeClass('Imoveis', ['index', 'add', 'edit', 'view']) ?>">Cadastro de Imóveis</a></li>
-                                        <li class="slide<?= $this->AdminMenu->activeClass('Interesses', 'index') ?>"><a href="/interesses" class="side-menu__item<?= $this->AdminMenu->activeClass('Interesses', ['index', 'view']) ?>">Interesses</a></li>
-									</ul>
-								</li>
-                                <li class="slide<?= $this->AdminMenu->activeClass('Atendimentos') ?>">
-                                    <a href="/atendimentos" class="side-menu__item<?= $this->AdminMenu->activeClass('Atendimentos', ['index', 'add', 'edit']) ?>">
-										<i class="ri-question-answer-line side-menu__icon"></i>
-										<span class="side-menu__label">Atendimentos</span>
-									</a>
-								</li>
-								<li class="slide has-sub<?= $this->AdminMenu->openClass(['ContasPagar', 'ValoresReceber']) ?>">
-									<a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass(['ContasPagar', 'ValoresReceber']) ?>">
-										<i class="ri-money-dollar-circle-line side-menu__icon"></i>
-										<span class="side-menu__label">Financeiro</span>
-										<i class="ri-arrow-down-s-line side-menu__angle"></i>
-									</a>
-									<ul class="slide-menu child1">
-										<li class="slide side-menu__label1"><a href="javascript:void(0)">Financeiro</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('ContasPagar') ?>"><a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass('ContasPagar') ?>">Contas a pagar</a></li>
-										<li class="slide<?= $this->AdminMenu->activeClass('ValoresReceber') ?>"><a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass('ValoresReceber') ?>">Valores a receber</a></li>
-									</ul>
-								</li>
-
-								<li class="slide<?= $this->AdminMenu->activeClass('Configuracoes') ?>">
-									<a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass('Configuracoes') ?>">
-										<i class="ri-settings-3-line side-menu__icon"></i>
-										<span class="side-menu__label">Configurações</span>
-									</a>
-								</li>
-							</ul>
-							<div class="slide-right" id="slide-right">
-								<i class="ri-arrow-right-s-line"></i>
-							</div>
+							<li class="slide<?= $this->AdminMenu->activeClass('Index', 'index') ?>">
+								<a href="<?= $this->Url->build(['controller' => 'Index', 'action' => 'index']) ?>" class="side-menu__item<?= $this->AdminMenu->activeClass('Index', 'index') ?>">
+									<i class="ri-dashboard-line side-menu__icon"></i>
+									<span class="side-menu__label">Dashboard</span>
+								</a>
+							</li>
+							<li class="slide has-sub<?= $this->AdminMenu->openClass(['Clients', 'Clientes', 'Fornecedores', 'Users']) ?>">
+								<a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass(['Clients', 'Clientes', 'Fornecedores', 'Users']) ?>">
+									<i class="ri-group-line side-menu__icon"></i>
+									<span class="side-menu__label">Pessoas</span>
+									<i class="ri-arrow-down-s-line side-menu__angle"></i>
+								</a>
+								<ul class="slide-menu child1">
+									<li class="slide side-menu__label1"><a href="javascript:void(0)">Pessoas</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Users', ['index', 'add', 'edit', 'view']) ?>"><a href="/users" class="side-menu__item<?= $this->AdminMenu->activeClass('Users', ['index', 'add', 'edit']) ?>">Corretores</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', ['index', 'add', 'edit', 'view']) ?>"><a href="/pessoas" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'index') ?>">Compradores/Locatários</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Users', 'parceiros') ?>"><a href="/users/parceiros" class="side-menu__item<?= $this->AdminMenu->activeClass('Users', 'parceiros') ?>">Parceiros</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>"><a href="/pessoas/proprietarios" class="side-menu__item<?= $this->AdminMenu->activeClass('Pessoas', 'proprietarios') ?>">Proprietários/Locadores</a></li>
+								</ul>
+							</li>
+								<li class="slide has-sub<?= $this->AdminMenu->openClass(['Imoveis', 'TipoImoveis', 'Categories']) ?>">
+									<a href="javascript:void(0);" class="side-menu__item<?= $this->AdminMenu->activeClass(['Products', 'Supplies', 'Categories']) ?>">
+									<i class="ri-community-line side-menu__icon"></i>
+									<span class="side-menu__label">Imóveis</span>
+									<i class="ri-arrow-down-s-line side-menu__angle"></i>
+								</a>
+								<ul class="slide-menu child1">
+									<li class="slide side-menu__label1"><a href="javascript:void(0)">Estoque</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Imoveis', 'index') ?>"><a href="/imoveis" class="side-menu__item<?= $this->AdminMenu->activeClass('Imoveis', ['index', 'add', 'edit', 'view']) ?>">Cadastro de Imóveis</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Interesses', 'index') ?>"><a href="/interesses" class="side-menu__item<?= $this->AdminMenu->activeClass('Interesses', ['index', 'view']) ?>">Interesses</a></li>
+								</ul>
+							</li>
+							<li class="slide<?= $this->AdminMenu->activeClass('Atendimentos') ?>">
+								<a href="/atendimentos" class="side-menu__item<?= $this->AdminMenu->activeClass('Atendimentos', ['index', 'add', 'edit']) ?>">
+									<i class="ri-question-answer-line side-menu__icon"></i>
+									<span class="side-menu__label">Atendimentos</span>
+								</a>
+							</li>
+						</ul>
+						<div class="slide-right" id="slide-right">
+							<i class="ri-arrow-right-s-line"></i>
+						</div>
 					</nav>
 					<!-- End::nav -->
 
