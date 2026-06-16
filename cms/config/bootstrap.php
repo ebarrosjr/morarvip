@@ -96,6 +96,25 @@ if (file_exists(CONFIG . 'app_local.php')) {
     Configure::load('app_local', 'default');
 }
 
+$imageUploadEnvironment = Configure::read('debug') ? 'homolog' : 'main';
+$imageUploadBaseUrl = rtrim((string)env(
+    'IMAGE_UPLOAD_BASE_URL',
+    Configure::read('debug') ? 'http://localhost:8763/uploads' : 'https://imagens.morar.vip'
+), '/');
+$imageUploadRoot = rtrim((string)env(
+    'IMAGE_UPLOAD_ROOT',
+    DS . 'mnt' . DS . '08B84889B84876EA' . DS . 'wwwroot' . DS . 'projetos' . DS . 'shared' . DS . 'uploads'
+), DS);
+
+defined('IMAGE_BASE_URL') || define(
+    'IMAGE_BASE_URL',
+    $imageUploadBaseUrl . '/' . $imageUploadEnvironment . '/images'
+);
+defined('IMAGE_UPLOAD_PATH') || define(
+    'IMAGE_UPLOAD_PATH',
+    $imageUploadRoot . DS . $imageUploadEnvironment . DS . 'images' . DS
+);
+
 /*
  * When debug = true the metadata cache should only last for a short time.
  */

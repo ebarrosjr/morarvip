@@ -50,7 +50,7 @@ return function (RouteBuilder $routes): void {
     $routes->setRouteClass(DashedRoute::class);
 
     $routes->scope('/', function (RouteBuilder $builder): void {
-        $builder->connect('/', ['controller' => 'Index', 'action' => 'soon']);
+        $builder->connect('/', ['controller' => 'Index', 'action' => 'index']);
         $builder->connect('/{controller}', ['action' => 'index']);
         $builder->connect('/{controller}/{action}/*', []);
 

@@ -22,9 +22,8 @@
     <meta name="twitter:title" content="Imóveis à venda e para alugar | Morar VIP" />
     <meta name="twitter:description" content="Encontre imóveis à venda e para alugar com fotos, preços, localização e contato direto." />
     <meta name="twitter:image" content="https://morar.vip/img/imoveis.jpg" />    
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="img/icons/favicon.png" type="image/x-icon" />
     
+
     <?= $this->Html->css(['style', 'responsive']) ?>
     <style>
         html,

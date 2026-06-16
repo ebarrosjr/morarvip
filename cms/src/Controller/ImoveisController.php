@@ -182,7 +182,7 @@ class ImoveisController extends AppController
                     );
                 }
 
-                $uploadPath = WWW_ROOT . 'img' . DS . 'imoveis' . DS;
+                $uploadPath = $this->getImageUploadPath();
                 if (!is_dir($uploadPath)) {
                     mkdir($uploadPath, 0775, true);
                 }
@@ -190,13 +190,8 @@ class ImoveisController extends AppController
                 $salvas = 0;
                 foreach ($files as $file) {
                     if ($file->getError() === UPLOAD_ERR_OK) {
-                        $safeClientFilename = preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientFilename());
-                        $extension = pathinfo($safeClientFilename, PATHINFO_EXTENSION);
-                        $basename = pathinfo($safeClientFilename, PATHINFO_FILENAME) ?: 'foto';
-                        $prefix = $id . '_' . uniqid() . '_';
-                        $suffix = $extension ? '.' . $extension : '';
-                        $maxBasenameLength = max(1, 45 - strlen($prefix) - strlen($suffix));
-                        $filename = $prefix . substr($basename, 0, $maxBasenameLength) . $suffix;
+                        $extension = $this->getImageExtension($file->getClientMediaType());
+                        $filename = $id . '_' . uniqid() . $extension;
                         $file->moveTo($uploadPath . $filename);
 
                         $fotoEntity = $this->Imoveis->FotoImoveis->newEmptyEntity();
@@ -230,7 +225,7 @@ class ImoveisController extends AppController
 
         $foto = $this->Imoveis->FotoImoveis->get($id);
         $imovelId = $foto->imovel_id;
-        $filePath = WWW_ROOT . 'img' . DS . 'imoveis' . DS . $foto->arquivo;
+        $filePath = $this->getImageUploadPath() . $foto->arquivo;
 
         if ($this->Imoveis->FotoImoveis->delete($foto)) {
             if (file_exists($filePath)) {
@@ -264,5 +259,21 @@ class ImoveisController extends AppController
         }
 
         return $this->redirect(['action' => 'view', $imovelId]);
+    }
+
+    private function getImageUploadPath(): string
+    {
+        return IMAGE_UPLOAD_PATH;
+    }
+
+    private function getImageExtension(?string $mediaType): string
+    {
+        return match ($mediaType) {
+            'image/jpeg' => '.jpg',
+            'image/png' => '.png',
+            'image/gif' => '.gif',
+            'image/webp' => '.webp',
+            default => '',
+        };
     }
 }

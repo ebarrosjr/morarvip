@@ -8,10 +8,8 @@
                         <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
                             <div class="product-img">
                                 <a href="product-details.html">
-                                    <img
-                                        src="<?= $this->Url->build('/img/imoveis/' . $imovel->foto_principal) ?>"
-                                        alt="<?= h($imovel->titulo) ?>"
-                                    >
+                                    <?php $fotoPrincipal = $imovel->foto_principal ? IMAGE_BASE_URL . '/' . $imovel->foto_principal : $this->Url->build('/img/no-imovel-photo.png'); ?>
+                                    <img src="<?= h($fotoPrincipal) ?>" alt="<?= h($imovel->titulo) ?>">
                                 </a>
                                 <div class="real-estate-agent">
                                     <div class="agent-img">

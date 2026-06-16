@@ -39,7 +39,7 @@
                     } 
                     foreach($imovei->foto_imoveis ?? [] as $foto) { ?>
                         <div class="col-3 mb-3">
-                            <img src="<?= $this->Url->build('/img/imoveis/' . $foto->arquivo) ?>" alt="Foto do imóvel" class="img-fluid rounded">
+                            <img src="<?= h(IMAGE_BASE_URL . '/' . $foto->arquivo) ?>" alt="Foto do imóvel" class="img-fluid rounded">
                             <?php if ($foto->principal) { ?>
                                 <span class="badge bg-primary mt-1">Principal</span>
                             <?php } else { ?>

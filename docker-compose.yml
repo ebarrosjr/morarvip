@@ -23,6 +23,7 @@ services:
       FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-}
     volumes:
       - ./:/var/www/html
+      - /mnt/08B84889B84876EA/wwwroot/projetos/shared:/mnt/08B84889B84876EA/wwwroot/projetos/shared
       - ./docker/apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
