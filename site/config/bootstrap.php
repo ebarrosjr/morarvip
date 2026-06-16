@@ -97,9 +97,16 @@ if (file_exists(CONFIG . 'app_local.php')) {
 }
 
 $imageUploadEnvironment = Configure::read('debug') ? 'homolog' : 'main';
+$imageUploadHost = strtolower((string)env('HTTP_HOST', env('SERVER_NAME', '')));
+$imageUploadHost = preg_replace('/:\d+$/', '', $imageUploadHost) ?? '';
+$isLocalImageHost = in_array($imageUploadHost, ['localhost', '127.0.0.1', '::1'], true)
+    || str_ends_with($imageUploadHost, '.localhost');
+$imageUploadDefaultBaseUrl = $isLocalImageHost
+    ? 'http://localhost:8763/uploads'
+    : 'https://imagens.morar.vip';
 $imageUploadBaseUrl = rtrim((string)env(
     'IMAGE_UPLOAD_BASE_URL',
-    Configure::read('debug') ? 'http://localhost:8763/uploads' : 'https://imagens.morar.vip'
+    $imageUploadDefaultBaseUrl
 ), '/');
 $imageUploadRoot = rtrim((string)env(
     'IMAGE_UPLOAD_ROOT',
