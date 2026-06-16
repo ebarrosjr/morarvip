@@ -1,0 +1,54 @@
+.morarvip-header-search-area {
+    background: var(--white);
+    padding: 14px 0;
+}
+
+.morarvip-header-search-form {
+    align-items: center;
+    border: 1px solid var(--border-color-7);
+    border-radius: 32px;
+    display: flex;
+    gap: 12px;
+    margin: 0;
+    padding: 0px 0px 0px 18px;
+}
+
+.morarvip-header-search-form i {
+    color: var(--ltn__secondary-color);
+    font-size: 18px;
+}
+
+.morarvip-header-search-form input {
+    border: 0;
+    flex: 1;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+}
+
+.morarvip-header-search-form input:focus {
+    outline: 0;
+}
+
+.morarvip-header-search-form button {
+    background: var(--ltn__secondary-color);
+    border: 0;
+    border-radius: 26px;
+    color: var(--white);
+    font-weight: 800;
+    padding: 11px 24px;
+}
+
+.morarvip-header-search-form button:hover {
+    background: var(--ltn__primary-color);
+}
+
+@media (max-width: 575px) {
+    .morarvip-header-search-form {
+        padding-left: 14px;
+    }
+
+    .morarvip-header-search-form button {
+        padding: 10px 16px;
+    }
+}

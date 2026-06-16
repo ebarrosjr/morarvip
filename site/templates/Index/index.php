@@ -1,3 +1,4 @@
+<?php $this->assign('hasFilterDrawer', '1'); ?>
 <?= $this->Html->css('listagem') ?>
 <div class="col-lg-8">
     <div class="advertinsig">
@@ -486,8 +487,13 @@
         </div>
     </div>
 </div>
-<div class="col-lg-4">
-    <aside class="sidebar ltn__shop-sidebar ltn__right-sidebar">
+<div class="col-lg-4 property-filter-column">
+    <aside id="ltn__utilize-filter-menu" class="sidebar ltn__shop-sidebar ltn__right-sidebar ltn__utilize property-filter-drawer">
+        <div class="ltn__utilize-menu-inner ltn__scrollbar property-filter-drawer-inner">
+            <div class="ltn__utilize-menu-head property-filter-drawer-head d-lg-none">
+                <h4 class="ltn__utilize-menu-title">Filtros</h4>
+                <button class="ltn__utilize-close">×</button>
+            </div>
         <?php
         $filtros = $filtros ?? [];
         $negocioSelecionado = $filtros['negocio'] ?? 'V';
@@ -495,6 +501,9 @@
         $todosTiposSelecionados = empty($tiposSelecionados);
         ?>
         <form class="widget property-filter-card" method="get" action="<?= $this->Url->build('/') ?>">
+            <?php if (!empty($filtros['q'])): ?>
+                <input type="hidden" name="q" value="<?= h($filtros['q']) ?>">
+            <?php endif; ?>
             <div class="property-filter-tabs">
                 <?php foreach (['V' => 'Comprar', 'A' => 'Alugar', 'L' => 'Imóvel novo'] as $negocioValor => $negocioLabel): ?>
                     <label class="property-filter-tab <?= $negocioSelecionado === $negocioValor ? 'active' : '' ?>">
@@ -757,5 +766,6 @@
             <a href="shop.html"><img src="img/banner/banner-2.jpg" alt="#"></a>
         </div>
 
+        </div>
     </aside>
 </div>

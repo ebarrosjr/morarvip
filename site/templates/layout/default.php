@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="Encontre imóveis à venda e para alugar com fotos, preços, localização e contato direto." />
     <meta name="twitter:image" content="https://morar.vip/img/imoveis.jpg" />    
 
-    <?= $this->Html->css(['font-icons', 'plugins', 'style', 'responsive']) ?>
+    <?= $this->Html->css(['font-icons', 'plugins', 'style', 'responsive', 'search']) ?>
 </head>
 
 <body>
@@ -214,23 +214,6 @@
                         </div>
                     </div>
                     <div class="col ltn__header-options ltn__header-options-2 mb-sm-20">
-                        <!-- header-search-1 -->
-                        <div class="header-search-wrap">
-                            <div class="header-search-1">
-                                <div class="search-icon">
-                                    <i class="icon-search for-search-show"></i>
-                                    <i class="icon-cancel  for-search-close"></i>
-                                </div>
-                            </div>
-                            <div class="header-search-1-form">
-                                <form id="#" method="get"  action="#">
-                                    <input type="text" name="search" value="" placeholder="Search here..."/>
-                                    <button type="submit">
-                                        <span><i class="icon-search"></i></span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
                         <!-- user-menu -->
                         <div class="ltn__drop-menu user-menu">
                             <ul>
@@ -245,6 +228,13 @@
                                 </li>
                             </ul>
                         </div>
+                        <?php if ($this->fetch('hasFilterDrawer')): ?>
+                            <div class="property-filter-header-toggle d-lg-none">
+                                <a href="#ltn__utilize-filter-menu" class="property-filter-mobile-toggle ltn__utilize-toggle" aria-label="Abrir filtros">
+                                    <i class="fas fa-filter"></i>
+                                </a>
+                            </div>
+                        <?php endif; ?>
                         <!-- Mobile Menu Button -->
                         <div class="mobile-menu-toggle d-xl-none">
                             <a href="#ltn__utilize-mobile-menu" class="ltn__utilize-toggle">
@@ -260,6 +250,20 @@
             </div>
         </div>
         <!-- ltn__header-middle-area end -->
+        <div class="morarvip-header-search-area">
+            <div class="container">
+                <form class="morarvip-header-search-form" method="get" action="<?= $this->Url->build('/') ?>">
+                    <i class="fas fa-search"></i>
+                    <input
+                        type="text"
+                        name="q"
+                        value="<?= h((string)$this->request->getQuery('q', '')) ?>"
+                        placeholder="Busque por bairro, cidade ou tipo de imóvel"
+                    >
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+        </div>
     </header>
     <!-- HEADER AREA END -->
     <!-- Utilize Mobile Menu Start -->
@@ -270,12 +274,6 @@
                     <a href="index.html"><img src="<?= $this->Url->build('/img/logo-full.svg') ?>" alt="Logo"></a>
                 </div>
                 <button class="ltn__utilize-close">×</button>
-            </div>
-            <div class="ltn__utilize-menu-search-form">
-                <form action="#">
-                    <input type="text" placeholder="Search...">
-                    <button><i class="fas fa-search"></i></button>
-                </form>
             </div>
             <div class="ltn__utilize-menu">
                 <ul>
@@ -719,4 +717,3 @@
     <?=  $this->Html->script(['plugins', 'main']) ?>
 </body>
 </html>
-

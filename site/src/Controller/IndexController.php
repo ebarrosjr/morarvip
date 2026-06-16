@@ -27,6 +27,7 @@ class IndexController extends AppController
             'vagas' => $this->normalizePositiveInteger($queryParams['vagas'] ?? null),
             'preco_minimo' => $queryParams['preco_minimo'] ?? '',
             'preco_maximo' => $queryParams['preco_maximo'] ?? '',
+            'q' => trim((string)($queryParams['q'] ?? '')),
         ];
 
         $fotoPrincipalOuPrimeira = $fotoImoveisTable
@@ -60,6 +61,20 @@ class IndexController extends AppController
                 ['FotoPrincipal.id' => $fotoPrincipalOuPrimeira],
             )
             ->where(['Imoveis.show_site' => 1]);
+
+        if ($filtros['q'] !== '') {
+            $termoBusca = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $filtros['q']) . '%';
+            $imoveisQuery->where(function ($exp) use ($termoBusca) {
+                return $exp->or([
+                    'Imoveis.titulo LIKE' => $termoBusca,
+                    'Imoveis.chamada LIKE' => $termoBusca,
+                    'Imoveis.descricao LIKE' => $termoBusca,
+                    'Imoveis.cep LIKE' => $termoBusca,
+                    'Imoveis.complemento LIKE' => $termoBusca,
+                    'TipoImoveis.nome LIKE' => $termoBusca,
+                ]);
+            });
+        }
 
         if (in_array($filtros['negocio'], ['V', 'A', 'L'], true)) {
             $imoveisQuery->where(['Imoveis.negocio' => $filtros['negocio']]);
