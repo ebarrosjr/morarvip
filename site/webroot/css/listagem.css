@@ -86,6 +86,63 @@
     width: 28px;
 }
 
+.property-agent-overlay:hover {
+    color: var(--white);
+}
+
+.property-empty-state {
+    background: var(--white);
+    border: 1px solid var(--border-color-7);
+    border-radius: 10px;
+    color: var(--ltn__paragraph-color);
+    margin-bottom: 24px;
+    padding: 26px;
+    text-align: center;
+}
+
+.broker-profile-card {
+    align-items: center;
+    background: var(--white);
+    border: 1px solid var(--border-color-7);
+    border-radius: 10px;
+    box-shadow: var(--ltn__box-shadow-4);
+    display: flex;
+    gap: 18px;
+    margin-bottom: 24px;
+    padding: 24px;
+}
+
+.broker-profile-avatar img {
+    border: 3px solid var(--ltn__secondary-color);
+    border-radius: 50%;
+    height: 88px;
+    object-fit: cover;
+    width: 88px;
+}
+
+.broker-profile-info span {
+    color: var(--ltn__secondary-color);
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.broker-profile-info h1 {
+    color: var(--ltn__heading-color);
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.broker-profile-info p,
+.broker-profile-info a {
+    color: var(--ltn__paragraph-color);
+    display: block;
+    margin-bottom: 4px;
+}
+
 .property-result-card .carousel-control-prev,
 .property-result-card .carousel-control-next {
     background: var(--white);

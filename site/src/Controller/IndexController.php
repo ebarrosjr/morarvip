@@ -19,7 +19,70 @@ class IndexController extends AppController
         $imoveisTable = $tableLocator->get('Imoveis');
         $fotoImoveisTable = $tableLocator->get('FotoImoveis');
         $queryParams = $this->request->getQueryParams();
-        $filtros = [
+        $filtros = $this->getFiltros($queryParams);
+        $imoveisQuery = $this->buildImoveisQuery($imoveisTable, $fotoImoveisTable, $filtros);
+
+        $this->paginate = [
+            'limit' => 10,
+            'order' => ['Imoveis.created' => 'DESC'],
+            'sortableFields' => [
+                'Imoveis.created',
+                'Imoveis.valor',
+                'Imoveis.titulo',
+            ],
+        ];
+
+        try {
+            $imoveis = $this->paginate($imoveisQuery);
+        } catch (NotFoundException) {
+            $queryParams['page'] = 1;
+
+            return $this->redirect(['?' => $queryParams]);
+        }
+
+        $tipoimoveis = $this->getTipoImoveisComQuantidade($imoveisTable, $tableLocator->get('TipoImoveis'));
+
+        $this->set(compact('imoveis', 'tipoimoveis', 'filtros'));
+    }
+
+    public function corretor($id)
+    {
+        $corretorId = (int)$id;
+        $tableLocator = TableRegistry::getTableLocator();
+        $usersTable = $tableLocator->get('Users');
+        $corretor = $usersTable->get($corretorId);
+        $imoveisTable = $tableLocator->get('Imoveis');
+        $fotoImoveisTable = $tableLocator->get('FotoImoveis');
+        $queryParams = $this->request->getQueryParams();
+        $filtros = $this->getFiltros($queryParams);
+        $imoveisQuery = $this->buildImoveisQuery($imoveisTable, $fotoImoveisTable, $filtros, $corretorId);
+
+        $this->paginate = [
+            'limit' => 10,
+            'order' => ['Imoveis.created' => 'DESC'],
+            'sortableFields' => [
+                'Imoveis.created',
+                'Imoveis.valor',
+                'Imoveis.titulo',
+            ],
+        ];
+
+        try {
+            $imoveis = $this->paginate($imoveisQuery);
+        } catch (NotFoundException) {
+            $queryParams['page'] = 1;
+
+            return $this->redirect(['action' => 'corretor', $corretorId, '?' => $queryParams]);
+        }
+
+        $tipoimoveis = $this->getTipoImoveisComQuantidade($imoveisTable, $tableLocator->get('TipoImoveis'), $corretorId);
+
+        $this->set(compact('corretor', 'imoveis', 'tipoimoveis', 'filtros'));
+    }
+
+    private function getFiltros(array $queryParams): array
+    {
+        return [
             'negocio' => $queryParams['negocio'] ?? 'V',
             'tipo_imovel' => array_values(array_filter((array)($queryParams['tipo_imovel'] ?? []), 'is_numeric')),
             'quartos' => $this->normalizePositiveInteger($queryParams['quartos'] ?? null),
@@ -29,7 +92,10 @@ class IndexController extends AppController
             'preco_maximo' => $queryParams['preco_maximo'] ?? '',
             'q' => trim((string)($queryParams['q'] ?? '')),
         ];
+    }
 
+    private function buildImoveisQuery($imoveisTable, $fotoImoveisTable, array $filtros, ?int $corretorId = null)
+    {
         $fotoPrincipalOuPrimeira = $fotoImoveisTable
             ->find()
             ->select(['FotoImoveis.id'])
@@ -53,8 +119,12 @@ class IndexController extends AppController
                         'FotoImoveis.id' => 'ASC',
                     ]);
                 },
-                'TipoImoveis',
-                'Users',
+                'TipoImoveis' => function ($q) {
+                    return $q->select(['TipoImoveis.id', 'TipoImoveis.nome']);
+                },
+                'Users' => function ($q) {
+                    return $q->select(['Users.id', 'Users.nome', 'Users.logo']);
+                },
             ])
             ->leftJoin(
                 ['FotoPrincipal' => 'foto_imoveis'],
@@ -62,6 +132,17 @@ class IndexController extends AppController
             )
             ->where(['Imoveis.show_site' => 1]);
 
+        if ($corretorId !== null) {
+            $imoveisQuery->where(['Imoveis.user_id' => $corretorId]);
+        }
+
+        $this->applyFiltros($imoveisQuery, $filtros);
+
+        return $imoveisQuery;
+    }
+
+    private function applyFiltros($imoveisQuery, array $filtros): void
+    {
         if ($filtros['q'] !== '') {
             $termoBusca = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $filtros['q']) . '%';
             $imoveisQuery->where(function ($exp) use ($termoBusca) {
@@ -105,26 +186,10 @@ class IndexController extends AppController
         if ($precoMaximo !== null) {
             $imoveisQuery->where(['Imoveis.valor <=' => $precoMaximo]);
         }
+    }
 
-        $this->paginate = [
-            'limit' => 10,
-            'order' => ['Imoveis.created' => 'DESC'],
-            'sortableFields' => [
-                'Imoveis.created',
-                'Imoveis.valor',
-                'Imoveis.titulo',
-            ],
-        ];
-
-        try {
-            $imoveis = $this->paginate($imoveisQuery);
-        } catch (NotFoundException) {
-            $queryParams['page'] = 1;
-
-            return $this->redirect(['?' => $queryParams]);
-        }
-
-        $tipoImoveisTable = $tableLocator->get('TipoImoveis');
+    private function getTipoImoveisComQuantidade($imoveisTable, $tipoImoveisTable, ?int $corretorId = null)
+    {
         $quantidadeImoveis = $imoveisTable->find();
         $quantidadeImoveis
             ->select(['quantidade' => $quantidadeImoveis->func()->count('*')])
@@ -133,31 +198,16 @@ class IndexController extends AppController
             })
             ->where(['Imoveis.show_site' => 1]);
 
-        $tipoimoveis = $tipoImoveisTable
+        if ($corretorId !== null) {
+            $quantidadeImoveis->where(['Imoveis.user_id' => $corretorId]);
+        }
+
+        return $tipoImoveisTable
             ->find()
             ->select($tipoImoveisTable)
             ->select(['quantidade_imoveis' => $quantidadeImoveis])
             ->orderBy(['TipoImoveis.nome' => 'ASC'])
             ->all();
-
-        $this->set(compact('imoveis', 'tipoimoveis', 'filtros'));
-    }
-
-    public function corretor($id)
-    {
-            $tableLocator = TableRegistry::getTableLocator();
-            $usersTable = $tableLocator->get('Users');
-            $corretor = $usersTable->get($id);
-
-            $imoveisTable = $tableLocator->get('Imoveis');
-            $imoveis = $imoveisTable
-                ->find()
-                ->where(['user_id' => $id, 'show_site' => 1, 'user_id IN ' => $tableLocator->get('ImovelParcerias')->find()->select(['parceiro_id'])->where(['fim_parceria > NOW()', 'situacao' => 'A'])])
-                ->orderBy(['created' => 'DESC'])
-                ->all();
-
-
-            $this->set(compact('corretor', 'imoveis'));
     }
 
     private function normalizePositiveInteger(mixed $value): ?int
