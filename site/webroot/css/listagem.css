@@ -3,7 +3,6 @@
     width: 100%;
     background: white;
     border: 1px solid black;
-    height: 100px;
     border-radius: 10px;
 }
 .advertinsig span {
@@ -14,6 +13,9 @@
     font-weight: 700;
     position: absolute;
     border-radius: 7px 0px 10px 0px;
+}
+.advertinsig img {
+    border-radius: 10px;
 }
 .property-list-summary {
     color: var(--ltn__heading-color);
