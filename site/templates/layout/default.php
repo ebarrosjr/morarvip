@@ -11,7 +11,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="canonical" href="https://morar.vip/" />
-    <link rel="shortcut icon" href="/img/icons/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="/img/icons/favicon.ico" type="image/x-icon" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Imóveis à venda e para alugar | Morar VIP" />
@@ -23,7 +23,7 @@
     <meta name="twitter:title" content="Imóveis à venda e para alugar | Morar VIP" />
     <meta name="twitter:description" content="Encontre imóveis à venda e para alugar com fotos, preços, localização e contato direto." />
     <meta name="twitter:image" content="https://morar.vip/img/imoveis.jpg" />    
-    
+
     <?= $this->Html->css(['font-icons', 'plugins', 'style', 'responsive']) ?>
 </head>
 
