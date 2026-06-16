@@ -7,6 +7,11 @@ use Cake\ORM\TableRegistry;
 class IndexController extends AppController
 {
 
+    public function soon()
+    {
+        $this->viewBuilder()->setLayout('ajax');
+    }
+
     public function index()
     {
         $tableLocator = TableRegistry::getTableLocator();
