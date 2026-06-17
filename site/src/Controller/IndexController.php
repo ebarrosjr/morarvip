@@ -8,6 +8,11 @@ use Cake\Utility\Text;
 
 class IndexController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->disableIdentityCheck();
+    }    
 
     public function soon()
     {

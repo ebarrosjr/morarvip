@@ -43,6 +43,29 @@
     background: var(--ltn__primary-color);
 }
 
+.modal-backdrop {
+    z-index: 100040;
+}
+
+.modal {
+    z-index: 100050;
+}
+
+.ltn__modal-area {
+    position: relative;
+    z-index: 100050;
+}
+
+.auth-modal-links a {
+    color: var(--ltn__primary-color);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-modal-links a:hover {
+    color: var(--ltn__secondary-color);
+}
+
 @media (max-width: 575px) {
     .morarvip-header-search-form {
         padding-left: 14px;
