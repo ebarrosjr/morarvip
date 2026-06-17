@@ -2,7 +2,6 @@
     display: inline-block;
     width: 100%;
     background: white;
-    border: 1px solid black;
     border-radius: 10px;
 }
 .advertinsig span {
@@ -225,7 +224,7 @@
 
 .property-result-feature i {
     color: var(--ltn__secondary-color);
-    font-size: 16px;
+    font-size: 25px;
 }
 
 .property-result-bottom {
@@ -250,9 +249,10 @@
 }
 
 .property-details-btn {
-    background: var(--ltn__secondary-color);
+    background: white;
     border-radius: 30px;
-    color: var(--white);
+    border: 1px solid var(--ltn__secondary-color);
+    color: var(--ltn__secondary-color);
     display: inline-block;
     font-weight: 800;
     padding: 14px 24px;
@@ -260,7 +260,7 @@
 }
 
 .property-details-btn:hover {
-    background: var(--ltn__primary-color);
+    background: var(--ltn__secondary-color);
     color: var(--white);
 }
 
@@ -468,6 +468,8 @@
 .ltn__pagination li.active a {
     background-color: var(--ltn__secondary-color);
     color: var(--white);
+    padding: 10px 15px;
+    border-radius: 50%;    
 }
 
 .property-filter-mobile-toggle {

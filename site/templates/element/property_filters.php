@@ -53,7 +53,7 @@
                             <?php foreach ([1, 2, 3, 4] as $valor): ?>
                                 <label class="property-filter-pill">
                                     <input type="radio" name="<?= h($campo) ?>" value="<?= $valor ?>" <?= (int)($filtros[$campo] ?? 0) === $valor ? 'checked' : '' ?>>
-                                    <span><?= $valor ?>+</span>
+                                    <span><?= $valor . ($valor == 4 ? '+' : '') ?></span>
                                 </label>
                             <?php endforeach; ?>
                         </div>
