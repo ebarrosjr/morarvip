@@ -32,6 +32,10 @@ class UsersController extends AppController
     {
     }
 
+    public function dashboard()
+    {
+    }
+
     public function login()
     {
         $result = $this->Authentication->getResult();
