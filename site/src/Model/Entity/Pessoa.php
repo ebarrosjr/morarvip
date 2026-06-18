@@ -71,6 +71,10 @@ class Pessoa extends Entity
         'religiao_id' => true,
         'email' => true,
         'password' => true,
+        'password_reset_token' => true,
+        'google_id' => true,
+        'facebook_id' => true,
+        'email_verified' => true,
         'cep' => true,
         'numero' => true,
         'complemento' => true,
@@ -95,6 +99,9 @@ class Pessoa extends Entity
 
     protected array $_hidden = [
         'password',
+        'password_reset_token',
+        'google_id',
+        'facebook_id',
     ];
 
     protected function _setPassword(string $password): ?string
