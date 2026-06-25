@@ -20,11 +20,12 @@ class ImoveisController extends AppController
      */
     public function index()
     {
-        $query = $this->Imoveis->find()
+        $userId = $this->currentUserId();
+        $query = $this->accessibleImoveisQuery($userId)
             ->contain(['Categorias', 'TipoImoveis']);
         $imoveis = $this->paginate($query);
 
-        $this->set(compact('imoveis'));
+        $this->set(compact('imoveis', 'userId'));
     }
 
     /**
@@ -36,8 +37,11 @@ class ImoveisController extends AppController
      */
     public function view($id = null)
     {
-        $imovei = $this->Imoveis->get($id, contain: ['Categorias', 'TipoImoveis', 'Pessoas', 'FotoImoveis']);
-        $this->set(compact('imovei'));
+        $imovei = $this->getAccessibleImovel($id, ['Categorias', 'TipoImoveis', 'Pessoas', 'FotoImoveis']);
+        $userId = $this->currentUserId();
+        $isOwner = (int)$imovei->user_id === $userId;
+
+        $this->set(compact('imovei', 'userId', 'isOwner'));
     }
 
     public function add()
@@ -97,7 +101,7 @@ class ImoveisController extends AppController
 
     public function edit($id = null)
     {
-        $imovei = $this->Imoveis->get($id, contain: []);
+        $imovei = $this->getOwnedImovel($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
@@ -143,7 +147,7 @@ class ImoveisController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $imovei = $this->Imoveis->get($id);
+        $imovei = $this->getOwnedImovel($id);
         if ($this->Imoveis->delete($imovei)) {
             $this->Flash->success(__('The imovei has been deleted.'));
         } else {
@@ -160,7 +164,7 @@ class ImoveisController extends AppController
      */
     public function fotos($id)
     {
-        $imovel = $this->Imoveis->get($id, contain: ['FotoImoveis']);
+        $imovel = $this->getOwnedImovel($id, ['FotoImoveis']);
         if($this->request->is('post')) {
             $data = $this->request->getData();
             $files = $data['fotos'] ?? [];
@@ -223,7 +227,7 @@ class ImoveisController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $foto = $this->Imoveis->FotoImoveis->get($id);
+        $foto = $this->getOwnedFoto($id);
         $imovelId = $foto->imovel_id;
         $filePath = $this->getImageUploadPath() . $foto->arquivo;
 
@@ -243,7 +247,7 @@ class ImoveisController extends AppController
     {
         $this->request->allowMethod(['post']);
 
-        $foto = $this->Imoveis->FotoImoveis->get($id);
+        $foto = $this->getOwnedFoto($id);
         $imovelId = $foto->imovel_id;
 
         $this->Imoveis->FotoImoveis->updateAll(
@@ -264,6 +268,83 @@ class ImoveisController extends AppController
     private function getImageUploadPath(): string
     {
         return IMAGE_UPLOAD_PATH;
+    }
+
+    private function currentUserId(): int
+    {
+        return (int)$this->Authentication->getIdentity()->getIdentifier();
+    }
+
+    private function accessibleImoveisQuery(int $userId)
+    {
+        $imoveisEmParceria = $this->validPartnershipImoveisQuery($userId);
+
+        return $this->Imoveis
+            ->find()
+            ->where([
+                'OR' => [
+                    'Imoveis.user_id' => $userId,
+                    'Imoveis.id IN' => $imoveisEmParceria,
+                ],
+            ]);
+    }
+
+    private function validPartnershipImoveisQuery(int $userId)
+    {
+        $today = date('Y-m-d');
+
+        return $this->fetchTable('ImovelParcerias')
+            ->find()
+            ->select(['ImovelParcerias.imovei_id'])
+            ->where([
+                'ImovelParcerias.parceiro_id' => $userId,
+                'ImovelParcerias.situacao' => 'A',
+                'ImovelParcerias.deleted IS' => null,
+                [
+                    'OR' => [
+                        'ImovelParcerias.inicio_parceria IS' => null,
+                        'ImovelParcerias.inicio_parceria <=' => $today,
+                    ],
+                ],
+                [
+                    'OR' => [
+                        'ImovelParcerias.fim_parceria IS' => null,
+                        'ImovelParcerias.fim_parceria >=' => $today,
+                    ],
+                ],
+            ]);
+    }
+
+    private function getAccessibleImovel($id, array $contain = [])
+    {
+        return $this->accessibleImoveisQuery($this->currentUserId())
+            ->where(['Imoveis.id' => $id])
+            ->contain($contain)
+            ->firstOrFail();
+    }
+
+    private function getOwnedImovel($id, array $contain = [])
+    {
+        return $this->Imoveis
+            ->find()
+            ->where([
+                'Imoveis.id' => $id,
+                'Imoveis.user_id' => $this->currentUserId(),
+            ])
+            ->contain($contain)
+            ->firstOrFail();
+    }
+
+    private function getOwnedFoto($id)
+    {
+        return $this->Imoveis->FotoImoveis
+            ->find()
+            ->contain(['Imoveis'])
+            ->where([
+                'FotoImoveis.id' => $id,
+                'Imoveis.user_id' => $this->currentUserId(),
+            ])
+            ->firstOrFail();
     }
 
     private function getImageExtension(?string $mediaType): string

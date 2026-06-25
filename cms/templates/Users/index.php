@@ -35,6 +35,7 @@
                 <tbody>
                     <?php
                     foreach($users as $user) {
+                        $isPartner = in_array((int)$user->id, array_map('intval', $partnerIds ?? []), true);
                     ?>
                     <tr>
                         <td>
@@ -43,7 +44,7 @@
                         <td>
                             <div class="d-flex">
                                 <div class="flex-1 ms-2">
-                                    <span class="d-block fw-semibold lh-1"><?= $user->nome ?></span>
+                                    <span class="d-block fw-semibold lh-1"><?= $isPartner ? 'P ' : '' ?><?= h($user->nome) ?></span>
                                     <a href="javascript:void(0);" class="text-muted fs-12"><?= $user->email ?></a>
                                 </div>
                             </div>

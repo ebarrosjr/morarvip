@@ -56,21 +56,22 @@
                 <td class="actions">
                     <div class="btn-list">
                         <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'view', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
-                        <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'edit', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
-                        <a aria-label="anchor" href="<?= $this->Url->build([])?>" ></a>
-                        <?= $this->Form->postLink(
-                            '<i class="ti ti-trash"></i>',
-                            ['action' => 'delete', $imovei->id],
-                            [
-                                "data-bs-toggle" => "tooltip",
-                                "data-bs-placement" => "top", 
-                                "data-bs-title" => "Delete",
-                                "class" => "btn btn-sm btn-icon btn-danger-light",
-                                "method" => 'delete',
-                                "confirm" => __('Excluir o imóvel # {0} não terá volta, deseja continuar?', $imovei->id),
-                                "escape" => false
-                            ]
-                        ) ?>
+                        <?php if ((int)$imovei->user_id === (int)$userId): ?>
+                            <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'edit', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
+                            <?= $this->Form->postLink(
+                                '<i class="ti ti-trash"></i>',
+                                ['action' => 'delete', $imovei->id],
+                                [
+                                    "data-bs-toggle" => "tooltip",
+                                    "data-bs-placement" => "top", 
+                                    "data-bs-title" => "Delete",
+                                    "class" => "btn btn-sm btn-icon btn-danger-light",
+                                    "method" => 'delete',
+                                    "confirm" => __('Excluir o imóvel # {0} não terá volta, deseja continuar?', $imovei->id),
+                                    "escape" => false
+                                ]
+                            ) ?>
+                        <?php endif; ?>
                     </div>                    
                 </td>
             </tr>

@@ -20,11 +20,16 @@ class UsersController extends AppController
 
     public function index()
     {
+        $userId = (int)$this->Authentication->getIdentity()->getIdentifier();
+        $partnerIds = $this->partnerUserIds($userId);
+        $visibleUserIds = array_values(array_unique(array_merge([$userId], $partnerIds)));
+
         $query = $this->Users->find()
+            ->where(['Users.id IN' => $visibleUserIds])
             ->contain(['Plans']);
         $users = $this->paginate($query);
 
-        $this->set(compact('users'));
+        $this->set(compact('users', 'userId', 'partnerIds'));
     }
 
     public function view($id = null)
@@ -164,5 +169,30 @@ class UsersController extends AppController
     {
         $this->Authentication->logout();
         return $this->redirect(['action' => 'login']);
+    }
+
+    private function partnerUserIds(int $userId): array
+    {
+        $parcerias = $this->fetchTable('ImovelParcerias')
+            ->find()
+            ->select(['ImovelParcerias.user_id', 'ImovelParcerias.parceiro_id'])
+            ->where([
+                'ImovelParcerias.deleted IS' => null,
+                'OR' => [
+                    'ImovelParcerias.user_id' => $userId,
+                    'ImovelParcerias.parceiro_id' => $userId,
+                ],
+            ])
+            ->enableHydration(false)
+            ->all();
+
+        $partnerIds = [];
+        foreach ($parcerias as $parceria) {
+            $ownerId = (int)$parceria['user_id'];
+            $partnerId = (int)$parceria['parceiro_id'];
+            $partnerIds[] = $ownerId === $userId ? $partnerId : $ownerId;
+        }
+
+        return array_values(array_unique(array_filter($partnerIds)));
     }
 }
