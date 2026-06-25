@@ -64,25 +64,7 @@ class ImoveisController extends AppController
                 $data['proprietario'] = $proprietario->id;
             }
 
-            // 1) ViaCEP (preenche campos se vierem vazios ou se você quiser sempre sobrescrever)
-            if (!empty($data['cep'])) {
-                $end = EnderecoService::getEnderecoByCep((string)$data['cep']);
-                if ($end) {
-                    // escolha: sobrescrever sempre, ou só se estiver vazio
-                    foreach (['cep','logradouro','bairro','cidade','estado','pais'] as $k) {
-                        if (empty($data[$k]) && isset($end[$k])) {
-                            $data[$k] = $end[$k];
-                        }
-                    }
-                }
-            }
-
-            // 2) Geocode (usa os dados já “completos”)
-            $addressString = EnderecoService::buildAddressString($data);
-            $coord = EnderecoService::getCoordenadas($addressString);
-
-            $data['latitude'] = $coord['latitude'];
-            $data['longitude'] = $coord['longitude'];
+            $data = $this->fillAddressData($data);
 
             $imovei = $this->Imoveis->patchEntity($imovei, $data);
 
@@ -106,21 +88,7 @@ class ImoveisController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
 
-            if (!empty($data['cep'])) {
-                $end = EnderecoService::getEnderecoByCep((string)$data['cep']);
-                if ($end) {
-                    foreach (['cep','logradouro','bairro','cidade','estado','pais'] as $k) {
-                        if (empty($data[$k]) && isset($end[$k])) {
-                            $data[$k] = $end[$k];
-                        }
-                    }
-                }
-            }
-
-            $addressString = EnderecoService::buildAddressString($data);
-            $coord = EnderecoService::getCoordenadas($addressString);
-            $data['latitude'] = $coord['latitude'];
-            $data['longitude'] = $coord['longitude'];
+            $data = $this->fillAddressData($data);
 
             $imovei = $this->Imoveis->patchEntity($imovei, $data);
 
@@ -268,6 +236,28 @@ class ImoveisController extends AppController
     private function getImageUploadPath(): string
     {
         return IMAGE_UPLOAD_PATH;
+    }
+
+    private function fillAddressData(array $data): array
+    {
+        if (!empty($data['cep'])) {
+            $endereco = EnderecoService::getEnderecoByCep((string)$data['cep']);
+            if ($endereco) {
+                $data['cep'] = $endereco['cep'] ?? $data['cep'];
+                $data['rua'] = $endereco['logradouro'] ?? ($data['rua'] ?? null);
+                $data['bairro'] = $endereco['bairro'] ?? ($data['bairro'] ?? null);
+                $data['cidade'] = $endereco['cidade'] ?? ($data['cidade'] ?? null);
+                $data['uf'] = $endereco['estado'] ?? ($data['uf'] ?? null);
+                $data['pais'] = $endereco['pais'] ?? ($data['pais'] ?? 'Brasil');
+            }
+        }
+
+        $addressString = EnderecoService::buildAddressString($data);
+        $coord = EnderecoService::getCoordenadas($addressString);
+        $data['latitude'] = $coord['latitude'];
+        $data['longitude'] = $coord['longitude'];
+
+        return $data;
     }
 
     private function currentUserId(): int

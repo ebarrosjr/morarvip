@@ -5,6 +5,13 @@ $loginUrl = $this->Url->build([
     'action' => 'login',
     '?' => ['redirect' => $currentUrl],
 ]);
+$logoutUrl = $this->Url->build(['controller' => 'Users', 'action' => 'logout']);
+$identity = $this->request->getAttribute('identity');
+$loggedUser = $identity && method_exists($identity, 'getOriginalData') ? $identity->getOriginalData() : $identity;
+$isLoggedIn = !empty($loggedUser);
+$loggedUserName = $isLoggedIn ? (string)($loggedUser->nome ?? $loggedUser->email ?? 'Minha conta') : '';
+$loggedUserPhoto = $isLoggedIn ? (string)($loggedUser->foto ?? '') : '';
+$loggedUserAvatar = $loggedUserPhoto !== '' ? $loggedUserPhoto : $this->Url->build('/img/no-photo.png');
 ?>
 <!doctype html>
 <html class="no-js" lang="pt-BR">
@@ -107,10 +114,22 @@ $loginUrl = $this->Url->build([
                             <div class="ltn__drop-menu user-menu">
                                 <ul>
                                     <li>
-                                        <a href="#"><i class="icon-user"></i></a>
+                                        <a href="#" aria-label="<?= $isLoggedIn ? h($loggedUserName) : 'Entrar' ?>">
+                                            <?php if ($isLoggedIn): ?>
+                                                <img class="morarvip-user-avatar" src="<?= h($loggedUserAvatar) ?>" alt="<?= h($loggedUserName) ?>">
+                                            <?php else: ?>
+                                                <i class="icon-user"></i>
+                                            <?php endif; ?>
+                                        </a>
                                         <ul>
-                                            <li><a class="js-login-modal" href="<?= h($loginUrl) ?>">Entrar</a></li>
-                                            <li><a href="/users/dashboard">Minha Conta</a></li>
+                                            <?php if ($isLoggedIn): ?>
+                                                <li><span class="morarvip-user-menu-name"><?= h($loggedUserName) ?></span></li>
+                                                <li><a href="/users/dashboard">Minha Conta</a></li>
+                                                <li><a href="<?= h($logoutUrl) ?>">Logout</a></li>
+                                            <?php else: ?>
+                                                <li><a class="js-login-modal" href="<?= h($loginUrl) ?>">Entrar</a></li>
+                                                <li><a href="/users/dashboard">Minha Conta</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </li>
                                 </ul>
@@ -177,21 +196,39 @@ $loginUrl = $this->Url->build([
                 <div class="ltn__utilize-buttons ltn__utilize-buttons-2">
                     <ul>
                         <li>
-                            <a class="js-login-modal" href="<?= h($loginUrl) ?>" title="My Account">
-                                <span class="utilize-btn-icon">
-                                    <i class="far fa-user"></i>
-                                </span>
-                                Entrar
-                            </a>
+                            <?php if ($isLoggedIn): ?>
+                                <a href="/users/dashboard" title="<?= h($loggedUserName) ?>">
+                                    <span class="utilize-btn-icon">
+                                        <img class="morarvip-user-avatar" src="<?= h($loggedUserAvatar) ?>" alt="<?= h($loggedUserName) ?>">
+                                    </span>
+                                    <?= h($loggedUserName) ?>
+                                </a>
+                            <?php else: ?>
+                                <a class="js-login-modal" href="<?= h($loginUrl) ?>" title="My Account">
+                                    <span class="utilize-btn-icon">
+                                        <i class="far fa-user"></i>
+                                    </span>
+                                    Entrar
+                                </a>
+                            <?php endif; ?>
                         </li>
                         <li>
-                            <a href="/users/dashboard" title="Wishlist">
-                                <span class="utilize-btn-icon">
-                                    <i class="far fa-building"></i>
-                                    <sup>3</sup>
-                                </span>
-                                Minha conta
-                            </a>
+                            <?php if ($isLoggedIn): ?>
+                                <a href="<?= h($logoutUrl) ?>" title="Logout">
+                                    <span class="utilize-btn-icon">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </span>
+                                    Logout
+                                </a>
+                            <?php else: ?>
+                                <a href="/users/dashboard" title="Wishlist">
+                                    <span class="utilize-btn-icon">
+                                        <i class="far fa-building"></i>
+                                        <sup>3</sup>
+                                    </span>
+                                    Minha conta
+                                </a>
+                            <?php endif; ?>
                         </li>
                     </ul>
                 </div>
@@ -246,7 +283,7 @@ $loginUrl = $this->Url->build([
                             <div class="footer-widget footer-about-widget">
                                 <div class="footer-logo">
                                     <div class="site-logo">
-                                        <img src="/img/logo-full.svg" alt="Logo">
+                                        <img src="/img/logo-full-white.svg" alt="Logo">
                                     </div>
                                 </div>
                                 <p>Lorem Ipsum is simply dummy text of the and typesetting industry. Lorem Ipsum is dummy text of the printing.</p>

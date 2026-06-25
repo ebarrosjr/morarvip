@@ -34,6 +34,35 @@ class UsersController extends AppController
 
     public function dashboard()
     {
+        $identity = $this->request->getAttribute('identity');
+        $loggedUser = $identity && method_exists($identity, 'getOriginalData') ? $identity->getOriginalData() : $identity;
+        $userId = (int)($loggedUser->id ?? 0);
+
+        $userProperties = [];
+        if ($userId > 0) {
+            $userProperties = $this->fetchTable('Imoveis')
+                ->find()
+                ->contain([
+                    'TipoImoveis',
+                    'FotoImoveis' => function ($q) {
+                        return $q->orderBy([
+                            'FotoImoveis.principal' => 'DESC',
+                            'FotoImoveis.id' => 'ASC',
+                        ]);
+                    },
+                ])
+                ->where([
+                    'OR' => [
+                        'Imoveis.user_id' => $userId,
+                        'Imoveis.proprietario' => $userId,
+                    ],
+                ])
+                ->orderBy(['Imoveis.created' => 'DESC'])
+                ->all()
+                ->toList();
+        }
+
+        $this->set(compact('userProperties'));
     }
 
     public function login()
@@ -414,7 +443,7 @@ class UsersController extends AppController
                 'redirectUri' => $config['redirect_uri'],
                 'urlAuthorize' => 'https://www.facebook.com/v19.0/dialog/oauth',
                 'urlAccessToken' => 'https://graph.facebook.com/v19.0/oauth/access_token',
-                'urlResourceOwnerDetails' => 'https://graph.facebook.com/me?fields=id,name,email',
+                'urlResourceOwnerDetails' => 'https://graph.facebook.com/me?fields=id,name,email,picture.type(large)',
             ]);
         }
 
@@ -433,6 +462,7 @@ class UsersController extends AppController
         $socialId = (string)($ownerData['id'] ?? $ownerData['sub'] ?? '');
         $email = trim((string)($ownerData['email'] ?? ''));
         $name = trim((string)($ownerData['name'] ?? $ownerData['given_name'] ?? ''));
+        $photo = $this->extractSocialPhoto($ownerData);
         $emailVerified = (bool)($ownerData['email_verified'] ?? true);
 
         if ($socialId === '' || $email === '') {
@@ -459,17 +489,38 @@ class UsersController extends AppController
             'origem' => 'S',
         ];
 
+        if ($photo !== '') {
+            $data['foto'] = $photo;
+        }
+
         if ($pessoa) {
             $pessoa = $pessoas->patchEntity($pessoa, $data, [
-                'fields' => ['nome', 'email', $socialField, 'email_verified', 'origem'],
+                'fields' => ['nome', 'email', $socialField, 'email_verified', 'origem', 'foto'],
             ]);
         } else {
             $pessoa = $pessoas->newEntity($data, [
-                'fields' => ['nome', 'email', $socialField, 'email_verified', 'origem'],
+                'fields' => ['nome', 'email', $socialField, 'email_verified', 'origem', 'foto'],
             ]);
         }
 
         return $pessoas->save($pessoa) ?: null;
+    }
+
+    private function extractSocialPhoto(array $ownerData): string
+    {
+        if (!empty($ownerData['picture']) && is_string($ownerData['picture'])) {
+            return $ownerData['picture'];
+        }
+
+        if (!empty($ownerData['avatar_url']) && is_string($ownerData['avatar_url'])) {
+            return $ownerData['avatar_url'];
+        }
+
+        if (!empty($ownerData['picture']['data']['url']) && is_string($ownerData['picture']['data']['url'])) {
+            return $ownerData['picture']['data']['url'];
+        }
+
+        return '';
     }
 
     private function sendPasswordResetEmail($pessoa, string $resetUrl): void

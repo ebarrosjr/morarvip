@@ -66,6 +66,29 @@
     color: var(--ltn__secondary-color);
 }
 
+.morarvip-user-avatar {
+    border: 2px solid var(--ltn__secondary-color);
+    border-radius: 50%;
+    display: inline-block;
+    height: 44px;
+    object-fit: cover;
+    width: 44px;
+}
+
+.ltn__utilize-buttons .morarvip-user-avatar {
+    border-width: 1px;
+    height: 36px;
+    width: 36px;
+}
+
+.morarvip-user-menu-name {
+    color: var(--ltn__heading-color);
+    display: block;
+    font-weight: 700;
+    padding: 8px 16px;
+    white-space: nowrap;
+}
+
 @media (max-width: 575px) {
     .morarvip-header-search-form {
         padding-left: 14px;

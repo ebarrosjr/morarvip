@@ -35,8 +35,8 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center justify-content-between">
                     <div>
-                        <h5 class="mb-3 fw-semibold">23.86%</h5>
-                        <span class="badge bg-success-transparent"><i class="ti ti-trending-up me-1 align-middle d-inline-block"></i>4.3%</span><span class="text-muted ms-1 d-inline-block fs-12"> From Last Month</span>
+                        <h5 class="mb-3 fw-semibold"><?= $this->Number->format($imoveisCadastrados ?? 0) ?></h5>
+                        <span class="text-muted d-inline-block fs-12">No seu escopo</span>
                     </div>
                 </div>
             </div>
@@ -57,8 +57,8 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center justify-content-between">
                     <div>
-                        <h5 class="mb-3 fw-semibold">3,245</h5>
-                        <span class="badge bg-success-transparent"><i class="ti ti-trending-up me-1 align-middle d-inline-block"></i>4.3%</span><span class="text-muted ms-1 d-inline-block fs-12"> From Last Month</span>
+                        <h5 class="mb-3 fw-semibold"><?= $this->Number->format($pessoasCadastradas ?? 0) ?></h5>
+                        <span class="text-muted d-inline-block fs-12">Proprietários dos seus imóveis</span>
                     </div>
                 </div>
             </div>
@@ -79,8 +79,8 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center justify-content-between">
                     <div>
-                        <h5 class="mb-3 fw-semibold">3,654</h5>
-                        <span class="badge bg-danger-transparent"><i class="ti ti-trending-down me-1 align-middle d-inline-block"></i>4.3%</span><span class="text-muted ms-1 d-inline-block fs-12"> From Last Month</span>
+                        <h5 class="mb-3 fw-semibold"><?= $this->Number->format($visitasAgendadasMes ?? 0) ?></h5>
+                        <span class="text-muted d-inline-block fs-12">Atendimentos com interesse no mês</span>
                     </div>
                 </div>
             </div>
@@ -101,8 +101,8 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center justify-content-between">
                     <div>
-                        <h5 class="mb-3 fw-semibold">3,654</h5>
-                        <span class="badge bg-danger-transparent"><i class="ti ti-trending-down me-1 align-middle d-inline-block"></i>4.3%</span><span class="text-muted ms-1 d-inline-block fs-12"> From Last Month</span>
+                        <h5 class="mb-3 fw-semibold"><?= $this->Number->format($atendimentosPendentes ?? 0) ?></h5>
+                        <span class="text-muted d-inline-block fs-12">Sem conversão concluída</span>
                     </div>
                 </div>
             </div>
@@ -138,21 +138,20 @@
             </div> 
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush active-customers-list">
-                    <li class="list-group-item">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="lh-1">
-                                    <span class="avatar avatar-xs avatar-rounded">
-                                        <img src="https://php.spruko.com/meno/meno/assets/images/flags/us_flag.jpg" alt="">
-                                    </span>
+                    <?php if (!empty($imoveisPorBairro)): ?>
+                        <?php foreach ($imoveisPorBairro as $bairro): ?>
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                    <div class="fw-medium"><?= h($bairro['bairro']) ?></div>
+                                    <div><span class="fw-medium">(<?= $this->Number->format($bairro['total']) ?>)</span></div>
                                 </div>
-                                <div class="fw-medium">United States</div>
-                            </div>
-                            <div>
-                                <span class="fw-medium">(32,879)</span><span class="text-success fs-12 ms-1"><i class="ti ti-trending-up me-1 align-middle d-inline-flex"></i>0.65%</span>
-                            </div>
-                        </div>
-                    </li>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li class="list-group-item text-muted">
+                            Não há dados de bairro cadastrados para os imóveis.
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

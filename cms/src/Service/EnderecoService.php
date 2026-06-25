@@ -124,11 +124,11 @@ class EnderecoService
     public static function buildAddressString(array $data): string
     {
         $parts = array_filter([
-            $data['logradouro'] ?? null,
+            $data['rua'] ?? $data['logradouro'] ?? null,
             $data['numero'] ?? null,
             $data['bairro'] ?? null,
             $data['cidade'] ?? null,
-            $data['estado'] ?? null,
+            $data['uf'] ?? $data['estado'] ?? null,
             $data['cep'] ?? null,
             $data['pais'] ?? 'Brasil',
         ], fn($v) => $v !== null && trim((string)$v) !== '');
