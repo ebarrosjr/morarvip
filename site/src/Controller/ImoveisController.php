@@ -191,8 +191,8 @@ class ImoveisController extends AppController
 
     private function loadFormLists(): void
     {
-        $categorias = $this->Imoveis->Categorias->find('list', ['limit' => 200])->all();
-        $tipos = $this->Imoveis->TipoImoveis->find('list', ['limit' => 200])->all();
+        $categorias = $this->Imoveis->Categorias->find('list')->limit(200)->all();
+        $tipos = $this->Imoveis->TipoImoveis->find('list')->limit(200)->all();
         $this->set(compact('categorias', 'tipos'));
     }
 
