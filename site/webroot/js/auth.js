@@ -12,6 +12,28 @@
         return null;
     };
 
+    const applyModalSize = function () {
+        const dialog = modalElement.querySelector('.modal-dialog');
+        if (!dialog) {
+            return;
+        }
+
+        const sizedContent = modalBody.querySelector('[data-modal-size]');
+        const size = sizedContent ? sizedContent.dataset.modalSize : '';
+
+        dialog.classList.remove('modal-md', 'modal-lg', 'modal-xl', 'property-submit-modal-dialog');
+        if (size === 'xl') {
+            dialog.classList.add('modal-xl', 'property-submit-modal-dialog');
+        } else if (size === 'lg') {
+            dialog.classList.add('modal-lg');
+        }
+
+        const modal = getModal();
+        if (modal && typeof modal.handleUpdate === 'function') {
+            modal.handleUpdate();
+        }
+    };
+
     const showModalMessage = function (form, message, type) {
         const messageBox = form.closest('.login-modal-content')?.querySelector('.auth-modal-message');
         if (!messageBox) {
@@ -50,6 +72,7 @@
         }
 
         modalBody.innerHTML = await response.text();
+        applyModalSize();
         bindAuthModalContent();
     };
 
@@ -90,6 +113,7 @@
     };
 
     const bindAuthModalContent = function () {
+        applyModalSize();
         modalBody.querySelectorAll('.js-auth-form').forEach(bindAuthForm);
         modalBody.querySelectorAll('.js-auth-modal').forEach(bindAuthLink);
     };

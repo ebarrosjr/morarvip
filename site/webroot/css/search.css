@@ -56,6 +56,21 @@
     z-index: 100050;
 }
 
+.property-submit-modal-dialog {
+    max-width: min(1180px, calc(100vw - 32px)) !important;
+    width: min(1180px, calc(100vw - 32px));
+}
+
+.property-submit-modal-content {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.property-submit-modal-content .form-control,
+.property-submit-modal-content select {
+    width: 100%;
+}
+
 .auth-modal-links a {
     color: var(--ltn__primary-color);
     font-weight: 700;

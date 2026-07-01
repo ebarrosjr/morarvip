@@ -35,7 +35,7 @@ $negocio = match ($imovel->negocio) {
     'L' => 'Lançamento',
     default => 'Venda',
 };
-$localizacao = $imovel->chamada ?: trim(($imovel->cep ? 'CEP ' . $imovel->cep : '') . ($imovel->numero ? ', ' . $imovel->numero : ''));
+$localizacao = $imovel->bairro . ' - ' . ($imovel->cidade ?? '') . ' - ' . ($imovel->uf ?? '');
 ?>
 <div class="col-lg-12">
     <div class="property-detail-page">
@@ -60,41 +60,30 @@ $localizacao = $imovel->chamada ?: trim(($imovel->cep ? 'CEP ' . $imovel->cep : 
                         </button>
                     <?php endif; ?>
                 </div>
-
-                <div class="row property-detail-main">
-                    <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-12">
                         <section class="property-detail-section">
-                            <h2>Resumo</h2>
-                            <dl class="property-summary-list">
-                                <dt>Localização</dt>
-                                <dd><?= h($localizacao ?: 'Consulte') ?></dd>
-                                <dt>Preço</dt>
-                                <dd><span class="property-detail-price"><?= h($preco) ?></span></dd>
-                                <dt>Tipo</dt>
-                                <dd><?= h($tipoNome) ?></dd>
-                                <dt>Status</dt>
-                                <dd><?= h($status) ?></dd>
-                                <dt>Negócio</dt>
-                                <dd><?= h($negocio) ?></dd>
-                                <dt>Área</dt>
-                                <dd><?= (int)$imovel->tamanho ?> m²</dd>
-                                <dt>Quartos</dt>
-                                <dd><?= (int)$imovel->quartos ?></dd>
-                                <dt>Banheiros</dt>
-                                <dd><?= (int)$imovel->banheiros ?></dd>
-                                <dt>Vagas</dt>
-                                <dd><?= (int)$imovel->vaga_garagem ?></dd>
-                            </dl>
-                        </section>
-                    </div>
-                    <div class="col-lg-8">
-                        <section class="property-detail-section">
-                            <h1><?= h($imovel->titulo ?: $tipoNome) ?></h1>
+                            <h1><?= h($imovel->titulo ?: $tipoNome) ?>
+                            <small><?= h($negocio) ?></small>
+                            </h1>
                             <p class="property-detail-location"><i class="flaticon-pin"></i> <?= h($localizacao ?: 'Localização sob consulta') ?></p>
+                            <div class="property-description">
+                                <i class="flaticon-quote"></i> <?= nl2br(h($imovel->chamada)) ?>
+                            </div>
                             <div class="property-description">
                                 <?= nl2br(h($imovel->descricao ?: 'Descrição em breve. Entre em contato com o corretor para mais informações sobre este imóvel.')) ?>
                             </div>
                         </section>
+                    </div>
+                </div>
+                <div class="row property-detail-main">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-3 align-items-center property-detail-features">
+                            <div><i class="flaticon-measure"></i> <?= (int)$imovel->tamanho ?> m²</div>
+                            <div><i class="flaticon-bed"></i> <?= (int)$imovel->quartos ?></div>
+                            <div><i class="flaticon-bathtub"></i> <?= (int)$imovel->banheiros ?></div>
+                            <div><i class="flaticon-car"></i> <?= (int)$imovel->vaga_garagem ?></div>
+                        </div>
                     </div>
                 </div>
 

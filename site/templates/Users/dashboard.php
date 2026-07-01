@@ -185,11 +185,22 @@ $userProperties = $userProperties ?? [];
                                             <td><?= $publicado ? 'Publicado' : 'Não publicado' ?></td>
                                             <td><?= $imovel->created ? h($imovel->created->i18nFormat('dd/MM/yyyy')) : '-' ?></td>
                                             <td>
-                                                <?php if ($publicado): ?>
-                                                    <a href="<?= h($detailUrl) ?>">Ver detalhes</a>
-                                                <?php else: ?>
-                                                    <span>-</span>
-                                                <?php endif; ?>
+                                                <a class="me-2" href="<?= $this->Url->build(['controller' => 'Imoveis', 'action' => 'view', $imovel->id]) ?>" title="Visualizar">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a class="me-2 js-auth-modal" href="<?= $this->Url->build(['controller' => 'Imoveis', 'action' => 'edit', $imovel->id]) ?>" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <?= $this->Form->postLink(
+                                                    '<i class="fas fa-trash"></i>',
+                                                    ['controller' => 'Imoveis', 'action' => 'delete', $imovel->id],
+                                                    [
+                                                        'class' => 'text-danger',
+                                                        'escape' => false,
+                                                        'title' => 'Remover',
+                                                        'confirm' => 'Remover este imóvel? Esta ação não poderá ser desfeita.',
+                                                    ]
+                                                ) ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
