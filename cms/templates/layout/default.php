@@ -252,7 +252,7 @@
 								<ul class="slide-menu child1">
 									<li class="slide side-menu__label1"><a href="javascript:void(0)">Estoque</a></li>
 									<li class="slide<?= $this->AdminMenu->activeClass('Imoveis', 'index') ?>"><a href="/imoveis" class="side-menu__item<?= $this->AdminMenu->activeClass('Imoveis', ['index', 'add', 'edit', 'view']) ?>">Cadastro de Imóveis</a></li>
-									<li class="slide<?= $this->AdminMenu->activeClass('Interesses', 'index') ?>"><a href="/interesses" class="side-menu__item<?= $this->AdminMenu->activeClass('Interesses', ['index', 'view']) ?>">Interesses</a></li>
+									<li class="slide<?= $this->AdminMenu->activeClass('Atendimentos', 'interesses') ?>"><a href="/interesses" class="side-menu__item<?= $this->AdminMenu->activeClass('Atendimentos', 'interesses') ?>">Interesses</a></li>
 								</ul>
 							</li>
 							<li class="slide<?= $this->AdminMenu->activeClass('Atendimentos') ?>">

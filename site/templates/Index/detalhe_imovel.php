@@ -18,23 +18,35 @@ if (!$fotos) {
 
 $tipoNome = $imovel->tipo_imovei->nome ?? 'Imóvel';
 $corretor = $imovel->user;
-$corretorAvatar = !empty($corretor?->logo) ? IMAGE_BASE_URL . '/' . $corretor->logo : $this->Url->build('/img/no-photo.png');
-$corretorSlug = $corretor?->nome ? strtolower(Text::slug($corretor->nome)) : null;
-$corretorUrl = ($corretor?->id && $corretorSlug)
+$corretorAvatar = !empty($corretor->logo) ? IMAGE_BASE_URL . '/' . $corretor->logo : $this->Url->build('/img/no-photo.png');
+$corretorSlug = !empty($corretor->nome) ? strtolower(Text::slug($corretor->nome)) : null;
+$corretorUrl = (!empty($corretor->id) && $corretorSlug)
     ? $this->Url->build(['controller' => 'Index', 'action' => 'corretor', 'id' => (int)$corretor->id, 'name' => $corretorSlug])
     : '#';
 $preco = $imovel->show_preco_site ? 'R$ ' . number_format((float)$imovel->valor, 2, ',', '.') : 'Consulte o valor';
-$status = match ($imovel->situacao) {
-    'V' => 'Vendido',
-    'A' => 'Alugado',
-    'S' => 'Suspenso',
-    default => 'Disponível',
-};
-$negocio = match ($imovel->negocio) {
-    'A' => 'Aluguel',
-    'L' => 'Lançamento',
-    default => 'Venda',
-};
+switch ($imovel->situacao) {
+    case 'V':
+        $status = 'Vendido';
+        break;
+    case 'A':
+        $status = 'Alugado';
+        break;
+    case 'S':
+        $status = 'Suspenso';
+        break;
+    default:
+        $status = 'Disponível';
+}
+switch ($imovel->negocio) {
+    case 'A':
+        $negocio = 'Aluguel';
+        break;
+    case 'L':
+        $negocio = 'Lançamento';
+        break;
+    default:
+        $negocio = 'Venda';
+}
 $localizacao = $imovel->bairro . ' - ' . ($imovel->cidade ?? '') . ' - ' . ($imovel->uf ?? '');
 ?>
 <div class="col-lg-12">
@@ -111,15 +123,20 @@ $localizacao = $imovel->bairro . ' - ' . ($imovel->cidade ?? '') . ' - ' . ($imo
                             </div>
                         </div>
                         <div class="col-lg-5">
-                            <form class="property-contact-form" method="post" action="#">
-                                <label>Seu nome*</label>
-                                <input type="text" name="nome">
-                                <label>Seu e-mail*</label>
-                                <input type="email" name="email">
+                            <?= $this->Form->create(null, [
+                                'class' => 'property-contact-form',
+                                'url' => ['controller' => 'Atendimentos', 'action' => 'interesse'],
+                            ]) ?>
+                            <?= $this->Flash->render('property_contact') ?>
+                            <?= $this->Form->hidden('imovel_id', ['value' => $imovel->id]) ?>
+                            <label>Seu nome*</label>
+                            <input type="text" name="nome">
+                            <label>Seu e-mail*</label>
+                            <input type="email" name="email">
                                 <label>Sua mensagem*</label>
                                 <textarea name="mensagem" rows="4"></textarea>
                                 <button type="submit">Enviar mensagem</button>
-                            </form>
+                            <?= $this->Form->end() ?>
                         </div>
                     </div>
                 </section>

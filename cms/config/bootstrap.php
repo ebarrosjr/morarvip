@@ -108,9 +108,12 @@ $imageUploadBaseUrl = rtrim((string)env(
     'IMAGE_UPLOAD_BASE_URL',
     $imageUploadDefaultBaseUrl
 ), '/');
+$imageUploadDefaultRoot = $isLocalImageHost
+    ? DS . 'mnt' . DS . '08B84889B84876EA' . DS . 'wwwroot' . DS . 'projetos' . DS . 'shared' . DS . 'uploads'
+    : dirname(ROOT, 2) . DS . 'shared' . DS . 'uploads';
 $imageUploadRoot = rtrim((string)env(
     'IMAGE_UPLOAD_ROOT',
-    DS . 'mnt' . DS . '08B84889B84876EA' . DS . 'wwwroot' . DS . 'projetos' . DS . 'shared' . DS . 'uploads'
+    $imageUploadDefaultRoot
 ), DS);
 
 defined('IMAGE_BASE_URL') || define(

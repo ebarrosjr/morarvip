@@ -8,18 +8,24 @@ class PessoasController extends AppController
 
     public function index()
     {
-        $xPessoas = $this->ownedPropertyOwnersQuery();
+        $xPessoas = $this->Pessoas
+            ->find()
+            ->where(['Pessoas.id' => 0]);
         $pessoas = $this->paginate($xPessoas);
+        $pageTitle = 'Compradores/Locatários';
+        $breadcrumbTitle = 'Clientes';
 
-        $this->set(compact('pessoas'));
+        $this->set(compact('pessoas', 'pageTitle', 'breadcrumbTitle'));
     }
 
     public function proprietarios()
     {
         $xPessoas = $this->ownedPropertyOwnersQuery();
         $pessoas = $this->paginate($xPessoas);
+        $pageTitle = 'Proprietários/Locadores';
+        $breadcrumbTitle = 'Proprietários';
 
-        $this->set(compact('pessoas'));
+        $this->set(compact('pessoas', 'pageTitle', 'breadcrumbTitle'));
         $this->render('index');
     }
 

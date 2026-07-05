@@ -19,6 +19,32 @@ class AtendimentosController extends AppController
         $this->set(compact('pessoas'));
     }
 
+    public function interesses()
+    {
+        $userId = (int)$this->Authentication->getIdentity()->getIdentifier();
+        $imoveisDoCorretor = $this->fetchTable('Imoveis')
+            ->find()
+            ->select(['Imoveis.id'])
+            ->where(['Imoveis.user_id' => $userId]);
+
+        $query = $this->Atendimentos
+            ->find()
+            ->where([
+                'Atendimentos.interesse' => 1,
+                'Atendimentos.imovel_id IN' => $imoveisDoCorretor,
+            ])
+            ->contain(['Pessoas', 'Imoveis'])
+            ->orderBy(['Atendimentos.created' => 'DESC']);
+
+        $atendimentos = $this->paginate($query);
+        $pageTitle = 'Interesses recebidos';
+        $breadcrumbTitle = 'Interesses';
+        $showNextButton = false;
+
+        $this->set(compact('atendimentos', 'pageTitle', 'breadcrumbTitle', 'showNextButton'));
+        $this->render('index');
+    }
+
     public function atender($id = null)
     {
         $tblPessoas = $this->fetchTable('Pessoas');
