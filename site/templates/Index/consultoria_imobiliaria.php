@@ -11,4 +11,7 @@
         <li><strong>Suporte Jurídico de Elite:</strong> Resolvemos os "nós" jurídicos que impedem a venda. Atuamos em casos de usucapião, cessão de direitos, adjudicações, compra em leilão, imissão na posse e despejos, viabilizando transações que pareciam impossíveis.</li>
         <li><strong>Análise de Risco de Imóveis:</strong> Ofereça aos seus clientes uma auditoria completa antes da compra. Isso eleva o seu nível de profissionalismo, gera confiança imediata e protege você e seu cliente de surpresas judiciais.</li>
     </ul>
+    <div class="text-center pt-4">
+        <a class="property-details-btn" href="#">Saiba Mais</a>
+    </div>    
 </div>

@@ -14464,6 +14464,22 @@ input.cart-plus-minus-box {
   .reverse-color:hover {
     background-color: var(--ltn__primary-color); }
 
+.property-details-btn {
+    background: white;
+    border-radius: 30px;
+    border: 1px solid var(--ltn__secondary-color);
+    color: var(--ltn__secondary-color);
+    display: inline-block;
+    font-weight: 800;
+    padding: 14px 24px;
+    white-space: nowrap;
+}
+
+.property-details-btn:hover {
+    background: var(--ltn__secondary-color);
+    color: var(--white);
+}
+
 .btn-white {
   background-color: var(--white);
   color: var(--ltn__primary-color);

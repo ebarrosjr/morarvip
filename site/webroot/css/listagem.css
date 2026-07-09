@@ -248,22 +248,6 @@
     margin-top: 4px;
 }
 
-.property-details-btn {
-    background: white;
-    border-radius: 30px;
-    border: 1px solid var(--ltn__secondary-color);
-    color: var(--ltn__secondary-color);
-    display: inline-block;
-    font-weight: 800;
-    padding: 14px 24px;
-    white-space: nowrap;
-}
-
-.property-details-btn:hover {
-    background: var(--ltn__secondary-color);
-    color: var(--white);
-}
-
 .property-filter-card {
     border: 1px solid var(--border-color-7);
     border-radius: 10px;
