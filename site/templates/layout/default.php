@@ -100,12 +100,8 @@ $announceUrl = $isLoggedIn
                                             <li>
                                                 <a href="/">Home</a>
                                             </li>
-                                            <li class="menu-icon"><a href="#">Serviços</a>
-                                                <ul>
-                                                    <li><a href="#">Corretores</a></li>
-                                                    <li><a href="#">Financiamento imobiliário</a></li>
-                                                    <li><a href="#">Consultoria imobiliária</a></li>
-                                                </ul>
+                                            <li>
+                                                <a href="<?= $this->Url->build('/consultoria-imobiliaria') ?>">Consultoria imobiliária</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -187,13 +183,7 @@ $announceUrl = $isLoggedIn
                 <div class="ltn__utilize-menu">
                     <ul>
                         <li><a href="#">Home</a></li>
-                        <li><a href="#">Serviços</a>
-                            <ul class="sub-menu">
-                                <li><a href="#">Corretores</a></li>
-                                <li><a href="#">Financiamento imobiliário</a></li>
-                                <li><a href="#">Consultoria imobiliária</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="<?= $this->Url->build('/consultoria-imobiliaria') ?>">Consultoria imobiliária</a></li>
                     </ul>
                 </div>
                 <div class="ltn__utilize-buttons ltn__utilize-buttons-2">
@@ -290,8 +280,8 @@ $announceUrl = $isLoggedIn
                         <div class="col-md-6 col-12 align-self-center">
                             <div class="ltn__copyright-menu text-end">
                                 <ul>
-                                    <li><a href="#">Termos de uso</a></li>
-                                    <li><a href="#">Política de privacidade</a></li>
+                                    <li><a href="/termos-de-uso">Termos de uso</a></li>
+                                    <li><a href="/politica-de-privacidade">Política de privacidade</a></li>
                                 </ul>
                             </div>
                         </div>

@@ -329,4 +329,16 @@ class IndexController extends AppController
 
         return is_numeric($value) ? (float)$value : null;
     }
+
+    public function consultoriaImobiliaria()
+    {
+    }
+
+    public function termosDeUso()
+    {
+    }
+
+    public function politicaDePrivacidade()
+    {
+    }
 }
