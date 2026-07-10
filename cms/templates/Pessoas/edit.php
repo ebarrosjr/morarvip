@@ -1,6 +1,6 @@
 <div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
     <div>
-        <h1 class="page-title fw-medium fs-18 mb-2">Adicionar Pessoa</h1>
+        <h1 class="page-title fw-medium fs-18 mb-2">Editar dados de <?= h($pessoa->nome) ?></h1>
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item">
                 <a href="/">
@@ -12,7 +12,7 @@
                     Pessoas
                 </a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Adicionar</li>
+            <li class="breadcrumb-item active" aria-current="page">Edição</li>
         </ol>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
