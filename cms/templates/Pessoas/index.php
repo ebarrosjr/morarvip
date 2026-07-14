@@ -63,8 +63,8 @@
                                     'data-ajax-modal' => true,
                                     'escape' => false
                                 ]) ?>
-                                <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'view', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
-                                <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'edit', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
+                                <a aria-label="Visualizar" href="<?= $this->Url->build(['action' => 'view', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visualizar" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
+                                <a aria-label="Editar" href="<?= $this->Url->build(['action' => 'edit', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
                                 <a aria-label="anchor" href="<?= $this->Url->build([])?>" ></a>
                                 <?= $this->Form->postLink(
                                     '<i class="ti ti-trash"></i>',
@@ -72,7 +72,7 @@
                                     [
                                         "data-bs-toggle" => "tooltip",
                                         "data-bs-placement" => "top", 
-                                        "data-bs-title" => "Delete",
+                                        "data-bs-title" => "Excluir",
                                         "class" => "btn btn-sm btn-icon btn-danger-light",
                                         "method" => 'delete',
                                         "confirm" => __('Excluir o imóvel # {0} não terá volta, deseja continuar?', $pessoa->id),
@@ -87,13 +87,4 @@
         </table>
     </div>
 </div>
-<div class="paginator">
-    <ul class="pagination">
-        <?= $this->Paginator->first('<< ' . __('first')) ?>
-        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-        <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->next(__('next') . ' >') ?>
-        <?= $this->Paginator->last(__('last') . ' >>') ?>
-    </ul>
-    <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-</div>
+<?= $this->element('pagination') ?>

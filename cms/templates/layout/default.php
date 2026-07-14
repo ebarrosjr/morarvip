@@ -94,14 +94,12 @@
 
 						<!-- Start::header-element -->
 						<li class="header-element notifications-dropdown d-xl-block d-none dropdown">
-							<!-- Start::header-link|dropdown-toggle -->
+							<!-- Start::header-link|dropdown-toggle 
 							<a href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" id="messageDropdown" aria-expanded="false">
 								<svg xmlns="http://www.w3.org/2000/svg" class="header-link-icon" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="currentColor"><path d="M2.53 14.77c-.213 1.394.738 2.361 1.902 2.843c4.463 1.85 10.673 1.85 15.136 0c1.164-.482 2.115-1.45 1.902-2.843c-.13-.857-.777-1.57-1.256-2.267c-.627-.924-.689-1.931-.69-3.003C19.525 5.358 16.157 2 12 2S4.475 5.358 4.475 9.5c0 1.072-.062 2.08-.69 3.003c-.478.697-1.124 1.41-1.255 2.267"/><path d="M8 19c.458 1.725 2.076 3 4 3c1.925 0 3.541-1.275 4-3"/></g></svg>
 								<span class="header-icon-pulse bg-pink rounded pulse pulse-pink"></span>
 							</a>
-							<!-- End::header-link|dropdown-toggle -->
-							<!-- Start::main-header-dropdown -->
-							<div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
+ 							<div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
 								<div class="p-3">
 									<div class="d-flex align-items-center justify-content-between">
 										<p class="mb-0 fs-16">Notifications</p>
@@ -144,7 +142,7 @@
 									</div>
 								</div>
 							</div>
-							<!-- End::main-header-dropdown -->
+							End::main-header-dropdown -->
 						</li>
 						<!-- End::header-element -->
 
@@ -169,9 +167,6 @@
 										</div>
 									</div>
 								</li>
-								<li><a class="dropdown-item d-flex align-items-center" href="profile.php.html"><i class="ri-user-line fs-15 me-2 text-gray fw-normal"></i>Perfil</a></li>
-								<li><a class="dropdown-item d-flex align-items-center" href="mail.php.html"><i class="ri-chat-1-line fs-15 me-2 text-gray fw-normal"></i>Mensagens <span class="badge bg-pink ms-auto">02</span></a></li>
-								<li><a class="dropdown-item d-flex align-items-center" href="mail-settings.php.html"><i class="ri-trophy-line fs-15 me-2 text-gray fw-normal"></i>Meu plano</a></li>
 								<li> <hr class="dropdown-divider"> </li>
 								<li><a class="dropdown-item d-flex align-items-center text-danger" href="/users/logout"><i class="ri-logout-circle-line fs-15 me-2 text-danger fw-normal"></i>Sair</a></li>
 							</ul>

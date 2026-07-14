@@ -29,7 +29,6 @@
                         <th scope="col">GeoPreferência</th>
                         <th scope="col">Status</th>
                         <th scope="col">Data</th>
-                        <th scope="col" class="actions">Ações</th>
                     </tr>
                 </thead>                
                 <tbody>
@@ -66,13 +65,6 @@
                         <td>
                             <span><?= $user->created->format('d/m/Y') ?></span>
                         </td>
-                        <td class="actions">
-                            <div class="btn-list">
-                                <a aria-label="anchor" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
-                                <a aria-label="anchor" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
-                                <a aria-label="anchor" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete" class="btn btn-sm btn-icon  btn-danger-light"><i class="ti ti-trash"></i></a>
-                            </div>
-                        </td>
                     </tr>
                     <?php
                     }
@@ -82,3 +74,4 @@
         </div>
     </div>
 </div>
+<?= $this->element('pagination') ?>

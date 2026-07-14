@@ -60,10 +60,10 @@ if (isset($atendimentos)) {
                 <table class="table table-responsive table-striped table-condensed">
                     <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('id') ?></th>
-                            <th><?= $this->Paginator->sort('nome') ?></th>
-                            <th><?= $this->Paginator->sort('nascimento') ?></th>
-                            <th><?= $this->Paginator->sort('sexo') ?></th>
+                            <th><?= $this->Paginator->sort('id', 'Código') ?></th>
+                            <th><?= $this->Paginator->sort('nome', 'Nome') ?></th>
+                            <th><?= $this->Paginator->sort('nascimento', 'Idade') ?></th>
+                            <th><?= $this->Paginator->sort('sexo', 'Sexo') ?></th>
                             <th>Localidade</th>
                             <th>Contato</th>
                             <th>Imóvel</th>
@@ -98,7 +98,7 @@ if (isset($atendimentos)) {
                             <td><?=$conversao[$atendimento->conversao] ?? '-';?></td>
                             <td class="actions">
                                 <div class="btn-list">
-                                    <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'view', $atendimento->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
+                                    <a aria-label="Visualizar" href="<?= $this->Url->build(['action' => 'view', $atendimento->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visualizar" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
                                 </div>                    
                             </td>                            
                         </tr>
@@ -108,14 +108,7 @@ if (isset($atendimentos)) {
             </div>
         </div>
     </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+    <div class="col-12">
+        <?= $this->element('pagination') ?>
     </div>
 </div>

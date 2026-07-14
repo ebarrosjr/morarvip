@@ -73,7 +73,7 @@ class PessoasController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The pessoa could not be saved. Please, try again.'));
+            $this->Flash->error("Houve um erro ao salvar a pessoa. Tente novamente. Erro: " . json_encode($pessoa->getErrors()));
         }
         $escolaridades = $this->escolaridades;
         $estadoCivil = $this->estadoCivil;
@@ -91,7 +91,7 @@ class PessoasController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The pessoa could not be saved. Please, try again.'));
+            $this->Flash->error("Houve um erro ao salvar a pessoa. Tente novamente. Erro: " . json_encode($pessoa->getErrors()));
         }
         $escolaridades = $this->escolaridades;
         $estadoCivil = $this->estadoCivil;

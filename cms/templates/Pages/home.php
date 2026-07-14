@@ -1,241 +1,260 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link      https://cakephp.org CakePHP(tm) Project
- * @since     0.10.0
- * @license   https://opensource.org/licenses/mit-license.php MIT License
  * @var \App\View\AppView $this
  */
-use Cake\Cache\Cache;
-use Cake\Core\Configure;
-use Cake\Core\Plugin;
-use Cake\Datasource\ConnectionManager;
-use Cake\Error\Debugger;
-use Cake\Http\Exception\NotFoundException;
-
 $this->disableAutoLayout();
 
-$checkConnection = function (string $name) {
-    $error = null;
-    $connected = false;
-    try {
-        ConnectionManager::get($name)->getDriver()->connect();
-        // No exception means success
-        $connected = true;
-    } catch (Exception $connectionError) {
-        $error = $connectionError->getMessage();
-        if (method_exists($connectionError, 'getAttributes')) {
-            $attributes = $connectionError->getAttributes();
-            if (isset($attributes['message'])) {
-                $error .= '<br />' . $attributes['message'];
-            }
-        }
-        if ($name === 'debug_kit') {
-            $error = 'Try adding your current <b>top level domain</b> to the
-                <a href="https://book.cakephp.org/debugkit/5/en/index.html#configuration" target="_blank">DebugKit.safeTld</a>
-            config and reload.';
-            if (!in_array('sqlite', \PDO::getAvailableDrivers())) {
-                $error .= '<br />You need to install the PHP extension <code>pdo_sqlite</code> so DebugKit can work properly.';
-            }
-        }
-    }
-
-    return compact('connected', 'error');
-};
-
-if (!Configure::read('debug')) :
-    throw new NotFoundException(
-        'Please replace templates/Pages/home.php with your own version or re-enable debug mode.'
-    );
-endif;
-
+$loginUrl = $this->Url->build(['controller' => 'Users', 'action' => 'login']);
+$registerUrl = $this->Url->build(['controller' => 'Users', 'action' => 'add']);
+$demoUrl = 'mailto:contato@morar.vip?subject=' . rawurlencode('Demonstração Morar.VIP CRM');
+$heroImage = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=920&q=80';
+$brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=920&q=80';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br" dir="ltr" data-theme-mode="light">
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        CakePHP: the rapid development PHP framework:
-        <?= $this->fetch('title') ?>
-    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Morar.VIP CRM para corretores autônomos</title>
+    <meta name="description" content="CRM imobiliário para corretores autônomos organizarem imóveis, leads, atendimentos, agenda e publicação em uma plataforma simples.">
+    <meta name="keywords" content="CRM imobiliário, corretores autônomos, gestão de imóveis, leads imobiliários, Morar.VIP">
+    <meta name="author" content="Morar.VIP">
+    <meta name="robots" content="index, follow">
     <?= $this->Html->meta('icon') ?>
-
-    <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake', 'home']) ?>
-
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
+    <?= $this->Html->css(['bootstrap.min', 'styles', 'icons', 'landing']) ?>
 </head>
-<body>
-    <header>
-        <div class="container text-center">
-            <a href="https://cakephp.org/" target="_blank" rel="noopener">
-                <img alt="CakePHP" src="https://cakephp.org/v2/img/logos/CakePHP_Logo.svg" width="350" />
+<body class="landing-page">
+    <header class="landing-header">
+        <nav class="container landing-nav" aria-label="Navegação principal">
+            <a class="landing-logo" href="<?= $this->Url->build('/') ?>" aria-label="Morar.VIP">
+                <?= $this->Html->image('logo-full.svg', ['alt' => 'Morar.VIP']) ?>
             </a>
-            <h1>
-                Welcome to CakePHP <?= h(Configure::version()) ?> Chiffon (🍰)
-            </h1>
-        </div>
+            <div class="landing-menu">
+                <a href="#produto">Produto</a>
+                <a href="#recursos">Recursos</a>
+                <a href="#para-quem">Para quem é</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#planos">Planos</a>
+            </div>
+            <div class="landing-actions">
+                <a class="landing-login" href="<?= h($loginUrl) ?>">Entrar</a>
+                <a class="btn btn-primary btn-wave" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
+            </div>
+        </nav>
     </header>
-    <main class="main">
-        <div class="container">
-            <div class="content">
-                <div class="row">
-                    <div class="column">
-                        <div class="message default text-center">
-                            <small>Please be aware that this page will not be shown if you turn off debug mode unless you replace templates/Pages/home.php with your own version.</small>
+
+    <main>
+        <section class="landing-hero" id="produto">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <span class="landing-eyebrow">CRM imobiliário para corretores autônomos</span>
+                        <h1>Organize seus imóveis. Atenda melhor seus clientes. Venda com mais controle.</h1>
+                        <p class="landing-lead">
+                            O Morar.VIP reúne catálogo de imóveis, leads, atendimentos, agenda e publicação em uma plataforma simples para quem trabalha sozinho e precisa manter tudo sob controle.
+                        </p>
+                        <div class="landing-hero-actions">
+                            <a class="btn btn-primary btn-lg btn-wave" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
+                            <a class="btn btn-outline-primary btn-lg" href="<?= h($loginUrl) ?>">Entrar no CRM</a>
                         </div>
-                        <div id="url-rewriting-warning" style="padding: 1rem; background: #fcebea; color: #cc1f1a; border-color: #ef5753;">
-                            <ul>
-                                <li class="bullet problem">
-                                    URL rewriting is not properly configured on your server.<br />
-                                    1) <a target="_blank" rel="noopener" href="https://book.cakephp.org/5/en/installation.html#url-rewriting">Help me configure it</a><br />
-                                    2) <a target="_blank" rel="noopener" href="https://book.cakephp.org/5/en/development/configuration.html#general-configuration">I don't / can't use URL rewriting</a>
-                                </li>
-                            </ul>
+                        <div class="landing-proof">
+                            <span><i class="ri-check-line"></i> Imóveis e proprietários</span>
+                            <span><i class="ri-check-line"></i> Leads e atendimentos</span>
+                            <span><i class="ri-check-line"></i> Rotina comercial</span>
                         </div>
-                        <?php Debugger::checkSecurityKeys(); ?>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <h4>Environment</h4>
-                        <ul>
-                        <?php if (version_compare(PHP_VERSION, '8.1.0', '>=')) : ?>
-                            <li class="bullet success">Your version of PHP is 8.1.0 or higher (detected <?= PHP_VERSION ?>).</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your version of PHP is too low. You need PHP 8.1.0 or higher to use CakePHP (detected <?= PHP_VERSION ?>).</li>
-                        <?php endif; ?>
-
-                        <?php if (extension_loaded('mbstring')) : ?>
-                            <li class="bullet success">Your version of PHP has the mbstring extension loaded.</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your version of PHP does NOT have the mbstring extension loaded.</li>
-                        <?php endif; ?>
-
-                        <?php if (extension_loaded('openssl')) : ?>
-                            <li class="bullet success">Your version of PHP has the openssl extension loaded.</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your version of PHP does NOT have the openssl extension loaded.</li>
-                        <?php endif; ?>
-
-                        <?php if (extension_loaded('intl')) : ?>
-                            <li class="bullet success">Your version of PHP has the intl extension loaded.</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your version of PHP does NOT have the intl extension loaded.</li>
-                        <?php endif; ?>
-
-                        <?php if (ini_get('zend.assertions') !== '1') : ?>
-                            <li class="bullet problem">You should set <code>zend.assertions</code> to <code>1</code> in your <code>php.ini</code> for your development environment.</li>
-                        <?php endif; ?>
-                        </ul>
-                    </div>
-                    <div class="column">
-                        <h4>Filesystem</h4>
-                        <ul>
-                        <?php if (is_writable(TMP)) : ?>
-                            <li class="bullet success">Your tmp directory is writable.</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your tmp directory is NOT writable.</li>
-                        <?php endif; ?>
-
-                        <?php if (is_writable(LOGS)) : ?>
-                            <li class="bullet success">Your logs directory is writable.</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your logs directory is NOT writable.</li>
-                        <?php endif; ?>
-
-                        <?php $settings = Cache::getConfig('_cake_translations_'); ?>
-                        <?php if (!empty($settings)) : ?>
-                            <li class="bullet success">The <em><?= h($settings['className']) ?></em> is being used for core caching. To change the config edit config/app.php</li>
-                        <?php else : ?>
-                            <li class="bullet problem">Your cache is NOT working. Please check the settings in config/app.php</li>
-                        <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="column">
-                        <h4>Database</h4>
-                        <?php
-                        $result = $checkConnection('default');
-                        ?>
-                        <ul>
-                        <?php if ($result['connected']) : ?>
-                            <li class="bullet success">CakePHP is able to connect to the database.</li>
-                        <?php else : ?>
-                            <li class="bullet problem">CakePHP is NOT able to connect to the database.<br /><?= h($result['error']) ?></li>
-                        <?php endif; ?>
-                        </ul>
-                    </div>
-                    <div class="column">
-                        <h4>DebugKit</h4>
-                        <ul>
-                        <?php if (Plugin::isLoaded('DebugKit')) : ?>
-                            <li class="bullet success">DebugKit is loaded.</li>
-                            <?php
-                            $result = $checkConnection('debug_kit');
-                            ?>
-                            <?php if ($result['connected']) : ?>
-                                <li class="bullet success">DebugKit can connect to the database.</li>
-                            <?php else : ?>
-                                <li class="bullet problem">There are configuration problems present which need to be fixed:<br /><?= $result['error'] ?></li>
-                            <?php endif; ?>
-                        <?php else : ?>
-                            <li class="bullet problem">DebugKit is <strong>not</strong> loaded.</li>
-                        <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="column links">
-                        <h3>Getting Started</h3>
-                        <a target="_blank" rel="noopener" href="https://book.cakephp.org/5/en/">CakePHP Documentation</a>
-                        <a target="_blank" rel="noopener" href="https://book.cakephp.org/5/en/tutorials-and-examples/cms/installation.html">The 20 min CMS Tutorial</a>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="column links">
-                        <h3>Help and Bug Reports</h3>
-                        <a target="_blank" rel="noopener" href="https://slack-invite.cakephp.org/">Slack</a>
-                        <a target="_blank" rel="noopener" href="https://github.com/cakephp/cakephp/issues">CakePHP Issues</a>
-                        <a target="_blank" rel="noopener" href="https://discourse.cakephp.org/">CakePHP Forum</a>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="column links">
-                        <h3>Docs and Downloads</h3>
-                        <a target="_blank" rel="noopener" href="https://api.cakephp.org/">CakePHP API</a>
-                        <a target="_blank" rel="noopener" href="https://bakery.cakephp.org">The Bakery</a>
-                        <a target="_blank" rel="noopener" href="https://book.cakephp.org/5/en/">CakePHP Documentation</a>
-                        <a target="_blank" rel="noopener" href="https://plugins.cakephp.org">CakePHP plugins repo</a>
-                        <a target="_blank" rel="noopener" href="https://github.com/cakephp/">CakePHP Code</a>
-                        <a target="_blank" rel="noopener" href="https://github.com/FriendsOfCake/awesome-cakephp">CakePHP Awesome List</a>
-                        <a target="_blank" rel="noopener" href="https://www.cakephp.org">CakePHP</a>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="column links">
-                        <h3>Training and Certification</h3>
-                        <a target="_blank" rel="noopener" href="https://cakefoundation.org/">Cake Software Foundation</a>
-                        <a target="_blank" rel="noopener" href="https://training.cakephp.org/">CakePHP Training</a>
+                    <div class="col-lg-6">
+                        <div class="landing-preview" aria-label="Prévia do painel Morar.VIP">
+                            <img src="<?= h($heroImage) ?>" alt="Ambiente imobiliário moderno usado como imagem provisória da landing">
+                            <div class="landing-preview-panel">
+                                <div>
+                                    <span>Novos leads</span>
+                                    <strong>Organizados por imóvel</strong>
+                                </div>
+                                <div>
+                                    <span>Visitas</span>
+                                    <strong>Agenda comercial</strong>
+                                </div>
+                                <div>
+                                    <span>Propostas</span>
+                                    <strong>Acompanhamento</strong>
+                                </div>
+                                <div>
+                                    <span>Imóveis</span>
+                                    <strong>Catálogo centralizado</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <section class="landing-section" id="recursos">
+            <div class="container">
+                <div class="landing-section-heading">
+                    <span class="landing-eyebrow">Recursos</span>
+                    <h2>O essencial para conduzir sua carteira sem planilhas soltas.</h2>
+                    <p>Cadastro, publicação, atendimento e acompanhamento comercial ficam no mesmo fluxo.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6 col-xl-3">
+                        <article class="landing-card">
+                            <i class="ri-building-2-line"></i>
+                            <h3>Catálogo de imóveis</h3>
+                            <p>Cadastre imóveis, fotos, dados do proprietário, endereço e características em uma base única.</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="landing-card">
+                            <i class="ri-user-heart-line"></i>
+                            <h3>Leads e interesses</h3>
+                            <p>Receba interessados pelo site e acompanhe cada contato vinculado ao imóvel anunciado.</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="landing-card">
+                            <i class="ri-calendar-check-line"></i>
+                            <h3>Agenda comercial</h3>
+                            <p>Registre retornos, visitas e próximas ações para reduzir perda de oportunidades.</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="landing-card">
+                            <i class="ri-line-chart-line"></i>
+                            <h3>Painel de controle</h3>
+                            <p>Visualize imóveis, proprietários, atendimentos pendentes e evolução da sua operação.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-section landing-split" id="para-quem">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <img loading="lazy" src="<?= h($brokerImage) ?>" alt="Corretor trabalhando em escritório, imagem provisória">
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="landing-eyebrow">Para quem é</span>
+                        <h2>Feito inicialmente para corretores autônomos.</h2>
+                        <p>
+                            A proposta é simplificar a rotina de quem prospecta, cadastra, atende e negocia sem uma grande estrutura operacional por trás.
+                        </p>
+                        <ul class="landing-list">
+                            <li><i class="ri-checkbox-circle-line"></i> Centralizar imóveis próprios e parcerias.</li>
+                            <li><i class="ri-checkbox-circle-line"></i> Saber quais clientes precisam de retorno.</li>
+                            <li><i class="ri-checkbox-circle-line"></i> Publicar imóveis com dados consistentes.</li>
+                            <li><i class="ri-checkbox-circle-line"></i> Separar proprietários, compradores e interessados.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-section" id="como-funciona">
+            <div class="container">
+                <div class="landing-section-heading">
+                    <span class="landing-eyebrow">Como funciona</span>
+                    <h2>Do cadastro ao atendimento, sem perder o contexto.</h2>
+                </div>
+                <div class="landing-flow">
+                    <article>
+                        <span>1</span>
+                        <h3>Cadastre o imóvel</h3>
+                        <p>Inclua dados principais, fotos, proprietário, endereço e condições comerciais.</p>
+                    </article>
+                    <article>
+                        <span>2</span>
+                        <h3>Publique e receba interesse</h3>
+                        <p>O imóvel fica pronto para ser exibido no site e captar interessados qualificados.</p>
+                    </article>
+                    <article>
+                        <span>3</span>
+                        <h3>Acompanhe o atendimento</h3>
+                        <p>Transforme contatos em retornos, visitas, propostas e histórico comercial.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-section landing-dashboard">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-5">
+                        <span class="landing-eyebrow">Dashboard</span>
+                        <h2>Uma visão direta do que exige ação.</h2>
+                        <p>O painel foi pensado para mostrar pendências, imóveis cadastrados, proprietários e regiões com mais atividade, sem exigir relatórios complexos.</p>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="landing-dashboard-card">
+                            <div class="landing-dashboard-bar"></div>
+                            <div class="landing-dashboard-grid">
+                                <div><strong>Imóveis</strong><span>No seu escopo</span></div>
+                                <div><strong>Pessoas</strong><span>Proprietários</span></div>
+                                <div><strong>Visitas</strong><span>Agenda do mês</span></div>
+                                <div><strong>Pendências</strong><span>Atendimentos</span></div>
+                            </div>
+                            <div class="landing-dashboard-table">
+                                <span></span><span></span><span></span>
+                                <span></span><span></span><span></span>
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-section" id="planos">
+            <div class="container">
+                <div class="landing-section-heading">
+                    <span class="landing-eyebrow">Planos</span>
+                    <h2>Comece pelo necessário e evolua a operação.</h2>
+                    <p>Os planos serão ajustados conforme o uso real dos corretores e a evolução do produto.</p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6 col-xl-4">
+                        <article class="landing-plan">
+                            <h3>Autônomo</h3>
+                            <p>Para o corretor organizar carteira, proprietários e interessados.</p>
+                            <a class="btn btn-primary btn-wave" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-4">
+                        <article class="landing-plan landing-plan-featured">
+                            <h3>Profissional</h3>
+                            <p>Para quem precisa acompanhar parcerias, publicação e rotina comercial.</p>
+                            <a class="btn btn-light" href="<?= h($registerUrl) ?>">Criar conta</a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-final">
+            <div class="container">
+                <div class="landing-final-box">
+                    <span class="landing-eyebrow">Morar.VIP CRM</span>
+                    <h2>Leve sua operação imobiliária para um fluxo mais claro.</h2>
+                    <p>Entre no CRM se você já possui acesso ou solicite uma demonstração para entender o encaixe na sua rotina.</p>
+                    <div>
+                        <a class="btn btn-primary btn-lg btn-wave" href="<?= h($loginUrl) ?>">Entrar</a>
+                        <a class="btn btn-outline-primary btn-lg" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <footer class="landing-footer">
+        <div class="container">
+            <span>&copy; <?= date('Y') ?> Morar.VIP. Todos os direitos reservados.</span>
+            <a href="<?= h($loginUrl) ?>">Entrar no CRM</a>
+        </div>
+    </footer>
+    <?= $this->Html->script(['bootstrap.bundle.min']) ?>
 </body>
 </html>

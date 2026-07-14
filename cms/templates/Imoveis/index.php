@@ -16,7 +16,7 @@
     <div class="d-flex align-items-center gap-2 flex-wrap">
         <div class="d-flex gap-2">
             <div class="position-relative">
-                <a href="<?= $this->Url->build(['controller' => 'Imoveis', 'action' => 'add']) ?>" class="btn btn-success btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Adicionar cliente" aria-describedby="tooltip968276" aria-expanded="false">
+                <a href="<?= $this->Url->build(['controller' => 'Imoveis', 'action' => 'add']) ?>" class="btn btn-success btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Adicionar imóvel" aria-describedby="tooltip968276" aria-expanded="false">
                     <i class="ri-user-add-line d-inline"></i> Adicionar imóvel
                 </a>
             </div>
@@ -28,15 +28,15 @@
         <table class="table table-responsive table-striped table-condensed">
             <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('titulo') ?></th>
-                    <th><?= $this->Paginator->sort('tipo_imovel_id') ?></th>
-                    <th><?= $this->Paginator->sort('negocio') ?></th>
-                    <th><?= $this->Paginator->sort('categoria_id') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('situacao') ?></th>
-                    <th><?= $this->Paginator->sort('valor') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
+                    <th><?= $this->Paginator->sort('id', 'Código') ?></th>
+                    <th><?= $this->Paginator->sort('titulo', 'Título') ?></th>
+                    <th><?= $this->Paginator->sort('tipo_imovel_id', 'Tipo') ?></th>
+                    <th><?= $this->Paginator->sort('negocio', 'Negócio') ?></th>
+                    <th><?= $this->Paginator->sort('categoria_id', 'Categoria') ?></th>
+                    <th><?= $this->Paginator->sort('created', 'Cadastro') ?></th>
+                    <th><?= $this->Paginator->sort('situacao', 'Situação') ?></th>
+                    <th><?= $this->Paginator->sort('valor', 'Valor') ?></th>
+                    <th class="actions"><?= __('Ações') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -55,16 +55,16 @@
                 <td>R$ <?= $imovei->valor === null ? '' : number_format($imovei->valor, 2, ',', '.') ?></td>
                 <td class="actions">
                     <div class="btn-list">
-                        <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'view', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
+                        <a aria-label="Visualizar" href="<?= $this->Url->build(['action' => 'view', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visualizar" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
                         <?php if ((int)$imovei->user_id === (int)$userId): ?>
-                            <a aria-label="anchor" href="<?= $this->Url->build(['action' => 'edit', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
+                            <a aria-label="Editar" href="<?= $this->Url->build(['action' => 'edit', $imovei->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
                             <?= $this->Form->postLink(
                                 '<i class="ti ti-trash"></i>',
                                 ['action' => 'delete', $imovei->id],
                                 [
                                     "data-bs-toggle" => "tooltip",
                                     "data-bs-placement" => "top", 
-                                    "data-bs-title" => "Delete",
+                                    "data-bs-title" => "Excluir",
                                     "class" => "btn btn-sm btn-icon btn-danger-light",
                                     "method" => 'delete',
                                     "confirm" => __('Excluir o imóvel # {0} não terá volta, deseja continuar?', $imovei->id),
@@ -80,13 +80,4 @@
     </table>
     </div>
 </div>
-<div class="paginator">
-    <ul class="pagination">
-        <?= $this->Paginator->first('<< ' . __('first')) ?>
-        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-        <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->next(__('next') . ' >') ?>
-        <?= $this->Paginator->last(__('last') . ' >>') ?>
-    </ul>
-    <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-</div>
+<?= $this->element('pagination') ?>
