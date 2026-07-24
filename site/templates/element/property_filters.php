@@ -17,7 +17,7 @@
                     <input type="hidden" name="q" value="<?= h($filtros['q']) ?>">
                 <?php endif; ?>
                 <div class="property-filter-tabs">
-                    <?php foreach (['V' => 'Comprar', 'A' => 'Alugar', 'L' => 'Imóvel novo'] as $negocioValor => $negocioLabel): ?>
+                    <?php foreach (['V' => 'Comprar', 'L' => 'Alugar'] as $negocioValor => $negocioLabel): ?>
                         <label class="property-filter-tab <?= $negocioSelecionado === $negocioValor ? 'active' : '' ?>">
                             <input type="radio" name="negocio" value="<?= h($negocioValor) ?>" <?= $negocioSelecionado === $negocioValor ? 'checked' : '' ?>>
                             <span><?= h($negocioLabel) ?></span>
