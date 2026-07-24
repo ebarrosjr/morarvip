@@ -40,7 +40,7 @@ $imovelUrl = $this->Url->build([
     'id' => (int)$imovel->id,
     'slug' => $imovelSlug,
 ]);
-$localizacao = $imovel->chamada ?: 'Consulte a localização';
+$localizacao = $imovel->bairro ? $imovel->bairro . ', ' . $imovel->cidade . ' - ' . $imovel->uf : 'Consulte a localização';
 ?>
 <div class="property-result-card">
     <div class="property-result-media">
