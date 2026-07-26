@@ -295,88 +295,41 @@ $profileLocation = implode(', ', array_filter([
                             <table class="table">
                                 <thead>
                                     <tr>
-                                    <th scope="col">Top Property</th>
-                                    <th scope="col"></th>
-                                    <th scope="col">Date Added</th>
-                                    <th scope="col">Actions</th>
-                                    <th scope="col">Delete</th>
+                                        <th scope="col">Imóveis favoritos</th>
+                                        <th scope="col"></th>
+                                        <th scope="col">Data</th>
+                                        <th scope="col">Desfavoritar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                    <td class="ltn__my-properties-img">
-                                        <a href="product-details.html"><img src="img/product-3/2.jpg" alt="#"></a>
-                                    </td>
-                                    <td>
-                                        <div class="ltn__my-properties-info">
-                                            <h6 class="mb-10"><a href="product-details.html">sdfasdfdsfsdafs</a></h6>
-                                            <small><i class="icon-placeholder"></i> Brooklyn, New York, United States</small>
-                                            <div class="product-ratting">
-                                                <ul>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
-                                                    <li><a href="#"><i class="far fa-star"></i></a></li>
-                                                    <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Feb 22, 2022</td>
-                                    <td><a href="#">Edit</a></td>
-                                    <td><a href="#"><i class="fa-solid fa-trash-can"></i></a></td>
+                                        <td colspan="4"><div class="text-center alert-info">Em breve</div></td>
                                     </tr>
-                                    <tr>
-                                    <td class="ltn__my-properties-img">
-                                        <a href="product-details.html"><img src="img/product-3/3.jpg" alt="#"></a>
-                                    </td>
-                                    <td>
-                                        <div class="ltn__my-properties-info">
-                                            <h6 class="mb-10"><a href="product-details.html">sdfasdfdsfsdafs</a></h6>
-                                            <small><i class="icon-placeholder"></i> Brooklyn, New York, United States</small>
-                                            <div class="product-ratting">
-                                                <ul>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
-                                                    <li><a href="#"><i class="far fa-star"></i></a></li>
-                                                    <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
-                                                </ul>
+                                    <!-- tr>
+                                        <td class="ltn__my-properties-img">
+                                            <a href="product-details.html"><img src="img/product-3/2.jpg" alt="#"></a>
+                                        </td>
+                                        <td>
+                                            <div class="ltn__my-properties-info">
+                                                <h6 class="mb-10"><a href="product-details.html">sdfasdfdsfsdafs</a></h6>
+                                                <small><i class="icon-placeholder"></i> Brooklyn, New York, United States</small>
+                                                <div class="product-ratting">
+                                                    <ul>
+                                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                                        <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                                        <li><a href="#"><i class="far fa-star"></i></a></li>
+                                                        <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>Feb 22, 2022</td>
-                                    <td><a href="#">Edit</a></td>
-                                    <td><a href="#"><i class="fa-solid fa-trash-can"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                    <td class="ltn__my-properties-img">
-                                        <a href="product-details.html"><img src="img/product-3/7.jpg" alt="#"></a>
-                                    </td>
-                                    <td>
-                                        <div class="ltn__my-properties-info">
-                                            <h6 class="mb-10"><a href="product-details.html">sdfasdfdsfsdafs</a></h6>
-                                            <small><i class="icon-placeholder"></i> Brooklyn, New York, United States</small>
-                                            <div class="product-ratting">
-                                                <ul>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
-                                                    <li><a href="#"><i class="far fa-star"></i></a></li>
-                                                    <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Feb 22, 2022</td>
-                                    <td><a href="#">Edit</a></td>
-                                    <td><a href="#"><i class="fa-solid fa-trash-can"></i></a></td>
-                                    </tr>
+                                        </td>
+                                        <td>Feb 22, 2022</td>
+                                        <td><a href="#"><i class="fa-solid fa-trash-can"></i></a></td>
+                                    </tr -->
                                 </tbody>
-                                </table>
+                            </table>
                         </div>
                     </div>
                 </div>
