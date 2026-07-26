@@ -165,15 +165,16 @@ class AtendimentosController extends AppController
                 $escopoPermitido,
             ])
             ->firstOrFail();
+        $pessoaId = (int)$atendimento->pessoa_id;
 
         $atendimentos = $this->Atendimentos->find()
             ->where([
-                'Atendimentos.pessoa_id' => $atendimento->pessoa_id,
+                'Atendimentos.pessoa_id' => $pessoaId,
                 $escopoPermitido,
             ])
             ->orderBy(['Atendimentos.created' => 'DESC'])
             ->contain(['Pessoas', 'Users', 'Imoveis']);
 
-        $this->set(compact('atendimentos'));
+        $this->set(compact('atendimentos', 'pessoaId'));
     }
 }

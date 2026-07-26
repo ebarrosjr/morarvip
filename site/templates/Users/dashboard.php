@@ -2,6 +2,21 @@
 use Cake\Utility\Text;
 
 $userProperties = $userProperties ?? [];
+$profileUser = $profileUser ?? $this->request->getAttribute('identity');
+$profileFallbackPhoto = $this->Url->build('/img/no-photo.png');
+$profilePhoto = trim((string)($profileUser->foto ?? ''));
+if ($profilePhoto === '') {
+    $profilePhoto = $profileFallbackPhoto;
+} elseif (str_starts_with($profilePhoto, '//')) {
+    $profilePhoto = 'https:' . $profilePhoto;
+} elseif (!preg_match('#^https?://#i', $profilePhoto) && !str_starts_with($profilePhoto, '/')) {
+    $profilePhoto = IMAGE_BASE_URL . '/' . ltrim($profilePhoto, '/');
+}
+$profileLocation = implode(', ', array_filter([
+    $profileUser->cep ?? null,
+    $profileUser->numero ?? null,
+    $profileUser->complemento ?? null,
+]));
 ?>
 <div class="container">
     <div class="row">
@@ -29,83 +44,141 @@ $userProperties = $userProperties ?? [];
                         <div class="ltn__comment-area mb-50">
                             <div class="ltn-author-introducing clearfix">
                                 <div class="author-img">
-                                    <img src="img/blog/author.jpg" alt="Author Image">
+                                    <img
+                                        src="<?= h($profilePhoto) ?>"
+                                        alt="<?= h($profileUser->nome ?? 'Usuário') ?>"
+                                        referrerpolicy="no-referrer"
+                                        onerror="this.onerror=null;this.src='<?= h($profileFallbackPhoto) ?>';"
+                                    >
                                 </div>
                                 <div class="author-info">
-                                    <h6>Agent of Property</h6>
-                                    <h2>Rosalina D. William</h2>
+                                    <h6>Minha conta</h6>
+                                    <h2><?= h($profileUser->nome ?? 'Usuário') ?></h2>
                                     <div class="footer-address">
                                         <ul>
+                                            <?php if ($profileLocation): ?>
                                             <li>
                                                 <div class="footer-address-icon">
                                                     <i class="icon-placeholder"></i>
                                                 </div>
                                                 <div class="footer-address-info">
-                                                    <p>Brooklyn, New York, United States</p>
+                                                    <p><?= h($profileLocation) ?></p>
                                                 </div>
                                             </li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($profileUser->telefone) || !empty($profileUser->whatsapp)): ?>
                                             <li>
                                                 <div class="footer-address-icon">
                                                     <i class="icon-call"></i>
                                                 </div>
                                                 <div class="footer-address-info">
-                                                    <p><a href="tel:+0123-456789">+0123-456789</a></p>
+                                                    <p>
+                                                        <a href="tel:<?= h(preg_replace('/\D+/', '', (string)($profileUser->telefone ?: $profileUser->whatsapp))) ?>">
+                                                            <?= h($profileUser->telefone ?: $profileUser->whatsapp) ?>
+                                                        </a>
+                                                    </p>
                                                 </div>
                                             </li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($profileUser->email)): ?>
                                             <li>
                                                 <div class="footer-address-icon">
                                                     <i class="icon-mail"></i>
                                                 </div>
                                                 <div class="footer-address-info">
-                                                    <p><a href="mailto:example@example.com">example@example.com</a></p>
+                                                    <p><a href="mailto:<?= h($profileUser->email) ?>"><?= h($profileUser->email) ?></a></p>
                                                 </div>
                                             </li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="ltn__form-box contact-form-box box-shadow white-bg">
-                                <h4 class="title-2">Get A Quote</h4>
-                                <form id="contact-form" action="mail.php" method="post">
+                                <h4 class="title-2">Editar meus dados</h4>
+                                <?= $this->Form->create($profileUser, ['url' => ['controller' => 'Users', 'action' => 'dashboard']]) ?>
+                                    <?= $this->Form->hidden('_profile_form', ['value' => 1]) ?>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="input-item input-item-name ltn__custom-icon">
-                                                <input type="text" name="name" placeholder="Enter your name">
+                                                <?= $this->Form->text('nome', ['placeholder' => 'Nome completo', 'required' => true]) ?>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-item input-item-email ltn__custom-icon">
-                                                <input type="email" name="email" placeholder="Enter email address">
+                                                <?= $this->Form->email('email', ['placeholder' => 'E-mail', 'required' => true]) ?>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="input-item">
-                                                <select class="nice-select" style="display: none;">
-                                                    <option>Select Service Type</option>
-                                                    <option>Property Management </option>
-                                                    <option>Mortgage Service </option>
-                                                    <option>Consulting Service</option>
-                                                    <option>Home Buying</option>
-                                                    <option>Home Selling</option>
-                                                    <option>Escrow Services</option>
-                                                </select><div class="nice-select" tabindex="0"><span class="current">Select Service Type</span><ul class="list"><li data-value="Select Service Type" class="option selected">Select Service Type</li><li data-value="Property Management" class="option">Property Management </li><li data-value="Mortgage Service" class="option">Mortgage Service </li><li data-value="Consulting Service" class="option">Consulting Service</li><li data-value="Home Buying" class="option">Home Buying</li><li data-value="Home Selling" class="option">Home Selling</li><li data-value="Escrow Services" class="option">Escrow Services</li></ul></div>
+                                            <div class="input-item input-item-subject ltn__custom-icon">
+                                                <?= $this->Form->text('cpf', ['placeholder' => 'CPF']) ?>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
+                                            <div class="input-item input-item-date ltn__custom-icon">
+                                                <?= $this->Form->date('nascimento', ['placeholder' => 'Nascimento']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="input-item input-item-phone ltn__custom-icon">
-                                                <input type="text" name="phone" placeholder="Enter phone number">
+                                                <?= $this->Form->text('telefone', ['placeholder' => 'Telefone']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-phone ltn__custom-icon">
+                                                <?= $this->Form->text('whatsapp', ['placeholder' => 'WhatsApp']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-subject ltn__custom-icon">
+                                                <?= $this->Form->select('sexo', ['N' => 'Não informado', 'F' => 'Feminino', 'M' => 'Masculino'], ['empty' => false]) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-website ltn__custom-icon">
+                                                <?= $this->Form->text('cep', ['placeholder' => 'CEP']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-subject ltn__custom-icon">
+                                                <?= $this->Form->text('numero', ['placeholder' => 'Número']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-subject ltn__custom-icon">
+                                                <?= $this->Form->text('complemento', ['placeholder' => 'Complemento']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-website ltn__custom-icon">
+                                                <?= $this->Form->text('telegram', ['placeholder' => 'Telegram']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-website ltn__custom-icon">
+                                                <?= $this->Form->text('instagram', ['placeholder' => 'Instagram']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-item input-item-website ltn__custom-icon">
+                                                <?= $this->Form->text('facebook', ['placeholder' => 'Facebook']) ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="input-item input-item-textarea ltn__custom-icon">
-                                        <textarea name="message" placeholder="Enter message"></textarea>
-                                    </div>
-                                    <p><label class="input-info-save mb-0"><input type="checkbox" name="agree"> Save my name, email, and website in this browser for the next time I comment.</label></p>
+                                    <p>
+                                        <label class="input-info-save mb-0">
+                                            <?= $this->Form->checkbox('propaganda') ?> Aceito receber comunicações do Morar.VIP
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label class="input-info-save mb-0">
+                                            <?= $this->Form->checkbox('share_data') ?> Autorizo o compartilhamento dos meus dados para atendimento imobiliário
+                                        </label>
+                                    </p>
                                     <div class="btn-wrapper mt-0">
-                                        <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">get a free service</button>
+                                        <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">Salvar dados</button>
                                     </div>
-                                    <p class="form-messege mb-0 mt-20"></p>
-                                </form>
+                                <?= $this->Form->end() ?>
                             </div>
                         </div>
                     </div>
@@ -114,6 +187,7 @@ $userProperties = $userProperties ?? [];
                     <div class="ltn__myaccount-tab-content-inner">
                         <!-- properties-area -->
                         <div class="ltn__my-properties-table table-responsive">
+                            <a class="js-auth-modal btn btn-sm btn-secondary" href="/imoveis/add">Incluir novo imóvel</a>
                             <table class="table">
                                 <thead>
                                     <tr>

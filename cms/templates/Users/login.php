@@ -24,6 +24,6 @@
             </div>
         </div>
     <div class="form-label mt-3 text-center">
-        Ainda não tem conta? <?= $this->Html->link("Facilite sua vida", ['action' => 'add']) ?>
+        <?= $this->Html->link("Ainda não tem conta? Facilite sua vida", ['action' => 'add'], ['class' => 'btn btn-outline-secondary']) ?>
     </div>
 </div>

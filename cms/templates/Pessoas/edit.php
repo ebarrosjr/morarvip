@@ -1,4 +1,11 @@
 <div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <?php
+    $returnTo = $returnTo ?? 'compradores';
+    $returnUrl = $returnTo === 'proprietarios'
+        ? ['controller' => 'Pessoas', 'action' => 'proprietarios']
+        : ['controller' => 'Pessoas', 'action' => 'index'];
+    $returnLabel = $returnTo === 'proprietarios' ? 'Proprietários' : 'Compradores/Locatários';
+    ?>
     <div>
         <h1 class="page-title fw-medium fs-18 mb-2">Editar dados de <?= h($pessoa->nome) ?></h1>
         <ol class="breadcrumb mb-0">
@@ -8,8 +15,8 @@
                 </a>
             </li>
             <li class="breadcrumb-item"> 
-                <a href="/pessoas">
-                    Pessoas
+                <a href="<?= $this->Url->build($returnUrl) ?>">
+                    <?= h($returnLabel) ?>
                 </a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">Edição</li>
@@ -18,7 +25,7 @@
     <div class="d-flex align-items-center gap-2 flex-wrap">
         <div class="d-flex gap-2">
             <div class="position-relative">
-                <a href="<?= $this->Url->build(['controller' => 'Imoveis', 'action' => 'index']) ?>" class="btn btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Adicionar cliente" aria-describedby="tooltip968276" aria-expanded="false">
+                <a href="<?= $this->Url->build($returnUrl) ?>" class="btn btn-danger btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Voltar para <?= h($returnLabel) ?>" aria-describedby="tooltip968276" aria-expanded="false">
                     <i class="ri-share-forward-line" style="transform: scaleX(-1)"></i> Voltar
                 </a>
             </div>
@@ -27,6 +34,7 @@
 </div>
 <div class="col-md-12">
     <?= $this->Form->create($pessoa) ?>
+    <?= $this->Form->hidden('return_to', ['value' => $returnTo]) ?>
     <h5 class="mb-3">Dados pessoais e contato</h5>    
     <div class="row mb-3">
         <div class="col-md-2">

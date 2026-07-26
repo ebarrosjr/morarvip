@@ -104,6 +104,32 @@
     white-space: nowrap;
 }
 
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.wrapper > .ltn__product-area {
+    flex: 1 0 auto;
+    margin-bottom: 0;
+    padding-bottom: 80px;
+}
+
+.wrapper > .ltn__footer-area {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
 @media (max-width: 575px) {
     .morarvip-header-search-form {
         padding-left: 14px;

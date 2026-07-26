@@ -6,7 +6,6 @@ $this->disableAutoLayout();
 
 $loginUrl = $this->Url->build(['controller' => 'Users', 'action' => 'login']);
 $registerUrl = $this->Url->build(['controller' => 'Users', 'action' => 'add']);
-$demoUrl = 'mailto:contato@morar.vip?subject=' . rawurlencode('Demonstração Morar.VIP CRM');
 $heroImage = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=920&q=80';
 $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=920&q=80';
 ?>
@@ -31,7 +30,7 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
                 <?= $this->Html->image('logo-full.svg', ['alt' => 'Morar.VIP']) ?>
             </a>
             <div class="landing-menu">
-                <a href="#produto">Produto</a>
+                <a href="#produto">Home</a>
                 <a href="#recursos">Recursos</a>
                 <a href="#para-quem">Para quem é</a>
                 <a href="#como-funciona">Como funciona</a>
@@ -39,7 +38,6 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
             </div>
             <div class="landing-actions">
                 <a class="landing-login" href="<?= h($loginUrl) ?>">Entrar</a>
-                <a class="btn btn-primary btn-wave" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
             </div>
         </nav>
     </header>
@@ -55,7 +53,6 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
                             O Morar.VIP reúne catálogo de imóveis, leads, atendimentos, agenda e publicação em uma plataforma simples para quem trabalha sozinho e precisa manter tudo sob controle.
                         </p>
                         <div class="landing-hero-actions">
-                            <a class="btn btn-primary btn-lg btn-wave" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
                             <a class="btn btn-outline-primary btn-lg" href="<?= h($loginUrl) ?>">Entrar no CRM</a>
                         </div>
                         <div class="landing-proof">
@@ -180,34 +177,6 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
             </div>
         </section>
 
-        <section class="landing-section landing-dashboard">
-            <div class="container">
-                <div class="row align-items-center g-5">
-                    <div class="col-lg-5">
-                        <span class="landing-eyebrow">Dashboard</span>
-                        <h2>Uma visão direta do que exige ação.</h2>
-                        <p>O painel foi pensado para mostrar pendências, imóveis cadastrados, proprietários e regiões com mais atividade, sem exigir relatórios complexos.</p>
-                    </div>
-                    <div class="col-lg-7">
-                        <div class="landing-dashboard-card">
-                            <div class="landing-dashboard-bar"></div>
-                            <div class="landing-dashboard-grid">
-                                <div><strong>Imóveis</strong><span>No seu escopo</span></div>
-                                <div><strong>Pessoas</strong><span>Proprietários</span></div>
-                                <div><strong>Visitas</strong><span>Agenda do mês</span></div>
-                                <div><strong>Pendências</strong><span>Atendimentos</span></div>
-                            </div>
-                            <div class="landing-dashboard-table">
-                                <span></span><span></span><span></span>
-                                <span></span><span></span><span></span>
-                                <span></span><span></span><span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section class="landing-section" id="planos">
             <div class="container">
                 <div class="landing-section-heading">
@@ -220,14 +189,14 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
                         <article class="landing-plan">
                             <h3>Autônomo</h3>
                             <p>Para o corretor organizar carteira, proprietários e interessados.</p>
-                            <a class="btn btn-primary btn-wave" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
+                            <a class="btn btn-primary btn-wave" href="<?= h($registerUrl) ?>">Cadastre-se</a>
                         </article>
                     </div>
                     <div class="col-md-6 col-xl-4">
                         <article class="landing-plan landing-plan-featured">
                             <h3>Profissional</h3>
                             <p>Para quem precisa acompanhar parcerias, publicação e rotina comercial.</p>
-                            <a class="btn btn-light" href="<?= h($registerUrl) ?>">Criar conta</a>
+                            <div class="btn btn-light">Em breve</div>
                         </article>
                     </div>
                 </div>
@@ -242,7 +211,6 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
                     <p>Entre no CRM se você já possui acesso ou solicite uma demonstração para entender o encaixe na sua rotina.</p>
                     <div>
                         <a class="btn btn-primary btn-lg btn-wave" href="<?= h($loginUrl) ?>">Entrar</a>
-                        <a class="btn btn-outline-primary btn-lg" href="<?= h($demoUrl) ?>">Solicitar demonstração</a>
                     </div>
                 </div>
             </div>

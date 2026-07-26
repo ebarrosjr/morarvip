@@ -10,8 +10,16 @@ $identity = $this->request->getAttribute('identity');
 $loggedUser = $identity && method_exists($identity, 'getOriginalData') ? $identity->getOriginalData() : $identity;
 $isLoggedIn = !empty($loggedUser);
 $loggedUserName = $isLoggedIn ? (string)($loggedUser->nome ?? $loggedUser->email ?? 'Minha conta') : '';
+$loggedUserFallbackAvatar = $this->Url->build('/img/no-photo.png');
 $loggedUserPhoto = $isLoggedIn ? (string)($loggedUser->foto ?? '') : '';
-$loggedUserAvatar = $loggedUserPhoto !== '' ? $loggedUserPhoto : $this->Url->build('/img/no-photo.png');
+$loggedUserAvatar = trim($loggedUserPhoto);
+if ($loggedUserAvatar === '') {
+    $loggedUserAvatar = $loggedUserFallbackAvatar;
+} elseif (str_starts_with($loggedUserAvatar, '//')) {
+    $loggedUserAvatar = 'https:' . $loggedUserAvatar;
+} elseif (!preg_match('#^https?://#i', $loggedUserAvatar) && !str_starts_with($loggedUserAvatar, '/')) {
+    $loggedUserAvatar = IMAGE_BASE_URL . '/' . ltrim($loggedUserAvatar, '/');
+}
 $announceUrl = $isLoggedIn
     ? $this->Url->build(['controller' => 'Imoveis', 'action' => 'add'])
     : $loginUrl;
@@ -115,7 +123,7 @@ $announceUrl = $isLoggedIn
                                     <li>
                                         <a href="#" aria-label="<?= $isLoggedIn ? h($loggedUserName) : 'Entrar' ?>">
                                             <?php if ($isLoggedIn): ?>
-                                                <img class="morarvip-user-avatar" src="<?= h($loggedUserAvatar) ?>" alt="<?= h($loggedUserName) ?>">
+                                                <img class="morarvip-user-avatar" src="<?= h($loggedUserAvatar) ?>" alt="<?= h($loggedUserName) ?>" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='<?= h($loggedUserFallbackAvatar) ?>';">
                                             <?php else: ?>
                                                 <i class="icon-user"></i>
                                             <?php endif; ?>
@@ -192,7 +200,7 @@ $announceUrl = $isLoggedIn
                             <?php if ($isLoggedIn): ?>
                                 <a href="/users/dashboard" title="<?= h($loggedUserName) ?>">
                                     <span class="utilize-btn-icon">
-                                        <img class="morarvip-user-avatar" src="<?= h($loggedUserAvatar) ?>" alt="<?= h($loggedUserName) ?>">
+                                        <img class="morarvip-user-avatar" src="<?= h($loggedUserAvatar) ?>" alt="<?= h($loggedUserName) ?>" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='<?= h($loggedUserFallbackAvatar) ?>';">
                                     </span>
                                     <?= h($loggedUserName) ?>
                                 </a>

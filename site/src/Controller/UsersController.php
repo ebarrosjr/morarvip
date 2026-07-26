@@ -37,6 +37,39 @@ class UsersController extends AppController
         $identity = $this->request->getAttribute('identity');
         $loggedUser = $identity && method_exists($identity, 'getOriginalData') ? $identity->getOriginalData() : $identity;
         $userId = (int)($loggedUser->id ?? 0);
+        $pessoas = $this->fetchTable('Pessoas');
+        $profileUser = $userId > 0 ? $pessoas->get($userId) : null;
+
+        if ($profileUser && $this->request->is(['post', 'put', 'patch']) && $this->request->getData('_profile_form')) {
+            $profileUser = $pessoas->patchEntity($profileUser, $this->request->getData(), [
+                'fields' => [
+                    'nome',
+                    'email',
+                    'cpf',
+                    'nascimento',
+                    'sexo',
+                    'telefone',
+                    'whatsapp',
+                    'telegram',
+                    'facebook',
+                    'instagram',
+                    'cep',
+                    'numero',
+                    'complemento',
+                    'propaganda',
+                    'share_data',
+                ],
+            ]);
+
+            if ($pessoas->save($profileUser)) {
+                $this->Authentication->setIdentity($profileUser);
+                $this->Flash->success(__('Seus dados foram atualizados com sucesso.'));
+
+                return $this->redirect(['action' => 'dashboard', '#' => 'ltn_tab_1_2']);
+            }
+
+            $this->Flash->error(__('Não foi possível atualizar seus dados. Verifique as informações e tente novamente.'));
+        }
 
         $userProperties = [];
         if ($userId > 0) {
@@ -62,7 +95,7 @@ class UsersController extends AppController
                 ->toList();
         }
 
-        $this->set(compact('userProperties'));
+        $this->set(compact('profileUser', 'userProperties'));
     }
 
     public function login()

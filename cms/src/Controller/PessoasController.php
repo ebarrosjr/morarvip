@@ -46,8 +46,9 @@ class PessoasController extends AppController
         $pessoas = $this->paginate($xPessoas);
         $pageTitle = 'Compradores/Locatários';
         $breadcrumbTitle = 'Clientes';
+        $listContext = 'compradores';
 
-        $this->set(compact('pessoas', 'pageTitle', 'breadcrumbTitle'));
+        $this->set(compact('pessoas', 'pageTitle', 'breadcrumbTitle', 'listContext'));
     }
 
     public function proprietarios()
@@ -56,47 +57,50 @@ class PessoasController extends AppController
         $pessoas = $this->paginate($xPessoas);
         $pageTitle = 'Proprietários/Locadores';
         $breadcrumbTitle = 'Proprietários';
+        $listContext = 'proprietarios';
 
-        $this->set(compact('pessoas', 'pageTitle', 'breadcrumbTitle'));
+        $this->set(compact('pessoas', 'pageTitle', 'breadcrumbTitle', 'listContext'));
         $this->render('index');
     }
 
     public function add()
     {
+        $returnTo = $this->resolveReturnContext();
         $pessoa = $this->Pessoas->newEmptyEntity();
         if ($this->request->is('post')) {
             $dados = $this->request->getData();
             $dados['origem'] = 'C';
             $pessoa = $this->Pessoas->patchEntity($pessoa, $dados);
             if ($this->Pessoas->save($pessoa)) {
-                $this->Flash->success(__('The pessoa has been saved.'));
+                $this->Flash->success(__('Pessoa salva com sucesso.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect($this->returnContextUrl($returnTo));
             }
             $this->Flash->error("Houve um erro ao salvar a pessoa. Tente novamente. Erro: " . json_encode($pessoa->getErrors()));
         }
         $escolaridades = $this->escolaridades;
         $estadoCivil = $this->estadoCivil;
         $rendaFamiliar = $this->rendaFamiliar;
-        $this->set(compact('pessoa', 'escolaridades', 'estadoCivil', 'rendaFamiliar'));
+        $this->set(compact('pessoa', 'escolaridades', 'estadoCivil', 'rendaFamiliar', 'returnTo'));
     }
 
     public function edit($id = null)
     {
+        $returnTo = $this->resolveReturnContext();
         $pessoa = $this->Pessoas->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $pessoa = $this->Pessoas->patchEntity($pessoa, $this->request->getData());
             if ($this->Pessoas->save($pessoa)) {
-                $this->Flash->success(__('The pessoa has been saved.'));
+                $this->Flash->success(__('Pessoa salva com sucesso.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect($this->returnContextUrl($returnTo));
             }
             $this->Flash->error("Houve um erro ao salvar a pessoa. Tente novamente. Erro: " . json_encode($pessoa->getErrors()));
         }
         $escolaridades = $this->escolaridades;
         $estadoCivil = $this->estadoCivil;
         $rendaFamiliar = $this->rendaFamiliar;
-        $this->set(compact('pessoa', 'escolaridades', 'estadoCivil', 'rendaFamiliar'));
+        $this->set(compact('pessoa', 'escolaridades', 'estadoCivil', 'rendaFamiliar', 'returnTo'));
     }
 
     public function enderecoPorCep($cep = null)
@@ -153,5 +157,21 @@ class PessoasController extends AppController
             ->find()
             ->where(['Pessoas.id IN' => $proprietarios])
             ->orderBy(['Pessoas.created' => 'DESC']);
+    }
+
+    private function resolveReturnContext(): string
+    {
+        $returnTo = (string)($this->request->getData('return_to') ?: $this->request->getQuery('return_to'));
+
+        return in_array($returnTo, ['proprietarios', 'compradores'], true) ? $returnTo : 'compradores';
+    }
+
+    private function returnContextUrl(string $returnTo): array
+    {
+        if ($returnTo === 'proprietarios') {
+            return ['controller' => 'Pessoas', 'action' => 'proprietarios'];
+        }
+
+        return ['controller' => 'Pessoas', 'action' => 'index'];
     }
 }

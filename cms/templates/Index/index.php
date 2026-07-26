@@ -15,10 +15,10 @@
         </div>
     </div>
 </div>
-<div class="row mb-4">
+<!-- div class="row mb-4">
     <div class="col-md-6"><div class="bg-primary p-2">BANNER #1 - FINANCIAMENTO</div></div>
     <div class="col-md-6"><div class="bg-secondary p-2">BANNER #2 - CONSULTORIA IMOBILIÁRIO</div></div>
-</div>
+</div -->
 <div class="row">
     <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
         <div class="card custom-card">

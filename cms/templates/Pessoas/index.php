@@ -1,4 +1,8 @@
 <div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <?php
+    $listContext = $listContext ?? 'compradores';
+    $addButtonLabel = $listContext === 'proprietarios' ? 'Adicionar proprietário' : 'Adicionar cliente';
+    ?>
     <div>
         <h1 class="page-title fw-medium fs-18 mb-2">Listagem de <?= h($pageTitle ?? 'clientes') ?></h1>
         <ol class="breadcrumb mb-0">
@@ -14,8 +18,8 @@
     <div class="d-flex align-items-center gap-2 flex-wrap">
         <div class="d-flex gap-2">
             <div class="position-relative">
-                <a href="<?= $this->Url->build(['controller' => 'Pessoas', 'action' => 'add']) ?>" class="btn btn-success btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Adicionar cliente" aria-describedby="tooltip968276" aria-expanded="false">
-                    <i class="ri-user-add-line d-inline"></i> Adicionar cliente
+                <a href="<?= $this->Url->build(['controller' => 'Pessoas', 'action' => 'add', '?' => ['return_to' => $listContext]]) ?>" class="btn btn-success btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<?= h($addButtonLabel) ?>" aria-describedby="tooltip968276" aria-expanded="false">
+                    <i class="ri-user-add-line d-inline"></i> <?= h($addButtonLabel) ?>
                 </a>
             </div>
         </div>
@@ -64,7 +68,7 @@
                                     'escape' => false
                                 ]) ?>
                                 <a aria-label="Visualizar" href="<?= $this->Url->build(['action' => 'view', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visualizar" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
-                                <a aria-label="Editar" href="<?= $this->Url->build(['action' => 'edit', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
+                                <a aria-label="Editar" href="<?= $this->Url->build(['action' => 'edit', $pessoa->id, '?' => ['return_to' => $listContext]])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
                                 <a aria-label="anchor" href="<?= $this->Url->build([])?>" ></a>
                                 <?= $this->Form->postLink(
                                     '<i class="ti ti-trash"></i>',
