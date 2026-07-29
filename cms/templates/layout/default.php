@@ -4,11 +4,11 @@
         <?= $this->Html->charset() ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="Description" content="Sistema de Gerenciamento de Oficinas e Concessionárias">
-        <meta name="Author" content="Everton Barros jr">
-        <meta name="keywords" content="SISCAR">
+        <meta name="Description" content="CMS para corretores autônomos e imobiliárias. Sistema de gestão de imóveis, clientes e atendimentos.">
+        <meta name="Author" content="Agencia M2U">
+        <meta name="keywords" content="MORAR.VIP">
 		<!-- Title -->
-        <title> SISCAR - Sistema de Gerenciamento de Oficinas e Concessionárias </title>
+        <title> MORAR.VIP - Seu CMS definitivo para imóveis </title>
         <!-- Favicon -->
         <link rel="icon" href="/favicon.ico" type="image/x-icon">
         <!-- Start::Styles -->

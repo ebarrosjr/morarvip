@@ -50,6 +50,7 @@ class ImoveisController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
+            $data = $this->normalizeCheckboxData($data);
             $data['user_id'] = $this->Authentication->getIdentity()->id;
             $pessoa = $data['pessoa'];
             $tblPessoas = TableRegistry::getTableLocator()->get('Pessoas');
@@ -87,6 +88,7 @@ class ImoveisController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $data = $this->normalizeCheckboxData($data);
 
             $data = $this->fillAddressData($data);
 
@@ -256,6 +258,23 @@ class ImoveisController extends AppController
         $coord = EnderecoService::getCoordenadas($addressString);
         $data['latitude'] = $coord['latitude'];
         $data['longitude'] = $coord['longitude'];
+
+        return $data;
+    }
+
+    private function normalizeCheckboxData(array $data): array
+    {
+        foreach ([
+            'financia',
+            'comissao_permanente',
+            'show_site',
+            'show_preco_site',
+            'corretor_opcionista',
+            'exclusividade',
+            'parceiria',
+        ] as $field) {
+            $data[$field] = !empty($data[$field]) ? 1 : 0;
+        }
 
         return $data;
     }
