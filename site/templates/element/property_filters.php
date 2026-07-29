@@ -32,41 +32,46 @@
                 </div>
 
                 <div class="property-filter-section">
-                    <h4 class="property-filter-title">Cidade e bairro</h4>
                     <div class="property-filter-select-fields">
-                        <div class="property-filter-select-field">
-                            <label for="property-filter-cidade">Cidade</label>
-                            <select
-                                name="cidade"
-                                id="property-filter-cidade"
-                                data-property-city-select
-                                data-bairros-endpoint="<?= h($bairrosEndpoint) ?>"
-                                data-corretor-id="<?= h((string)($corretorId ?? '')) ?>"
-                            >
-                                <option value="">Todas as cidades</option>
-                                <?php foreach ($cidades as $cidade): ?>
-                                    <option value="<?= h($cidade) ?>" <?= $cidadeSelecionada === $cidade ? 'selected' : '' ?>>
-                                        <?= h($cidade) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="property-filter-select-field">
-                            <label for="property-filter-bairro">Bairro</label>
-                            <select
-                                name="bairro"
-                                id="property-filter-bairro"
-                                data-property-neighborhood-select
-                                data-selected-bairro="<?= h($bairroSelecionado) ?>"
-                                <?= $cidadeSelecionada === '' ? 'disabled' : '' ?>
-                            >
-                                <option value="">Todos os bairros</option>
-                                <?php foreach ($bairros as $bairro): ?>
-                                    <option value="<?= h($bairro) ?>" <?= $bairroSelecionado === $bairro ? 'selected' : '' ?>>
-                                        <?= h($bairro) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="property-filter-select-field">
+                                    <label for="property-filter-cidade">Cidade</label>
+                                    <select
+                                        name="cidade"
+                                        id="property-filter-cidade"
+                                        data-property-city-select
+                                        data-bairros-endpoint="<?= h($bairrosEndpoint) ?>"
+                                        data-corretor-id="<?= h((string)($corretorId ?? '')) ?>"
+                                    >
+                                        <option value="">Todas as cidades</option>
+                                        <?php foreach ($cidades as $cidade): ?>
+                                            <option value="<?= h($cidade) ?>" <?= $cidadeSelecionada === $cidade ? 'selected' : '' ?>>
+                                                <?= h($cidade) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="property-filter-select-field">
+                                    <label for="property-filter-bairro">Bairro</label>
+                                    <select
+                                        name="bairro"
+                                        id="property-filter-bairro"
+                                        data-property-neighborhood-select
+                                        data-selected-bairro="<?= h($bairroSelecionado) ?>"
+                                        <?= $cidadeSelecionada === '' ? 'disabled' : '' ?>
+                                    >
+                                        <option value="">Todos os bairros</option>
+                                        <?php foreach ($bairros as $bairro): ?>
+                                            <option value="<?= h($bairro) ?>" <?= $bairroSelecionado === $bairro ? 'selected' : '' ?>>
+                                                <?= h($bairro) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,6 +151,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
         citySelect.dataset.filtersReady = '1';
 
+        function refreshSelect(select) {
+            if (window.jQuery && window.jQuery.fn && window.jQuery.fn.niceSelect) {
+                window.jQuery(select).niceSelect('update');
+            }
+        }
+
+        function bindChange(element, handler) {
+            if (window.jQuery) {
+                window.jQuery(element).off('change.propertyFilters').on('change.propertyFilters', handler);
+                return;
+            }
+
+            element.addEventListener('change', handler);
+        }
+
         function getSelectedBusinessType() {
             const selected = form.querySelector('input[name="negocio"]:checked');
             return selected ? selected.value : '';
@@ -158,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
             option.textContent = label;
             neighborhoodSelect.appendChild(option);
             neighborhoodSelect.disabled = disabled;
+            refreshSelect(neighborhoodSelect);
         }
 
         function fillNeighborhoods(neighborhoods, selectedNeighborhood = '') {
@@ -170,6 +191,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 option.selected = neighborhood === selectedNeighborhood;
                 neighborhoodSelect.appendChild(option);
             });
+
+            refreshSelect(neighborhoodSelect);
         }
 
         async function loadNeighborhoods(selectedNeighborhood = '') {
@@ -209,13 +232,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        citySelect.addEventListener('change', function () {
+        bindChange(citySelect, function () {
             neighborhoodSelect.dataset.selectedBairro = '';
             loadNeighborhoods();
         });
 
         form.querySelectorAll('input[name="negocio"]').forEach(function (input) {
-            input.addEventListener('change', function () {
+            bindChange(input, function () {
                 if (citySelect.value) {
                     neighborhoodSelect.dataset.selectedBairro = '';
                     loadNeighborhoods();

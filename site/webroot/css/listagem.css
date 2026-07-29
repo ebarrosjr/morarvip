@@ -349,6 +349,10 @@
     width: 100%;
 }
 
+.property-filter-select-fields .row {
+    width: 100%;
+}
+
 .property-filter-select-field {
     min-width: 0;
     width: 100%;
@@ -373,6 +377,30 @@
     max-width: none;
     padding: 0 14px;
     width: 100%;
+}
+
+.property-filter-select-field .nice-select {
+    border: 1px solid var(--border-color-7);
+    border-radius: 12px;
+    box-sizing: border-box;
+    color: var(--ltn__heading-color);
+    display: block;
+    font-weight: 600;
+    height: 48px;
+    line-height: 46px;
+    max-width: none;
+    padding-left: 14px;
+    padding-right: 34px;
+    width: 100%;
+}
+
+.property-filter-select-field .nice-select .list {
+    width: 100%;
+}
+
+.property-filter-select-field .nice-select.disabled {
+    background: var(--section-bg-1, #f7f7f7);
+    color: var(--ltn__paragraph-color);
 }
 
 .property-filter-select-field select:focus {
