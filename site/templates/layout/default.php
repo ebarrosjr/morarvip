@@ -76,6 +76,10 @@ $announceUrl = $isLoggedIn
                                     <ul>
                                         <li>
                                             <!-- header-top-btn -->
+                                                <a href="https://homolog-cms.morar.vip"> Sou Corretor </a>
+                                        </li>
+                                        <li>
+                                            <!-- header-top-btn -->
                                             <div class="header-top-btn">
                                                 <a class="js-auth-modal" href="<?= h($announceUrl) ?>">Anuncie seu imóvel</a>
                                             </div>
