@@ -136,87 +136,91 @@
 <?php $this->append('script'); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const citySelect = document.querySelector('[data-property-city-select]');
-    const neighborhoodSelect = document.querySelector('[data-property-neighborhood-select]');
+    document.querySelectorAll('.property-filter-card').forEach(function (form) {
+        const citySelect = form.querySelector('[data-property-city-select]');
+        const neighborhoodSelect = form.querySelector('[data-property-neighborhood-select]');
 
-    if (!citySelect || !neighborhoodSelect) {
-        return;
-    }
-
-    function getSelectedBusinessType() {
-        const selected = document.querySelector('input[name="negocio"]:checked');
-        return selected ? selected.value : '';
-    }
-
-    function resetNeighborhood(label, disabled = true) {
-        neighborhoodSelect.innerHTML = '';
-        const option = document.createElement('option');
-        option.value = '';
-        option.textContent = label;
-        neighborhoodSelect.appendChild(option);
-        neighborhoodSelect.disabled = disabled;
-    }
-
-    function fillNeighborhoods(neighborhoods, selectedNeighborhood = '') {
-        resetNeighborhood('Todos os bairros', false);
-
-        neighborhoods.forEach(function (neighborhood) {
-            const option = document.createElement('option');
-            option.value = neighborhood;
-            option.textContent = neighborhood;
-            option.selected = neighborhood === selectedNeighborhood;
-            neighborhoodSelect.appendChild(option);
-        });
-    }
-
-    async function loadNeighborhoods(selectedNeighborhood = '') {
-        const city = citySelect.value;
-
-        if (!city) {
-            resetNeighborhood('Todos os bairros');
+        if (!citySelect || !neighborhoodSelect || citySelect.dataset.filtersReady === '1') {
             return;
         }
 
-        resetNeighborhood('Carregando bairros...', true);
+        citySelect.dataset.filtersReady = '1';
 
-        const url = new URL(citySelect.dataset.bairrosEndpoint, window.location.origin);
-        url.searchParams.set('cidade', city);
-
-        if (citySelect.dataset.corretorId) {
-            url.searchParams.set('corretor_id', citySelect.dataset.corretorId);
+        function getSelectedBusinessType() {
+            const selected = form.querySelector('input[name="negocio"]:checked');
+            return selected ? selected.value : '';
         }
 
-        const negocio = getSelectedBusinessType();
-        if (negocio) {
-            url.searchParams.set('negocio', negocio);
+        function resetNeighborhood(label, disabled = true) {
+            neighborhoodSelect.innerHTML = '';
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = label;
+            neighborhoodSelect.appendChild(option);
+            neighborhoodSelect.disabled = disabled;
         }
 
-        try {
-            const response = await fetch(url.toString(), {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                credentials: 'same-origin'
+        function fillNeighborhoods(neighborhoods, selectedNeighborhood = '') {
+            resetNeighborhood('Todos os bairros', false);
+
+            neighborhoods.forEach(function (neighborhood) {
+                const option = document.createElement('option');
+                option.value = neighborhood;
+                option.textContent = neighborhood;
+                option.selected = neighborhood === selectedNeighborhood;
+                neighborhoodSelect.appendChild(option);
             });
-            const data = await response.json();
-            fillNeighborhoods(Array.isArray(data.bairros) ? data.bairros : [], selectedNeighborhood);
-        } catch (error) {
-            resetNeighborhood('Não foi possível carregar os bairros');
         }
-    }
 
-    citySelect.addEventListener('change', function () {
-        neighborhoodSelect.dataset.selectedBairro = '';
-        loadNeighborhoods();
-    });
+        async function loadNeighborhoods(selectedNeighborhood = '') {
+            const city = citySelect.value;
 
-    document.querySelectorAll('input[name="negocio"]').forEach(function (input) {
-        input.addEventListener('change', function () {
-            if (citySelect.value) {
-                neighborhoodSelect.dataset.selectedBairro = '';
-                loadNeighborhoods();
+            if (!city) {
+                resetNeighborhood('Todos os bairros');
+                return;
             }
+
+            resetNeighborhood('Carregando bairros...', true);
+
+            const url = new URL(citySelect.dataset.bairrosEndpoint, window.location.origin);
+            url.searchParams.set('cidade', city);
+
+            if (citySelect.dataset.corretorId) {
+                url.searchParams.set('corretor_id', citySelect.dataset.corretorId);
+            }
+
+            const negocio = getSelectedBusinessType();
+            if (negocio) {
+                url.searchParams.set('negocio', negocio);
+            }
+
+            try {
+                const response = await fetch(url.toString(), {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                });
+                const data = await response.json();
+                fillNeighborhoods(Array.isArray(data.bairros) ? data.bairros : [], selectedNeighborhood);
+            } catch (error) {
+                resetNeighborhood('Não foi possível carregar os bairros');
+            }
+        }
+
+        citySelect.addEventListener('change', function () {
+            neighborhoodSelect.dataset.selectedBairro = '';
+            loadNeighborhoods();
+        });
+
+        form.querySelectorAll('input[name="negocio"]').forEach(function (input) {
+            input.addEventListener('change', function () {
+                if (citySelect.value) {
+                    neighborhoodSelect.dataset.selectedBairro = '';
+                    loadNeighborhoods();
+                }
+            });
         });
     });
 });

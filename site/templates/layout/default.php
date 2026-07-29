@@ -318,5 +318,6 @@ $announceUrl = $isLoggedIn
         <!-- MODAL AREA END -->
     </div>
     <?=  $this->Html->script(['plugins', 'main', 'auth']) ?>
+    <?= $this->fetch('script') ?>
 </body>
 </html>
