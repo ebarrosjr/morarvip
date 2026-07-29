@@ -11,7 +11,10 @@ $corretorSlug = strtolower(Text::slug($corretor->nome));
 ]) ?>
 <?= $this->element('property_filters', [
     'tipoimoveis' => $tipoimoveis,
+    'cidades' => $cidades,
+    'bairros' => $bairros,
     'filtros' => $filtros,
+    'corretorId' => (int)$corretor->id,
     'filterActionUrl' => $this->Url->build([
         'controller' => 'Index',
         'action' => 'corretor',

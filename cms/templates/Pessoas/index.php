@@ -67,6 +67,7 @@
                                     'data-ajax-modal' => true,
                                     'escape' => false
                                 ]) ?>
+                                <a aria-label="Visualizar" href="<?= $this->Url->build(['action' => 'view', $pessoa->id])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visualizar" class="btn btn-sm btn-icon btn-primary-light"><i class="ti ti-eye"></i></a>
                                 <a aria-label="Editar" href="<?= $this->Url->build(['action' => 'edit', $pessoa->id, '?' => ['return_to' => $listContext]])?>" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar" class="btn btn-sm btn-icon btn-success-light"><i class="ti ti-pencil"></i></a>
                                 <a aria-label="anchor" href="<?= $this->Url->build([])?>" ></a>
                                 <?= $this->Form->postLink(

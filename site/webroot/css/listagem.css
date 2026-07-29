@@ -343,6 +343,40 @@
     font-size: 13px;
 }
 
+.property-filter-select-fields {
+    display: grid;
+    gap: 14px;
+}
+
+.property-filter-select-field label {
+    color: var(--ltn__heading-color);
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.property-filter-select-field select {
+    background: var(--white);
+    border: 1px solid var(--border-color-7);
+    border-radius: 12px;
+    color: var(--ltn__heading-color);
+    font-weight: 600;
+    height: 48px;
+    padding: 0 14px;
+    width: 100%;
+}
+
+.property-filter-select-field select:focus {
+    border-color: var(--ltn__secondary-color);
+    outline: 0;
+}
+
+.property-filter-select-field select:disabled {
+    background: var(--section-bg-1, #f7f7f7);
+    color: var(--ltn__paragraph-color);
+    cursor: not-allowed;
+}
+
 .property-filter-options {
     display: flex;
     flex-wrap: wrap;

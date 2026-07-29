@@ -6,6 +6,8 @@
 ]) ?>
 <?= $this->element('property_filters', [
     'tipoimoveis' => $tipoimoveis,
+    'cidades' => $cidades,
+    'bairros' => $bairros,
     'filtros' => $filtros,
     'filterActionUrl' => $this->Url->build('/'),
 ]) ?>

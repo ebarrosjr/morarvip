@@ -40,15 +40,17 @@ class IndexController extends AppController
 
         try {
             $imoveis = $this->paginate($imoveisQuery);
-        } catch (NotFoundException) {
+        } catch (NotFoundException $exception) {
             $queryParams['page'] = 1;
 
             return $this->redirect(['?' => $queryParams]);
         }
 
         $tipoimoveis = $this->getTipoImoveisComQuantidade($imoveisTable, $tableLocator->get('TipoImoveis'));
+        $cidades = $this->getCidadesComImoveis($imoveisTable);
+        $bairros = $this->getBairrosPorCidade($imoveisTable, $filtros['cidade'], null, $filtros['negocio']);
 
-        $this->set(compact('imoveis', 'tipoimoveis', 'filtros'));
+        $this->set(compact('imoveis', 'tipoimoveis', 'cidades', 'bairros', 'filtros'));
     }
 
     public function corretor($id)
@@ -75,15 +77,43 @@ class IndexController extends AppController
 
         try {
             $imoveis = $this->paginate($imoveisQuery);
-        } catch (NotFoundException) {
+        } catch (NotFoundException $exception) {
             $queryParams['page'] = 1;
 
             return $this->redirect(['action' => 'corretor', $corretorId, '?' => $queryParams]);
         }
 
         $tipoimoveis = $this->getTipoImoveisComQuantidade($imoveisTable, $tableLocator->get('TipoImoveis'), $corretorId);
+        $cidades = $this->getCidadesComImoveis($imoveisTable, $corretorId);
+        $bairros = $this->getBairrosPorCidade($imoveisTable, $filtros['cidade'], $corretorId, $filtros['negocio']);
 
-        $this->set(compact('corretor', 'imoveis', 'tipoimoveis', 'filtros'));
+        $this->set(compact('corretor', 'imoveis', 'tipoimoveis', 'cidades', 'bairros', 'filtros'));
+    }
+
+    public function bairrosPorCidade()
+    {
+        $this->request->allowMethod(['get']);
+
+        $cidade = trim((string)$this->request->getQuery('cidade', ''));
+        $corretorId = $this->normalizePositiveInteger($this->request->getQuery('corretor_id'));
+        $negocio = (string)$this->request->getQuery('negocio', '');
+        $bairros = [];
+
+        if ($cidade !== '') {
+            $bairros = $this->getBairrosPorCidade(
+                TableRegistry::getTableLocator()->get('Imoveis'),
+                $cidade,
+                $corretorId,
+                $negocio
+            );
+        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody((string)json_encode([
+                'success' => true,
+                'bairros' => $bairros,
+            ]));
     }
 
     public function detalheImovel($id)
@@ -178,6 +208,8 @@ class IndexController extends AppController
             'vagas' => $this->normalizePositiveInteger($queryParams['vagas'] ?? null),
             'preco_minimo' => $queryParams['preco_minimo'] ?? '',
             'preco_maximo' => $queryParams['preco_maximo'] ?? '',
+            'cidade' => trim((string)($queryParams['cidade'] ?? '')),
+            'bairro' => trim((string)($queryParams['bairro'] ?? '')),
             'q' => trim((string)($queryParams['q'] ?? '')),
         ];
     }
@@ -240,9 +272,19 @@ class IndexController extends AppController
                     'Imoveis.descricao LIKE' => $termoBusca,
                     'Imoveis.cep LIKE' => $termoBusca,
                     'Imoveis.complemento LIKE' => $termoBusca,
+                    'Imoveis.cidade LIKE' => $termoBusca,
+                    'Imoveis.bairro LIKE' => $termoBusca,
                     'TipoImoveis.nome LIKE' => $termoBusca,
                 ]);
             });
+        }
+
+        if ($filtros['cidade'] !== '') {
+            $imoveisQuery->where(['Imoveis.cidade' => $filtros['cidade']]);
+        }
+
+        if ($filtros['bairro'] !== '') {
+            $imoveisQuery->where(['Imoveis.bairro' => $filtros['bairro']]);
         }
 
         if (in_array($filtros['negocio'], ['V', 'A', 'L'], true)) {
@@ -296,6 +338,68 @@ class IndexController extends AppController
             ->select(['quantidade_imoveis' => $quantidadeImoveis])
             ->orderBy(['TipoImoveis.nome' => 'ASC'])
             ->all();
+    }
+
+    private function getCidadesComImoveis($imoveisTable, ?int $corretorId = null): array
+    {
+        $query = $imoveisTable
+            ->find()
+            ->select(['cidade' => 'Imoveis.cidade'])
+            ->distinct(['Imoveis.cidade'])
+            ->where([
+                'Imoveis.show_site' => 1,
+                'Imoveis.cidade IS NOT' => null,
+                'Imoveis.cidade <>' => '',
+            ])
+            ->orderBy(['Imoveis.cidade' => 'ASC'])
+            ->enableHydration(false);
+
+        if ($corretorId !== null) {
+            $query->where(['Imoveis.user_id' => $corretorId]);
+        }
+
+        $cidades = [];
+        foreach ($query as $row) {
+            $cidades[] = $row['cidade'];
+        }
+
+        return $cidades;
+    }
+
+    private function getBairrosPorCidade($imoveisTable, string $cidade, ?int $corretorId = null, ?string $negocio = null): array
+    {
+        $cidade = trim($cidade);
+        if ($cidade === '') {
+            return [];
+        }
+
+        $query = $imoveisTable
+            ->find()
+            ->select(['bairro' => 'Imoveis.bairro'])
+            ->distinct(['Imoveis.bairro'])
+            ->where([
+                'Imoveis.show_site' => 1,
+                'Imoveis.cidade' => $cidade,
+                'Imoveis.bairro IS NOT' => null,
+                'Imoveis.bairro <>' => '',
+            ])
+            ->orderBy(['Imoveis.bairro' => 'ASC'])
+            ->enableHydration(false);
+
+        if ($corretorId !== null) {
+            $query->where(['Imoveis.user_id' => $corretorId]);
+        }
+
+        if (in_array($negocio, ['V', 'A', 'L'], true)) {
+            $query->where(['Imoveis.negocio' => $negocio]);
+        }
+
+        $bairros = [];
+        foreach ($query as $row) {
+            $bairros[] = $row['bairro'];
+        }
+
+        return $bairros;
     }
 
     private function normalizePositiveInteger(mixed $value): ?int

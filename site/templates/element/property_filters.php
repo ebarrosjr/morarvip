@@ -7,10 +7,16 @@
             </div>
             <?php
             $filtros = $filtros ?? [];
+            $cidades = $cidades ?? [];
+            $bairros = $bairros ?? [];
+            $cidadeSelecionada = $filtros['cidade'] ?? '';
+            $bairroSelecionado = $filtros['bairro'] ?? '';
+            $corretorId = $corretorId ?? null;
             $negocioSelecionado = $filtros['negocio'] ?? 'V';
             $tiposSelecionados = array_map('intval', $filtros['tipo_imovel'] ?? []);
             $todosTiposSelecionados = empty($tiposSelecionados);
             $filterActionUrl = $filterActionUrl ?? $this->Url->build('/');
+            $bairrosEndpoint = $this->Url->build(['controller' => 'Index', 'action' => 'bairrosPorCidade']);
             ?>
             <form class="widget property-filter-card" method="get" action="<?= h($filterActionUrl) ?>">
                 <?php if (!empty($filtros['q'])): ?>
@@ -23,6 +29,46 @@
                             <span><?= h($negocioLabel) ?></span>
                         </label>
                     <?php endforeach; ?>
+                </div>
+
+                <div class="property-filter-section">
+                    <h4 class="property-filter-title">Cidade e bairro</h4>
+                    <div class="property-filter-select-fields">
+                        <div class="property-filter-select-field">
+                            <label for="property-filter-cidade">Cidade</label>
+                            <select
+                                name="cidade"
+                                id="property-filter-cidade"
+                                data-property-city-select
+                                data-bairros-endpoint="<?= h($bairrosEndpoint) ?>"
+                                data-corretor-id="<?= h((string)($corretorId ?? '')) ?>"
+                            >
+                                <option value="">Todas as cidades</option>
+                                <?php foreach ($cidades as $cidade): ?>
+                                    <option value="<?= h($cidade) ?>" <?= $cidadeSelecionada === $cidade ? 'selected' : '' ?>>
+                                        <?= h($cidade) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="property-filter-select-field">
+                            <label for="property-filter-bairro">Bairro</label>
+                            <select
+                                name="bairro"
+                                id="property-filter-bairro"
+                                data-property-neighborhood-select
+                                data-selected-bairro="<?= h($bairroSelecionado) ?>"
+                                <?= $cidadeSelecionada === '' ? 'disabled' : '' ?>
+                            >
+                                <option value="">Todos os bairros</option>
+                                <?php foreach ($bairros as $bairro): ?>
+                                    <option value="<?= h($bairro) ?>" <?= $bairroSelecionado === $bairro ? 'selected' : '' ?>>
+                                        <?= h($bairro) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="property-filter-section">
@@ -61,7 +107,6 @@
                 <?php endforeach; ?>
 
                 <div class="property-filter-section">
-                    <h4 class="property-filter-title">Preço</h4>
                     <div class="property-price-fields">
                         <div class="property-price-field">
                             <label for="preco-minimo">Mínimo</label>
@@ -88,3 +133,92 @@
         </div>
     </aside>
 </div>
+<?php $this->append('script'); ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const citySelect = document.querySelector('[data-property-city-select]');
+    const neighborhoodSelect = document.querySelector('[data-property-neighborhood-select]');
+
+    if (!citySelect || !neighborhoodSelect) {
+        return;
+    }
+
+    function getSelectedBusinessType() {
+        const selected = document.querySelector('input[name="negocio"]:checked');
+        return selected ? selected.value : '';
+    }
+
+    function resetNeighborhood(label, disabled = true) {
+        neighborhoodSelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = label;
+        neighborhoodSelect.appendChild(option);
+        neighborhoodSelect.disabled = disabled;
+    }
+
+    function fillNeighborhoods(neighborhoods, selectedNeighborhood = '') {
+        resetNeighborhood('Todos os bairros', false);
+
+        neighborhoods.forEach(function (neighborhood) {
+            const option = document.createElement('option');
+            option.value = neighborhood;
+            option.textContent = neighborhood;
+            option.selected = neighborhood === selectedNeighborhood;
+            neighborhoodSelect.appendChild(option);
+        });
+    }
+
+    async function loadNeighborhoods(selectedNeighborhood = '') {
+        const city = citySelect.value;
+
+        if (!city) {
+            resetNeighborhood('Todos os bairros');
+            return;
+        }
+
+        resetNeighborhood('Carregando bairros...', true);
+
+        const url = new URL(citySelect.dataset.bairrosEndpoint, window.location.origin);
+        url.searchParams.set('cidade', city);
+
+        if (citySelect.dataset.corretorId) {
+            url.searchParams.set('corretor_id', citySelect.dataset.corretorId);
+        }
+
+        const negocio = getSelectedBusinessType();
+        if (negocio) {
+            url.searchParams.set('negocio', negocio);
+        }
+
+        try {
+            const response = await fetch(url.toString(), {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            });
+            const data = await response.json();
+            fillNeighborhoods(Array.isArray(data.bairros) ? data.bairros : [], selectedNeighborhood);
+        } catch (error) {
+            resetNeighborhood('Não foi possível carregar os bairros');
+        }
+    }
+
+    citySelect.addEventListener('change', function () {
+        neighborhoodSelect.dataset.selectedBairro = '';
+        loadNeighborhoods();
+    });
+
+    document.querySelectorAll('input[name="negocio"]').forEach(function (input) {
+        input.addEventListener('change', function () {
+            if (citySelect.value) {
+                neighborhoodSelect.dataset.selectedBairro = '';
+                loadNeighborhoods();
+            }
+        });
+    });
+});
+</script>
+<?php $this->end(); ?>
