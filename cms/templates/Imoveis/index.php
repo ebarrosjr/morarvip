@@ -33,6 +33,7 @@
                     <th><?= $this->Paginator->sort('tipo_imovel_id', 'Tipo') ?></th>
                     <th><?= $this->Paginator->sort('negocio', 'Negócio') ?></th>
                     <th><?= $this->Paginator->sort('categoria_id', 'Categoria') ?></th>
+                    <th><?= $this->Paginator->sort('bairro', 'Bairro') ?></th>
                     <th><?= $this->Paginator->sort('created', 'Cadastro') ?></th>
                     <th><?= $this->Paginator->sort('situacao', 'Situação') ?></th>
                     <th><?= $this->Paginator->sort('valor', 'Valor') ?></th>
@@ -50,6 +51,7 @@
                 <td><?= $imovei->tipo_imovel_id === null ? '' : $imovei->tipo_imovei->nome ?></td>
                 <td><?= h($negocio[$imovei->negocio]) ?></td>
                 <td><?= $imovei->hasValue('categoria') ? $this->Html->link($imovei->categoria->nome, ['controller' => 'Categorias', 'action' => 'view', $imovei->categoria->id]) : '' ?></td>
+                <td><?= $imovei->bairro ?></td>
                 <td><?= $imovei->created->i18nFormat("dd/MM/YYYY H:s") ?></td>
                 <td><?= h($situacao[$imovei->situacao]) ?></td>
                 <td>R$ <?= $imovei->valor === null ? '' : number_format($imovei->valor, 2, ',', '.') ?></td>
