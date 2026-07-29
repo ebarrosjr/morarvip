@@ -188,7 +188,7 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
                     <div class="col-md-6 col-xl-4">
                         <article class="landing-plan">
                             <h3>Autônomo</h3>
-                            <p>Para o corretor organizar carteira, proprietários e interessados.</p>
+                            <p>Para o corretor organizar carteira, proprietários e interessados. São 90 dias de teste grátis. E depois: apenas R$ 19,90/mês</p>
                             <a class="btn btn-primary btn-wave" href="<?= h($registerUrl) ?>">Cadastre-se</a>
                         </article>
                     </div>

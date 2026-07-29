@@ -58,7 +58,7 @@ class UsersController extends AppController
         $this->viewBuilder()->setLayout('auth');
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user = $this->Users->patchEntity($user, $this->normalizeBrokerData($this->request->getData()));
             if ($this->Users->save($user)) {
 
                 $user->activation_code = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
@@ -72,7 +72,8 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $plans = $this->Users->Plans->find('list', limit: 200)->all();
-        $this->set(compact('user', 'plans'));
+        $ufs = $this->brazilianStates();
+        $this->set(compact('user', 'plans', 'ufs'));
     }
 
     public function confirmation()
@@ -123,7 +124,7 @@ class UsersController extends AppController
     {
         $user = $this->Users->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user = $this->Users->patchEntity($user, $this->normalizeBrokerData($this->request->getData()));
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -132,7 +133,8 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $plans = $this->Users->Plans->find('list', limit: 200)->all();
-        $this->set(compact('user', 'plans'));
+        $ufs = $this->brazilianStates();
+        $this->set(compact('user', 'plans', 'ufs'));
     }
 
     public function delete($id = null)
@@ -194,5 +196,51 @@ class UsersController extends AppController
         }
 
         return array_values(array_unique(array_filter($partnerIds)));
+    }
+
+    private function normalizeBrokerData(array $data): array
+    {
+        if (isset($data['creci'])) {
+            $data['creci'] = trim((string)$data['creci']);
+        }
+
+        if (isset($data['uf_creci'])) {
+            $data['uf_creci'] = strtoupper(trim((string)$data['uf_creci']));
+        }
+
+        return $data;
+    }
+
+    private function brazilianStates(): array
+    {
+        return [
+            'AC' => 'AC',
+            'AL' => 'AL',
+            'AP' => 'AP',
+            'AM' => 'AM',
+            'BA' => 'BA',
+            'CE' => 'CE',
+            'DF' => 'DF',
+            'ES' => 'ES',
+            'GO' => 'GO',
+            'MA' => 'MA',
+            'MT' => 'MT',
+            'MS' => 'MS',
+            'MG' => 'MG',
+            'PA' => 'PA',
+            'PB' => 'PB',
+            'PR' => 'PR',
+            'PE' => 'PE',
+            'PI' => 'PI',
+            'RJ' => 'RJ',
+            'RN' => 'RN',
+            'RS' => 'RS',
+            'RO' => 'RO',
+            'RR' => 'RR',
+            'SC' => 'SC',
+            'SP' => 'SP',
+            'SE' => 'SE',
+            'TO' => 'TO',
+        ];
     }
 }

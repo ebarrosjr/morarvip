@@ -116,7 +116,12 @@ class UsersTable extends Table
         $validator
             ->scalar('uf_creci')
             ->maxLength('uf_creci', 2)
-            ->allowEmptyString('uf_creci');
+            ->allowEmptyString('uf_creci')
+            ->inList('uf_creci', [
+                'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
+                'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
+                'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+            ], 'Informe uma UF válida.');
 
         $validator
             ->scalar('instagram')

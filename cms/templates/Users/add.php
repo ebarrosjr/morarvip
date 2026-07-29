@@ -15,6 +15,27 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
+                        <label for="creci" class="form-label">
+                            <i class="ri-id-card-line"></i> CRECI
+                        </label>
+                        <?= $this->Form->control('creci', ['label' => false, 'class' => 'form-control', 'placeholder' => "CRECI", "required" => true]) ?>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="uf_creci" class="form-label">
+                            <i class="ri-map-2-line"></i> UF do CRECI
+                        </label>
+                        <?= $this->Form->control('uf_creci', [
+                            'type' => 'select',
+                            'label' => false,
+                            'class' => 'form-control',
+                            'empty' => 'Selecione',
+                            'options' => $ufs,
+                            'required' => true,
+                        ]) ?>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
                         <label for="telefone" class="form-label">
                             <i class="ri-whatsapp-line"></i> Telefone
                         </label>
