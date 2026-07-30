@@ -25,6 +25,9 @@ use Cake\ORM\Entity;
  * @property string|null $cep
  * @property string|null $numero
  * @property string|null $complemento
+ * @property string|null $rua
+ * @property string|null $bairro
+ * @property string|null $cidade
  * @property string|null $latitude
  * @property string|null $longitude
  * @property string|null $telefone
@@ -72,6 +75,9 @@ class Pessoa extends Entity
         'cep' => true,
         'numero' => true,
         'complemento' => true,
+        'rua' => true,
+        'bairro' => true,
+        'cidade' => true,
         'latitude' => true,
         'longitude' => true,
         'telefone' => true,

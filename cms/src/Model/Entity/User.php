@@ -18,6 +18,7 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
  * @property string|null $whatsapp
  * @property string|null $logo
  * @property string|null $password
+ * @property string|null $password_reset_token
  * @property string|null $creci
  * @property string|null $uf_creci
  * @property string|null $instagram
@@ -56,6 +57,7 @@ class User extends Entity
         'whatsapp' => true,
         'logo' => true,
         'password' => true,
+        'password_reset_token' => true,
         'creci' => true,
         'uf_creci' => true,
         'instagram' => true,
@@ -79,6 +81,7 @@ class User extends Entity
      */
     protected array $_hidden = [
         'password',
+        'password_reset_token',
     ];
 
     protected function _setPassword(string $password): ?string

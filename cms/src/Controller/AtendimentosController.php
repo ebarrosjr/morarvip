@@ -8,15 +8,19 @@ class AtendimentosController extends AppController
 
     public function index()
     {
-        $query = $this->fetchTable('Pessoas')->find()
-            ->matching('Atendimentos')
-            ->contain([
-                'Atendimentos' => function ($q) {
-                    return $q->orderBy(['Atendimentos.created' => 'DESC']);
-                }
-            ]);
-        $pessoas = $this->paginate($query);
-        $this->set(compact('pessoas'));
+        $ultimoAtendimentoPorPessoa = $this->Atendimentos
+            ->find()
+            ->select(['id' => 'MAX(Atendimentos.id)'])
+            ->groupBy(['Atendimentos.pessoa_id']);
+
+        $query = $this->Atendimentos
+            ->find()
+            ->where(['Atendimentos.id IN' => $ultimoAtendimentoPorPessoa])
+            ->contain(['Pessoas', 'Imoveis'])
+            ->orderBy(['Atendimentos.created' => 'DESC']);
+
+        $atendimentos = $this->paginate($query);
+        $this->set(compact('atendimentos'));
     }
 
     public function interesses()

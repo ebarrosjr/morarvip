@@ -135,6 +135,21 @@ class PessoasTable extends Table
             ->allowEmptyString('complemento');
 
         $validator
+            ->scalar('rua')
+            ->maxLength('rua', 255)
+            ->allowEmptyString('rua');
+
+        $validator
+            ->scalar('bairro')
+            ->maxLength('bairro', 150)
+            ->allowEmptyString('bairro');
+
+        $validator
+            ->scalar('cidade')
+            ->maxLength('cidade', 150)
+            ->allowEmptyString('cidade');
+
+        $validator
             ->decimal('latitude')
             ->allowEmptyString('latitude');
 

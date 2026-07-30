@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\SmsService;
+use Cake\Routing\Router;
+
 /**
  * Users Controller
  *
@@ -15,7 +18,7 @@ class UsersController extends AppController
         parent::beforeFilter($event);
         // Configure the login action to not require authentication, preventing
         // the infinite redirect loop issue
-        $this->Authentication->allowUnauthenticated(['login', 'add']);
+        $this->Authentication->allowUnauthenticated(['login', 'add', 'esqueci', 'novaSenha']);
     }
 
     public function index()
@@ -63,10 +66,11 @@ class UsersController extends AppController
 
                 $user->activation_code = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
                 $this->Users->save($user);
+                $this->sendActivationCode($user);
 
                 $this->Authentication->setIdentity($user);
 
-                $this->Flash->success('Usuário registrado com sucesso! Bem-vindo ao Morar.VIP. [' . $user->activation_code . ']');
+                $this->Flash->success('Usuário registrado com sucesso. Enviamos o código de ativação por SMS.');
                 return $this->redirect(['action' => 'confirmation']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
@@ -80,15 +84,33 @@ class UsersController extends AppController
     {
         $this->viewBuilder()->setLayout('auth');
 
-        if (!$this->request->is('post')) {
-            return;
-        }
-
         $identity = $this->Authentication->getIdentity();
         if (!$identity) {
             $this->Flash->error('Faça login para ativar sua conta.');
 
             return $this->redirect(['action' => 'login']);
+        }
+
+        $user = $this->Users->get($identity->getIdentifier());
+        if (!empty($user->activation_date)) {
+            return $this->redirect(['controller' => 'Index', 'action' => 'index']);
+        }
+
+        if (!$this->request->is('post')) {
+            return;
+        }
+
+        if ($this->request->getData('resend_activation_code')) {
+            $user = $this->ensureActivationCode($user);
+
+            if ($this->Users->save($user) && $this->sendActivationCode($user)) {
+                $this->Authentication->setIdentity($user);
+                $this->Flash->success('Reenviamos o código de ativação por SMS.');
+            } else {
+                $this->Flash->error('Não foi possível reenviar o código por SMS. Verifique o telefone cadastrado.');
+            }
+
+            return $this->redirect(['action' => 'confirmation']);
         }
 
         $activationCode = $this->request->getData('activation_code');
@@ -97,7 +119,6 @@ class UsersController extends AppController
         }
 
         $activationCode = strtoupper((string)preg_replace('/[^A-Z0-9]/', '', (string)$activationCode));
-        $user = $this->Users->get($identity->getIdentifier());
 
         if ($activationCode !== $user->activation_code) {
             $this->Flash->error('Código de ativação inválido.');
@@ -156,6 +177,15 @@ class UsersController extends AppController
         $result = $this->Authentication->getResult();
         // If the user is logged in send them away.
         if ($result && $result->isValid()) {
+            $identity = $this->Authentication->getIdentity();
+            $user = $this->Users->get($identity->getIdentifier());
+
+            if (empty($user->activation_date)) {
+                $this->Authentication->setIdentity($user);
+
+                return $this->redirect(['action' => 'confirmation']);
+            }
+
             $target = $this->Authentication->getLoginRedirect() ?? [
                 'controller' => 'Index',
                 'action' => 'index',
@@ -165,6 +195,123 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $this->Flash->error(__('Invalid username or password'));
         }
+    }
+
+    public function esqueci()
+    {
+        $this->viewBuilder()->setLayout('auth');
+
+        if (!$this->request->is(['post', 'put', 'patch'])) {
+            return;
+        }
+
+        $email = trim((string)$this->request->getData('email'));
+        if ($email === '') {
+            $this->Flash->error('Informe o e-mail cadastrado.');
+
+            return;
+        }
+
+        $user = $this->Users->find()
+            ->where(['Users.email' => $email])
+            ->first();
+
+        if (!$user) {
+            $this->Flash->error('Usuário não encontrado para o e-mail informado.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        $phone = (string)($user->whatsapp ?: $user->telefone);
+        if (trim($phone) === '') {
+            $this->Flash->error('Este cadastro não possui telefone para envio do SMS.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $user = $this->Users->patchEntity($user, ['password_reset_token' => $token], [
+            'fields' => ['password_reset_token'],
+        ]);
+
+        if (!$this->Users->save($user)) {
+            $this->Flash->error('Não foi possível gerar o token de recuperação. Tente novamente.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        $link = Router::url(['controller' => 'Users', 'action' => 'novaSenha', $token], true);
+        $firstName = $this->firstName((string)$user->nome, 'corretor');
+        $message = "Ola, {$firstName}. Altere sua senha Morar.VIP em: {$link}";
+        if (strlen($message) > 160) {
+            $message = "Altere sua senha Morar.VIP em: {$link}";
+        }
+
+        if ((new SmsService())->sendText($phone, $message)) {
+            $this->Flash->success('Enviamos um SMS com o link para criar uma nova senha.');
+        } else {
+            $this->Flash->error('Não conseguimos enviar o SMS. Tente novamente.');
+        }
+
+        return $this->redirect(['action' => 'login']);
+    }
+
+    public function novaSenha($token = null)
+    {
+        $this->viewBuilder()->setLayout('auth');
+        $token = trim((string)$token);
+
+        if ($token === '') {
+            $this->Flash->error('Token de recuperação não informado.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        $user = $this->Users->find()
+            ->where(['Users.password_reset_token' => $token])
+            ->first();
+
+        if (!$user) {
+            $this->Flash->error('Token de recuperação inválido ou já utilizado.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        if (!$this->isPasswordResetTokenValid($user)) {
+            $user->password_reset_token = null;
+            $this->Users->save($user, ['checkRules' => false]);
+            $this->Flash->error('O token está vencido. Solicite uma nova recuperação de senha.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        if ($this->request->is('post')) {
+            $password = (string)$this->request->getData('password');
+            $confirmPassword = (string)$this->request->getData('confirm_password');
+
+            if ($password === '' || $password !== $confirmPassword) {
+                $this->Flash->error('As senhas informadas não são iguais.');
+
+                return;
+            }
+
+            $user = $this->Users->patchEntity($user, [
+                'password' => $password,
+                'password_reset_token' => null,
+            ], [
+                'fields' => ['password', 'password_reset_token'],
+            ]);
+
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Senha alterada com sucesso. Faça login com a nova senha.');
+
+                return $this->redirect(['action' => 'login']);
+            }
+
+            $this->Flash->error('Não foi possível alterar a senha. Tente novamente.');
+        }
+
+        $this->set(compact('token', 'user'));
     }
     
     public function logout()
@@ -209,6 +356,45 @@ class UsersController extends AppController
         }
 
         return $data;
+    }
+
+    private function sendActivationCode($user): bool
+    {
+        $phone = (string)($user->whatsapp ?: $user->telefone);
+        if (trim($phone) === '' || empty($user->activation_code)) {
+            return false;
+        }
+
+        $firstName = $this->firstName((string)$user->nome, 'corretor');
+        $message = "Ola, {$firstName}. Seu codigo de ativacao Morar.VIP: {$user->activation_code}";
+
+        return (new SmsService())->sendText($phone, $message);
+    }
+
+    private function ensureActivationCode($user)
+    {
+        if (empty($user->activation_code)) {
+            $user->activation_code = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
+        }
+
+        return $user;
+    }
+
+    private function firstName(string $name, string $fallback): string
+    {
+        $names = preg_split('/\s+/', trim($name)) ?: [];
+        $firstName = $names[0] ?? $fallback;
+
+        return substr($firstName, 0, 24) ?: $fallback;
+    }
+
+    private function isPasswordResetTokenValid($user): bool
+    {
+        if (empty($user->modified)) {
+            return false;
+        }
+
+        return $user->modified->getTimestamp() >= (time() - 86400);
     }
 
     private function brazilianStates(): array

@@ -65,7 +65,7 @@ if (isset($atendimentos)) {
                             <th><?= $this->Paginator->sort('nascimento', 'Idade') ?></th>
                             <th><?= $this->Paginator->sort('sexo', 'Sexo') ?></th>
                             <th>Localidade</th>
-                            <th>Contato</th>
+                            <th>Último Contato</th>
                             <th>Imóvel</th>
                             <th>Nota</th>
                             <th>Percepção</th>

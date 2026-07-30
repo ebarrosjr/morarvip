@@ -70,6 +70,7 @@ class PessoasController extends AppController
         if ($this->request->is('post')) {
             $dados = $this->request->getData();
             $dados['origem'] = 'C';
+            $dados = $this->fillAddressData($dados);
             $pessoa = $this->Pessoas->patchEntity($pessoa, $dados);
             if ($this->Pessoas->save($pessoa)) {
                 $this->Flash->success(__('Pessoa salva com sucesso.'));
@@ -89,7 +90,7 @@ class PessoasController extends AppController
         $returnTo = $this->resolveReturnContext();
         $pessoa = $this->Pessoas->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $pessoa = $this->Pessoas->patchEntity($pessoa, $this->request->getData());
+            $pessoa = $this->Pessoas->patchEntity($pessoa, $this->fillAddressData($this->request->getData()));
             if ($this->Pessoas->save($pessoa)) {
                 $this->Flash->success(__('Pessoa salva com sucesso.'));
 
@@ -157,6 +158,53 @@ class PessoasController extends AppController
             ->find()
             ->where(['Pessoas.id IN' => $proprietarios])
             ->orderBy(['Pessoas.created' => 'DESC']);
+    }
+
+    private function fillAddressData(array $data): array
+    {
+        $addressColumns = ['rua', 'bairro', 'cidade'];
+        $schema = $this->Pessoas->getSchema();
+
+        foreach ($addressColumns as $column) {
+            if (!$schema->hasColumn($column)) {
+                unset($data[$column]);
+            }
+        }
+
+        if (empty($data['cep'])) {
+            return $data;
+        }
+
+        $endereco = EnderecoService::getEnderecoByCep((string)$data['cep']);
+
+        if ($endereco) {
+            $data['cep'] = $endereco['cep'] ?? $data['cep'];
+
+            $columnMap = [
+                'rua' => $endereco['logradouro'] ?? null,
+                'bairro' => $endereco['bairro'] ?? null,
+                'cidade' => $endereco['cidade'] ?? null,
+            ];
+
+            foreach ($columnMap as $column => $value) {
+                if ($schema->hasColumn($column) && $value !== null && trim((string)$value) !== '') {
+                    $data[$column] = $value;
+                }
+            }
+
+            $addressString = EnderecoService::buildAddressString($endereco + $data);
+            $coordenadas = EnderecoService::getCoordenadas($addressString);
+
+            if (!empty($coordenadas['latitude'])) {
+                $data['latitude'] = $coordenadas['latitude'];
+            }
+
+            if (!empty($coordenadas['longitude'])) {
+                $data['longitude'] = $coordenadas['longitude'];
+            }
+        }
+
+        return $data;
     }
 
     private function resolveReturnContext(): string

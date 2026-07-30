@@ -109,6 +109,11 @@ class UsersTable extends Table
             ->allowEmptyString('password');
 
         $validator
+            ->scalar('password_reset_token')
+            ->maxLength('password_reset_token', 255)
+            ->allowEmptyString('password_reset_token');
+
+        $validator
             ->scalar('creci')
             ->maxLength('creci', 15)
             ->allowEmptyString('creci');

@@ -28,7 +28,7 @@ class IndexController extends AppController
                 $atendimentoScope,
                 'OR' => [
                     'Atendimentos.conversao IS' => null,
-                    'Atendimentos.conversao' => 'N',
+                    'Atendimentos.conversao' => 'X',
                 ],
             ])
             ->count();

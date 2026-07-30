@@ -108,6 +108,9 @@
                             <?= $this->Form->control('cep', ['label' => false, 'class' => 'form-control']) ?>
                         </div>
                         <div class="col-md-6" id="logradouro"></div>
+                        <?= $this->Form->hidden('rua', ['id' => 'rua']) ?>
+                        <?= $this->Form->hidden('bairro', ['id' => 'bairro']) ?>
+                        <?= $this->Form->hidden('cidade', ['id' => 'cidade']) ?>
                         <?= $this->Form->hidden('latitude', ['id' => 'latitude']) ?>
                         <?= $this->Form->hidden('longitude', ['id' => 'longitude']) ?>
                         <div class="col-md-2">
@@ -147,6 +150,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const cepInput = document.getElementById('cep');
     const logradouroBox = document.getElementById('logradouro');
+    const ruaInput = document.getElementById('rua');
+    const bairroInput = document.getElementById('bairro');
+    const cidadeInput = document.getElementById('cidade');
     const latitudeInput = document.getElementById('latitude');
     const longitudeInput = document.getElementById('longitude');
     const endpointBase = '<?= $this->Url->build(['controller' => 'Pessoas', 'action' => 'enderecoPorCep']) ?>';
@@ -164,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function setAddress(data) {
         const parts = [data.logradouro, data.bairro, data.cidade, data.uf].filter(Boolean);
         logradouroBox.innerHTML = '<label class="form-label d-block">Logradouro</label><div class="form-control-plaintext">' + escapeHtml(parts.join(' - ') || 'Endereço não informado') + '</div>';
+        ruaInput.value = data.logradouro || '';
+        bairroInput.value = data.bairro || '';
+        cidadeInput.value = data.cidade || '';
 
         if (data.latitude) {
             latitudeInput.value = data.latitude;
@@ -176,6 +185,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setError(message) {
         logradouroBox.innerHTML = '<label class="form-label d-block">Logradouro</label><div class="form-control-plaintext text-danger">' + escapeHtml(message) + '</div>';
+        ruaInput.value = '';
+        bairroInput.value = '';
+        cidadeInput.value = '';
         latitudeInput.value = '';
         longitudeInput.value = '';
     }
