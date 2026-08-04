@@ -39,10 +39,10 @@
                     } 
                     foreach($imovei->foto_imoveis ?? [] as $foto) { ?>
                         <div class="col-3 mb-3">
-                            <img src="<?= $this->Url->build('/img/imoveis/' . $foto->arquivo) ?>" alt="Foto do imóvel" class="img-fluid rounded">
+                            <img src="<?= h(IMAGE_BASE_URL . '/' . $foto->arquivo) ?>" alt="Foto do imóvel" class="img-fluid rounded">
                             <?php if ($foto->principal) { ?>
                                 <span class="badge bg-primary mt-1">Principal</span>
-                            <?php } else { ?>
+                            <?php } elseif ($isOwner) { ?>
                                 <?= $this->Form->postLink(
                                     'Principal',
                                     ['controller' => 'Imoveis', 'action' => 'setPrincipal', $foto->id],
@@ -52,24 +52,28 @@
                                     ]
                                 ) ?>
                             <?php } ?>
-                            <?= $this->Form->postLink(
-                                '<i class="ri-delete-bin-2-line"></i>',
-                                ['controller' => 'Imoveis', 'action' => 'deleteFoto', $foto->id],
-                                [
-                                    'class' => 'badge bg-danger-transparent mt-1 text-decoration-none',
-                                    'escape' => false,
-                                    'confirm' => __('Excluir esta foto não terá volta, deseja continuar?'),
-                                ]
-                            ) ?>
+                            <?php if ($isOwner): ?>
+                                <?= $this->Form->postLink(
+                                    '<i class="ri-delete-bin-2-line"></i>',
+                                    ['controller' => 'Imoveis', 'action' => 'deleteFoto', $foto->id],
+                                    [
+                                        'class' => 'badge bg-danger-transparent mt-1 text-decoration-none',
+                                        'escape' => false,
+                                        'confirm' => __('Excluir esta foto não terá volta, deseja continuar?'),
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     <?php } ?>
                 </div>
             </div>
-            <div class="card-footer text-center d-flex gap-2 flex-wrap justify-content-center">
-                <button type="button" class="btn btn-primary btn-w-lg me-2" data-bs-toggle="modal" data-bs-target="#modalAdicionarFoto">
-                    <i class="ri-image-add-fill"></i> Adicionar Foto
-                </button>
-            </div>
+            <?php if ($isOwner): ?>
+                <div class="card-footer text-center d-flex gap-2 flex-wrap justify-content-center">
+                    <button type="button" class="btn btn-primary btn-w-lg me-2" data-bs-toggle="modal" data-bs-target="#modalAdicionarFoto">
+                        <i class="ri-image-add-fill"></i> Adicionar Foto
+                    </button>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     <div class="col-xxl-7">
@@ -148,6 +152,7 @@
     </div>
 </div>
 
+<?php if ($isOwner): ?>
 <div class="modal fade" id="modalAdicionarFoto" tabindex="-1" aria-labelledby="modalAdicionarFotoLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -178,3 +183,4 @@
         </div>
     </div>
 </div>
+<?php endif; ?>

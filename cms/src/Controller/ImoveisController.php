@@ -20,11 +20,12 @@ class ImoveisController extends AppController
      */
     public function index()
     {
-        $query = $this->Imoveis->find()
+        $userId = $this->currentUserId();
+        $query = $this->accessibleImoveisQuery($userId)
             ->contain(['Categorias', 'TipoImoveis']);
         $imoveis = $this->paginate($query);
 
-        $this->set(compact('imoveis'));
+        $this->set(compact('imoveis', 'userId'));
     }
 
     /**
@@ -36,8 +37,11 @@ class ImoveisController extends AppController
      */
     public function view($id = null)
     {
-        $imovei = $this->Imoveis->get($id, contain: ['Categorias', 'TipoImoveis', 'Pessoas', 'FotoImoveis']);
-        $this->set(compact('imovei'));
+        $imovei = $this->getAccessibleImovel($id, ['Categorias', 'TipoImoveis', 'Pessoas', 'FotoImoveis']);
+        $userId = $this->currentUserId();
+        $isOwner = (int)$imovei->user_id === $userId;
+
+        $this->set(compact('imovei', 'userId', 'isOwner'));
     }
 
     public function add()
@@ -46,6 +50,7 @@ class ImoveisController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
+            $data = $this->normalizeCheckboxData($data);
             $data['user_id'] = $this->Authentication->getIdentity()->id;
             $pessoa = $data['pessoa'];
             $tblPessoas = TableRegistry::getTableLocator()->get('Pessoas');
@@ -60,25 +65,7 @@ class ImoveisController extends AppController
                 $data['proprietario'] = $proprietario->id;
             }
 
-            // 1) ViaCEP (preenche campos se vierem vazios ou se você quiser sempre sobrescrever)
-            if (!empty($data['cep'])) {
-                $end = EnderecoService::getEnderecoByCep((string)$data['cep']);
-                if ($end) {
-                    // escolha: sobrescrever sempre, ou só se estiver vazio
-                    foreach (['cep','logradouro','bairro','cidade','estado','pais'] as $k) {
-                        if (empty($data[$k]) && isset($end[$k])) {
-                            $data[$k] = $end[$k];
-                        }
-                    }
-                }
-            }
-
-            // 2) Geocode (usa os dados já “completos”)
-            $addressString = EnderecoService::buildAddressString($data);
-            $coord = EnderecoService::getCoordenadas($addressString);
-
-            $data['latitude'] = $coord['latitude'];
-            $data['longitude'] = $coord['longitude'];
+            $data = $this->fillAddressData($data);
 
             $imovei = $this->Imoveis->patchEntity($imovei, $data);
 
@@ -97,26 +84,13 @@ class ImoveisController extends AppController
 
     public function edit($id = null)
     {
-        $imovei = $this->Imoveis->get($id, contain: []);
+        $imovei = $this->getOwnedImovel($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $data = $this->normalizeCheckboxData($data);
 
-            if (!empty($data['cep'])) {
-                $end = EnderecoService::getEnderecoByCep((string)$data['cep']);
-                if ($end) {
-                    foreach (['cep','logradouro','bairro','cidade','estado','pais'] as $k) {
-                        if (empty($data[$k]) && isset($end[$k])) {
-                            $data[$k] = $end[$k];
-                        }
-                    }
-                }
-            }
-
-            $addressString = EnderecoService::buildAddressString($data);
-            $coord = EnderecoService::getCoordenadas($addressString);
-            $data['latitude'] = $coord['latitude'];
-            $data['longitude'] = $coord['longitude'];
+            $data = $this->fillAddressData($data);
 
             $imovei = $this->Imoveis->patchEntity($imovei, $data);
 
@@ -143,7 +117,7 @@ class ImoveisController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $imovei = $this->Imoveis->get($id);
+        $imovei = $this->getOwnedImovel($id);
         if ($this->Imoveis->delete($imovei)) {
             $this->Flash->success(__('The imovei has been deleted.'));
         } else {
@@ -160,7 +134,7 @@ class ImoveisController extends AppController
      */
     public function fotos($id)
     {
-        $imovel = $this->Imoveis->get($id, contain: ['FotoImoveis']);
+        $imovel = $this->getOwnedImovel($id, ['FotoImoveis']);
         if($this->request->is('post')) {
             $data = $this->request->getData();
             $files = $data['fotos'] ?? [];
@@ -182,7 +156,7 @@ class ImoveisController extends AppController
                     );
                 }
 
-                $uploadPath = WWW_ROOT . 'img' . DS . 'imoveis' . DS;
+                $uploadPath = $this->getImageUploadPath();
                 if (!is_dir($uploadPath)) {
                     mkdir($uploadPath, 0775, true);
                 }
@@ -190,13 +164,8 @@ class ImoveisController extends AppController
                 $salvas = 0;
                 foreach ($files as $file) {
                     if ($file->getError() === UPLOAD_ERR_OK) {
-                        $safeClientFilename = preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientFilename());
-                        $extension = pathinfo($safeClientFilename, PATHINFO_EXTENSION);
-                        $basename = pathinfo($safeClientFilename, PATHINFO_FILENAME) ?: 'foto';
-                        $prefix = $id . '_' . uniqid() . '_';
-                        $suffix = $extension ? '.' . $extension : '';
-                        $maxBasenameLength = max(1, 45 - strlen($prefix) - strlen($suffix));
-                        $filename = $prefix . substr($basename, 0, $maxBasenameLength) . $suffix;
+                        $extension = $this->getImageExtension($file->getClientMediaType());
+                        $filename = $id . '_' . uniqid() . $extension;
                         $file->moveTo($uploadPath . $filename);
 
                         $fotoEntity = $this->Imoveis->FotoImoveis->newEmptyEntity();
@@ -228,9 +197,9 @@ class ImoveisController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $foto = $this->Imoveis->FotoImoveis->get($id);
+        $foto = $this->getOwnedFoto($id);
         $imovelId = $foto->imovel_id;
-        $filePath = WWW_ROOT . 'img' . DS . 'imoveis' . DS . $foto->arquivo;
+        $filePath = $this->getImageUploadPath() . $foto->arquivo;
 
         if ($this->Imoveis->FotoImoveis->delete($foto)) {
             if (file_exists($filePath)) {
@@ -248,7 +217,7 @@ class ImoveisController extends AppController
     {
         $this->request->allowMethod(['post']);
 
-        $foto = $this->Imoveis->FotoImoveis->get($id);
+        $foto = $this->getOwnedFoto($id);
         $imovelId = $foto->imovel_id;
 
         $this->Imoveis->FotoImoveis->updateAll(
@@ -264,5 +233,137 @@ class ImoveisController extends AppController
         }
 
         return $this->redirect(['action' => 'view', $imovelId]);
+    }
+
+    private function getImageUploadPath(): string
+    {
+        return IMAGE_UPLOAD_PATH;
+    }
+
+    private function fillAddressData(array $data): array
+    {
+        if (!empty($data['cep'])) {
+            $endereco = EnderecoService::getEnderecoByCep((string)$data['cep']);
+            if ($endereco) {
+                $data['cep'] = $endereco['cep'] ?? $data['cep'];
+                $data['rua'] = $endereco['logradouro'] ?? ($data['rua'] ?? null);
+                $data['bairro'] = $endereco['bairro'] ?? ($data['bairro'] ?? null);
+                $data['cidade'] = $endereco['cidade'] ?? ($data['cidade'] ?? null);
+                $data['uf'] = $endereco['estado'] ?? ($data['uf'] ?? null);
+                $data['pais'] = $endereco['pais'] ?? ($data['pais'] ?? 'Brasil');
+            }
+        }
+
+        $addressString = EnderecoService::buildAddressString($data);
+        $coord = EnderecoService::getCoordenadas($addressString);
+        $data['latitude'] = $coord['latitude'];
+        $data['longitude'] = $coord['longitude'];
+
+        return $data;
+    }
+
+    private function normalizeCheckboxData(array $data): array
+    {
+        foreach ([
+            'financia',
+            'comissao_permanente',
+            'show_site',
+            'show_preco_site',
+            'corretor_opcionista',
+            'exclusividade',
+            'parceiria',
+        ] as $field) {
+            $data[$field] = !empty($data[$field]) ? 1 : 0;
+        }
+
+        return $data;
+    }
+
+    private function currentUserId(): int
+    {
+        return (int)$this->Authentication->getIdentity()->getIdentifier();
+    }
+
+    private function accessibleImoveisQuery(int $userId)
+    {
+        $imoveisEmParceria = $this->validPartnershipImoveisQuery($userId);
+
+        return $this->Imoveis
+            ->find()
+            ->where([
+                'OR' => [
+                    'Imoveis.user_id' => $userId,
+                    'Imoveis.id IN' => $imoveisEmParceria,
+                ],
+            ]);
+    }
+
+    private function validPartnershipImoveisQuery(int $userId)
+    {
+        $today = date('Y-m-d');
+
+        return $this->fetchTable('ImovelParcerias')
+            ->find()
+            ->select(['ImovelParcerias.imovei_id'])
+            ->where([
+                'ImovelParcerias.parceiro_id' => $userId,
+                'ImovelParcerias.situacao' => 'A',
+                'ImovelParcerias.deleted IS' => null,
+                [
+                    'OR' => [
+                        'ImovelParcerias.inicio_parceria IS' => null,
+                        'ImovelParcerias.inicio_parceria <=' => $today,
+                    ],
+                ],
+                [
+                    'OR' => [
+                        'ImovelParcerias.fim_parceria IS' => null,
+                        'ImovelParcerias.fim_parceria >=' => $today,
+                    ],
+                ],
+            ]);
+    }
+
+    private function getAccessibleImovel($id, array $contain = [])
+    {
+        return $this->accessibleImoveisQuery($this->currentUserId())
+            ->where(['Imoveis.id' => $id])
+            ->contain($contain)
+            ->firstOrFail();
+    }
+
+    private function getOwnedImovel($id, array $contain = [])
+    {
+        return $this->Imoveis
+            ->find()
+            ->where([
+                'Imoveis.id' => $id,
+                'Imoveis.user_id' => $this->currentUserId(),
+            ])
+            ->contain($contain)
+            ->firstOrFail();
+    }
+
+    private function getOwnedFoto($id)
+    {
+        return $this->Imoveis->FotoImoveis
+            ->find()
+            ->contain(['Imoveis'])
+            ->where([
+                'FotoImoveis.id' => $id,
+                'Imoveis.user_id' => $this->currentUserId(),
+            ])
+            ->firstOrFail();
+    }
+
+    private function getImageExtension(?string $mediaType): string
+    {
+        return match ($mediaType) {
+            'image/jpeg' => '.jpg',
+            'image/png' => '.png',
+            'image/gif' => '.gif',
+            'image/webp' => '.webp',
+            default => '',
+        };
     }
 }

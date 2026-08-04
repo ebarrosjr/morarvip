@@ -22,46 +22,74 @@
     <meta name="twitter:title" content="Imóveis à venda e para alugar | Morar VIP" />
     <meta name="twitter:description" content="Encontre imóveis à venda e para alugar com fotos, preços, localização e contato direto." />
     <meta name="twitter:image" content="https://morar.vip/img/imoveis.jpg" />    
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="img/icons/favicon.png" type="image/x-icon" />
     
-    <?= $this->Html->css(['style', 'responsive']) ?>
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
 
-        body {
-            margin: 0;
-        }
-
-        .soon-wrapper {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .soon-content img {
-            margin-bottom: 30px;
-            max-width: 280px;
-            width: 100%;
-        }
-    </style>
+    <?= $this->Html->css(['soon', 'font-icons']) ?>
 </head>
-<body>
-    <div class="soon-wrapper">
-        <div class="soon-content">
-            <img src="<?= $this->Url->build('/img/logo-full.svg') ?>" alt="Logo">
-            <h1>Em breve</h1>
-            <p>Estamos trabalhando para trazer uma experiência incrível para você.</p>
-            <p>
-                Fique atento às nossas redes sociais para novidades!
-            </p>
-        </div>
-    </div>
+<body class="imgbg imgbg2">
+	<!-- Document Content -->
+	<div class="content">
+		<a href="index.html" class="border-0"><img src="img/logo-full-white.svg" width="300" alt="AD"></a>
+		<h1>Estamos chegando</h1>
+		<p>Estamos trabalhando duro para criar o mlehor site e estaremos prontos para lançar após</p>
+		<div class="counter">
+			<div class="countdown">
+				<div class="container days">
+					<canvas id="days-canvas"></canvas>
+					<svg>
+						<circle fill="transparent" stroke="#000000" opacity="0.1" r="50"/>
+					</svg>
+					<div class="label">
+						<span id="days-value">0</span>
+						<span class="time-label">Dias</span>
+					</div>
+				</div>
+				<div class="container hours">
+					<canvas id="hours-canvas"></canvas>
+					<svg>
+						<circle fill="transparent" stroke="#000000" opacity="0.1" r="50"/>
+					</svg>
+					<div class="label">
+						<span id="hours-value">0</span>
+						<span class="time-label">Horas</span>
+					</div>
+				</div>
+				<div class="container minutes">
+					<canvas id="minutes-canvas"></canvas>
+					<svg>
+						<circle fill="transparent" stroke="#000000" opacity="0.1" r="50"/>
+					</svg>
+					<div class="label">
+						<span id="minutes-value">0</span>
+						<span class="time-label">Minutos</span>
+					</div>
+				</div>
+				<div class="container seconds">
+					<canvas id="seconds-canvas"></canvas>
+					<svg>
+						<circle fill="transparent" stroke="#000000" opacity="0.1" r="50"/>
+					</svg>
+					<div class="label">
+						<span id="seconds-value">0</span>
+						<span class="time-label">Segundos</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="sociallink">
+			<div class="buttons">
+				<a href="https://wa.me/5521983195552?text=Ol%C3%A1,%20vim%20do%20Morar.VIP" target="_blank" title="Call to inquiry"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+				<a href="https://www.facebook.com/profile.php?id=61592420873471" target="_blank" title="Join us on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+				<a href="https://www.instagram.com/morarvip?igsh=eXc2ZmloY2t2YW5y" target="_blank" title="Join us on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+			</div>
+		</div>
+	</div>
+	<!-- Document Content End -->
+	
+	<!-- Preloader -->
+	<div class="loader"></div>
+	<!-- Preloader End --> 
+    <script src="/js/jquery2.min.js"></script>
+    <script src="/js/timer.js"></script>	
 </body>
 </html>

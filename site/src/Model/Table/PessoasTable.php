@@ -120,6 +120,11 @@ class PessoasTable extends Table
             ->allowEmptyString('email');
 
         $validator
+            ->scalar('password')
+            ->maxLength('password', 150)
+            ->allowEmptyString('password');
+
+        $validator
             ->scalar('cep')
             ->maxLength('cep', 10)
             ->allowEmptyString('cep');

@@ -6,7 +6,15 @@ return function (RouteBuilder $routes): void {
     $routes->setRouteClass(DashedRoute::class);
 
     $routes->scope('/', function (RouteBuilder $builder): void {
-        $builder->connect('/', ['controller' => 'index', 'action' => 'index']);
+        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/interesses', ['controller' => 'Atendimentos', 'action' => 'interesses']);
+        $builder->connect('/esqueci', ['controller' => 'Users', 'action' => 'esqueci']);
+        $builder->connect('/nova-senha/{token}', [
+            'controller' => 'Users',
+            'action' => 'novaSenha',
+        ])->setPass(['token'])->setPatterns([
+            'token' => '[a-f0-9]{64}',
+        ]);
         $builder->connect('/{controller}', ['action' => 'index']);
         $builder->connect('/{controller}/{action}/*', []);
 

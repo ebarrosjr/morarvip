@@ -3,7 +3,7 @@
         <img src="<?= $this->Html->Url->image('logo-full.svg') ?>" alt="Morar.VIP Logo" class="auth-logo" />
         <?= $this->Flash->render() ?>
         <h5 class="card-title mt-3">Confirmação de Cadastro</h5>
-        <p>Digite o código de ativação enviado para seu e-mail para ativar sua conta.</p>
+        <p>Digite o código de ativação enviado por SMS para ativar sua conta.</p>
     </div>
     <div class="card mt-2" style="min-width: 90%;">
         <div class="card-body p-5">
@@ -30,7 +30,11 @@
                 <?= $this->Form->button('Ativar Conta', ['class' => 'btn btn-primary w-50 mt-4 mx-auto d-block']); ?>
             <?= $this->Form->end() ?>
             <div class="auth-notice mt-4">
-                <p><i class="ri-information-line"></i> Não recebeu o código de ativação? <a href="#">Clique aqui para reenviar</a></p>
+                <p><i class="ri-information-line"></i> Não recebeu o código de ativação?</p>
+                <?= $this->Form->create(null, ['class' => 'text-center']) ?>
+                    <?= $this->Form->hidden('resend_activation_code', ['value' => 1]) ?>
+                    <?= $this->Form->button('Reenviar código por SMS', ['class' => 'btn btn-outline-primary']) ?>
+                <?= $this->Form->end() ?>
             </div>
         </div>
     </div>

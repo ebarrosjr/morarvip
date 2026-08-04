@@ -211,10 +211,10 @@ font-family: 'Poppins', sans-serif;
   /* Darken */
   --ltn__primary-color-3: #133236;
   /* Lighten */
-  --ltn__secondary-color: #FF5A3C;
-  --ltn__secondary-color-2: #cb3421;
+  --ltn__secondary-color: #92611b;
+  --ltn__secondary-color-2: #a16208;
   /* Darken */
-  --ltn__secondary-color-3: #fb412a;
+  --ltn__secondary-color-3: #c48a3a;
   /* Lighten */
   --ltn__heading-color: #071c1f;
   --ltn__paragraph-color: #5C727D;
@@ -14463,6 +14463,22 @@ input.cart-plus-minus-box {
   background-color: var(--ltn__secondary-color); }
   .reverse-color:hover {
     background-color: var(--ltn__primary-color); }
+
+.property-details-btn {
+    background: white;
+    border-radius: 30px;
+    border: 1px solid var(--ltn__secondary-color);
+    color: var(--ltn__secondary-color);
+    display: inline-block;
+    font-weight: 800;
+    padding: 14px 24px;
+    white-space: nowrap;
+}
+
+.property-details-btn:hover {
+    background: var(--ltn__secondary-color);
+    color: var(--white);
+}
 
 .btn-white {
   background-color: var(--white);

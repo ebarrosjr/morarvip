@@ -93,7 +93,8 @@
                 </div>
                 <div class="mb-3 mt-1 pt-4 col-md-3">
                     <label for="financia" class="form-label">
-                        <?=$this->Form->control('financia', ['type' => 'checkbox', 'label' => false, 'value' => 1, 'class' => 'form-check-input'])?>
+                        <?= $this->Form->hidden('financia', ['value' => 0]) ?>
+                        <input type="checkbox" class="form-check-input" name="financia" id="financia" value="1"<?= $imovei->financia ? ' checked' : '' ?>>
                         <span class="form-check-label">Aceita financiamento</span>
                     </label>
                 </div>
@@ -126,25 +127,29 @@
         </div>
         <div class="mb-3 mt-1 pt-4 col-md-2">
             <label for="comissao-permanente" class="form-label">
-                <input type="checkbox" class="form-check-input me-1" name="comissao_permanente" id="comissao-permanente" value="1">
+                <?= $this->Form->hidden('comissao_permanente', ['value' => 0]) ?>
+                <input type="checkbox" class="form-check-input me-1" name="comissao_permanente" id="comissao-permanente" value="1"<?= $imovei->comissao_permanente ? ' checked' : '' ?>>
                 <span class="form-check-label">Comissão permanente</span>
             </label>
         </div>        
         <div class="mb-3 mt-1 pt-4 col-md-2">
             <label for="show-site" class="form-label">
-                <input type="checkbox" class="form-check-input me-1" name="show_site" id="show-site" value="1">
+                <?= $this->Form->hidden('show_site', ['value' => 0]) ?>
+                <input type="checkbox" class="form-check-input me-1" name="show_site" id="show-site" value="1"<?= $imovei->show_site ? ' checked' : '' ?>>
                 <span class="form-check-label">Mostrar imóvel no site</span>
             </label>
         </div>
         <div class="mb-3 mt-1 pt-4 col-md-2">
             <label for="show-preco-site" class="form-label">
-                <input type="checkbox" class="form-check-input me-1" name="show_preco_site" id="show-preco-site" value="1">
+                <?= $this->Form->hidden('show_preco_site', ['value' => 0]) ?>
+                <input type="checkbox" class="form-check-input me-1" name="show_preco_site" id="show-preco-site" value="1"<?= $imovei->show_preco_site ? ' checked' : '' ?>>
                 <span class="form-check-label">Mostrar preço no site</span>
             </label>
         </div>        
         <div class="mb-3 mt-1 pt-4 col-md-2">
             <label for="corretor-opcionista" class="form-label">
-                <input type="checkbox" class="form-check-input me-1" name="corretor_opcionista" id="corretor-opcionista" value="1">
+                <?= $this->Form->hidden('corretor_opcionista', ['value' => 0]) ?>
+                <input type="checkbox" class="form-check-input me-1" name="corretor_opcionista" id="corretor-opcionista" value="1"<?= $imovei->corretor_opcionista ? ' checked' : '' ?>>
                 <span class="form-check-label">Sou opcionista</span>
             </label>
         </div>
@@ -152,7 +157,8 @@
     <div class="row">
         <div class="mb-3 mt-1 pt-4 col-md-2">
             <label for="exclusividade" class="form-label pt-4 mt-2">
-                <input type="checkbox" class="form-check-input me-1" name="exclusividade" id="exclusividade" value="1">
+                <?= $this->Form->hidden('exclusividade', ['value' => 0]) ?>
+                <input type="checkbox" class="form-check-input me-1" name="exclusividade" id="exclusividade" value="1"<?= $imovei->exclusividade ? ' checked' : '' ?>>
                 <span class="form-check-label">Exclusividade</span>
             </label>
         </div>
@@ -166,6 +172,7 @@
         </div>
         <div class="mb-3 mt-1 pt-4 col-md-2">
             <label for="parceiria" class="form-label pt-4 mt-2">
+                <?= $this->Form->hidden('parceiria', ['value' => 0]) ?>
                 <input type="checkbox" class="form-check-input me-1" name="parceiria" id="parceiria" value="1"<?= $imovei->parceiria ? ' checked' : '' ?>>
                 <span class="form-check-label">Aceita parceria</span>
             </label>

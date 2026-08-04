@@ -1,0 +1,141 @@
+.morarvip-header-search-area {
+    background: var(--white);
+    padding: 14px 0;
+}
+
+.morarvip-header-search-form {
+    align-items: center;
+    border: 1px solid var(--border-color-7);
+    border-radius: 32px;
+    display: flex;
+    gap: 12px;
+    margin: 0;
+    padding: 0px 0px 0px 18px;
+}
+
+.morarvip-header-search-form i {
+    color: var(--ltn__secondary-color);
+    font-size: 18px;
+}
+
+.morarvip-header-search-form input {
+    border: 0;
+    flex: 1;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+}
+
+.morarvip-header-search-form input:focus {
+    outline: 0;
+}
+
+.morarvip-header-search-form button {
+    background: var(--ltn__secondary-color);
+    border: 0;
+    border-radius: 26px;
+    color: var(--white);
+    font-weight: 800;
+    padding: 11px 24px;
+}
+
+.morarvip-header-search-form button:hover {
+    background: var(--ltn__primary-color);
+}
+
+.modal-backdrop {
+    z-index: 100040;
+}
+
+.modal {
+    z-index: 100050;
+}
+
+.ltn__modal-area {
+    position: relative;
+    z-index: 100050;
+}
+
+.property-submit-modal-dialog {
+    max-width: min(1180px, calc(100vw - 32px)) !important;
+    width: min(1180px, calc(100vw - 32px));
+}
+
+.property-submit-modal-content {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.property-submit-modal-content .form-control,
+.property-submit-modal-content select {
+    width: 100%;
+}
+
+.auth-modal-links a {
+    color: var(--ltn__primary-color);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-modal-links a:hover {
+    color: var(--ltn__secondary-color);
+}
+
+.morarvip-user-avatar {
+    border: 2px solid var(--ltn__secondary-color);
+    border-radius: 50%;
+    display: inline-block;
+    height: 44px;
+    object-fit: cover;
+    width: 44px;
+}
+
+.ltn__utilize-buttons .morarvip-user-avatar {
+    border-width: 1px;
+    height: 36px;
+    width: 36px;
+}
+
+.morarvip-user-menu-name {
+    color: var(--ltn__heading-color);
+    display: block;
+    font-weight: 700;
+    padding: 8px 16px;
+    white-space: nowrap;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.wrapper > .ltn__product-area {
+    flex: 1 0 auto;
+    margin-bottom: 0;
+    padding-bottom: 80px;
+}
+
+.wrapper > .ltn__footer-area {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+@media (max-width: 575px) {
+    .morarvip-header-search-form {
+        padding-left: 14px;
+    }
+
+    .morarvip-header-search-form button {
+        padding: 10px 16px;
+    }
+}

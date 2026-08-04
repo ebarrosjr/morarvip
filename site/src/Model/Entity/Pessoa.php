@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 
 /**
  * Pessoa Entity
@@ -69,6 +70,11 @@ class Pessoa extends Entity
         'renda_id' => true,
         'religiao_id' => true,
         'email' => true,
+        'password' => true,
+        'password_reset_token' => true,
+        'google_id' => true,
+        'facebook_id' => true,
+        'email_verified' => true,
         'cep' => true,
         'numero' => true,
         'complemento' => true,
@@ -90,4 +96,19 @@ class Pessoa extends Entity
         'motivo' => true,
         'atendimentos' => true,
     ];
+
+    protected array $_hidden = [
+        'password',
+        'password_reset_token',
+        'google_id',
+        'facebook_id',
+    ];
+
+    protected function _setPassword(string $password): ?string
+    {
+        if (mb_strlen($password) > 0) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
+        return null;
+    }    
 }

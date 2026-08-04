@@ -113,6 +113,26 @@ class ImoveisTable extends Table
             ->allowEmptyString('complemento');
 
         $validator
+            ->scalar('rua')
+            ->maxLength('rua', 255)
+            ->allowEmptyString('rua');
+
+        $validator
+            ->scalar('bairro')
+            ->maxLength('bairro', 150)
+            ->allowEmptyString('bairro');
+
+        $validator
+            ->scalar('cidade')
+            ->maxLength('cidade', 150)
+            ->allowEmptyString('cidade');
+
+        $validator
+            ->scalar('uf')
+            ->maxLength('uf', 2)
+            ->allowEmptyString('uf');
+
+        $validator
             ->decimal('latitude')
             ->allowEmptyString('latitude');
 

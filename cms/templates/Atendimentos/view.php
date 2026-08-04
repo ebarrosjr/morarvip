@@ -14,25 +14,18 @@
         </div>
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <div class="d-flex gap-2">
-                <div class="position-relative">
-                    <button class="btn btn-primary btn-wave waves-effect waves-light" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                        Filter By <i class="ri-arrow-down-s-fill ms-1"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
-                        <li><a class="dropdown-item" href="javascript:void(0);">Today</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">Yesterday</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">Last 7 Days</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">Last 30 Days</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">Last 6 Months</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">Last Year</a></li>
-                    </ul>
-                </div>
-                <button class="btn btn-secondary btn-icon btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Download">
-                    <i class="ti ti-download"></i>
-                </button>
-                <button class="btn btn-success btn-icon btn-wave waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share">
-                    <i class="ti ti-share-3"></i>
-                </button>
+                <?= $this->Html->link(
+                    '<i class="ti ti-phone"></i> Novo Atendimento',
+                    ['controller' => 'Atendimentos', 'action' => 'atender', $pessoaId],
+                    [
+                        'class' => 'btn btn-secondary btn-wave waves-effect waves-light',
+                        'data-ajax-modal' => true,
+                        'data-bs-toggle' => 'tooltip',
+                        'data-bs-placement' => 'top',
+                        'data-bs-title' => 'Novo atendimento',
+                        'escape' => false,
+                    ]
+                ) ?>
             </div>
         </div>
     </div>
@@ -54,7 +47,58 @@
                         "O" => "Neutro"
                     ];
 
+                    $normalizarTelefoneBrasil = function (?string $telefone): string {
+                        $numero = preg_replace('/\D+/', '', (string)$telefone);
+
+                        if ($numero === '') {
+                            return '';
+                        }
+
+                        if (str_starts_with($numero, '55')) {
+                            return $numero;
+                        }
+
+                        return '55' . $numero;
+                    };
+
+                    $formatarTelefoneBrasil = function (string $numero): string {
+                        $semDdi = preg_replace('/^55/', '', $numero);
+
+                        if (strlen($semDdi) === 11) {
+                            return sprintf(
+                                '+55 (%s) %s-%s',
+                                substr($semDdi, 0, 2),
+                                substr($semDdi, 2, 5),
+                                substr($semDdi, 7)
+                            );
+                        }
+
+                        if (strlen($semDdi) === 10) {
+                            return sprintf(
+                                '+55 (%s) %s-%s',
+                                substr($semDdi, 0, 2),
+                                substr($semDdi, 2, 4),
+                                substr($semDdi, 6)
+                            );
+                        }
+
+                        return '+' . $numero;
+                    };
+
                 foreach($atendimentos as $atendimento):
+                    $mediaContatoNumero = '';
+                    $mediaContatoHref = '';
+                    $mediaContatoIcon = '';
+
+                    if ($atendimento->canal === 'T') {
+                        $mediaContatoNumero = $normalizarTelefoneBrasil($atendimento->pessoa->telefone ?? null);
+                        $mediaContatoHref = $mediaContatoNumero !== '' ? 'tel:+' . $mediaContatoNumero : '';
+                        $mediaContatoIcon = 'ri-phone-line';
+                    } elseif ($atendimento->canal === 'W') {
+                        $mediaContatoNumero = $normalizarTelefoneBrasil($atendimento->pessoa->whatsapp ?? null);
+                        $mediaContatoHref = $mediaContatoNumero !== '' ? 'https://wa.me/' . $mediaContatoNumero : '';
+                        $mediaContatoIcon = 'ri-whatsapp-line';
+                    }
                 ?>
                 <li>
                     <div class="notification-time">
@@ -74,6 +118,14 @@
                             <div class="flex-fill w-50">
                                 <h5 class="mb-1 fs-15 fw-medium text-dark"><?= $atendimento->pessoa->nome ?></h5>
                                 <p class="mb-0 mb-0 text-info">Media: <?= $canais[$atendimento->canal] ?></p>
+                                <?php if ($mediaContatoHref !== ''): ?>
+                                    <p class="mb-0">
+                                        <a class="text-primary fw-medium" href="<?= h($mediaContatoHref) ?>" target="<?= $atendimento->canal === 'W' ? '_blank' : '_self' ?>" rel="noopener">
+                                            <i class="<?= h($mediaContatoIcon) ?>"></i>
+                                            <?= h($formatarTelefoneBrasil($mediaContatoNumero)) ?>
+                                        </a>
+                                    </p>
+                                <?php endif; ?>
                                 <?php
                                 if($atendimento->interesse) {
                                 ?>

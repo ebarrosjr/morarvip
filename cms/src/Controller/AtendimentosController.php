@@ -8,15 +8,45 @@ class AtendimentosController extends AppController
 
     public function index()
     {
-        $query = $this->fetchTable('Pessoas')->find()
-            ->matching('Atendimentos')
-            ->contain([
-                'Atendimentos' => function ($q) {
-                    return $q->orderBy(['Atendimentos.created' => 'DESC']);
-                }
-            ]);
-        $pessoas = $this->paginate($query);
-        $this->set(compact('pessoas'));
+        $ultimoAtendimentoPorPessoa = $this->Atendimentos
+            ->find()
+            ->select(['id' => 'MAX(Atendimentos.id)'])
+            ->groupBy(['Atendimentos.pessoa_id']);
+
+        $query = $this->Atendimentos
+            ->find()
+            ->where(['Atendimentos.id IN' => $ultimoAtendimentoPorPessoa])
+            ->contain(['Pessoas', 'Imoveis'])
+            ->orderBy(['Atendimentos.created' => 'DESC']);
+
+        $atendimentos = $this->paginate($query);
+        $this->set(compact('atendimentos'));
+    }
+
+    public function interesses()
+    {
+        $userId = (int)$this->Authentication->getIdentity()->getIdentifier();
+        $imoveisDoCorretor = $this->fetchTable('Imoveis')
+            ->find()
+            ->select(['Imoveis.id'])
+            ->where(['Imoveis.user_id' => $userId]);
+
+        $query = $this->Atendimentos
+            ->find()
+            ->where([
+                'Atendimentos.interesse' => 1,
+                'Atendimentos.imovel_id IN' => $imoveisDoCorretor,
+            ])
+            ->contain(['Pessoas', 'Imoveis'])
+            ->orderBy(['Atendimentos.created' => 'DESC']);
+
+        $atendimentos = $this->paginate($query);
+        $pageTitle = 'Interesses recebidos';
+        $breadcrumbTitle = 'Interesses';
+        $showNextButton = false;
+
+        $this->set(compact('atendimentos', 'pageTitle', 'breadcrumbTitle', 'showNextButton'));
+        $this->render('index');
     }
 
     public function atender($id = null)
@@ -139,15 +169,16 @@ class AtendimentosController extends AppController
                 $escopoPermitido,
             ])
             ->firstOrFail();
+        $pessoaId = (int)$atendimento->pessoa_id;
 
         $atendimentos = $this->Atendimentos->find()
             ->where([
-                'Atendimentos.pessoa_id' => $atendimento->pessoa_id,
+                'Atendimentos.pessoa_id' => $pessoaId,
                 $escopoPermitido,
             ])
             ->orderBy(['Atendimentos.created' => 'DESC'])
             ->contain(['Pessoas', 'Users', 'Imoveis']);
 
-        $this->set(compact('atendimentos'));
+        $this->set(compact('atendimentos', 'pessoaId'));
     }
 }

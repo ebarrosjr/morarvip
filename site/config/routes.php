@@ -51,6 +51,30 @@ return function (RouteBuilder $routes): void {
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         $builder->connect('/', ['controller' => 'Index', 'action' => 'soon']);
+        $builder->connect('/consultoria-imobiliaria', ['controller' => 'Index', 'action' => 'consultoriaImobiliaria']);
+        $builder->connect('/termos-de-uso', ['controller' => 'Index', 'action' => 'termosDeUso']);
+        $builder->connect('/politica-de-privacidade', ['controller' => 'Index', 'action' => 'politicaDePrivacidade']);
+        
+        $builder->connect('/detalhe-imovel/{id}/{slug}', [
+                'controller' => 'Index',
+                'action' => 'detalheImovel'
+            ])->setPass(['id'])->setPatterns([
+            'id' => '[0-9]+',
+            'slug' => '[^/]+',
+        ]);
+        $builder->connect('/corretor/{id}/{name}', [
+                'controller' => 'Index',
+                'action' => 'corretor',
+            ])->setPass(['id'])->setPatterns([
+            'id' => '[0-9]+',
+            'name' => '[^/]+',
+        ]);
+        $builder->connect('/corretor/{id}', [
+                'controller' => 'Index',
+                'action' => 'corretor',
+            ])->setPass(['id'])->setPatterns([
+            'id' => '[0-9]+',
+        ]);
         $builder->connect('/{controller}', ['action' => 'index']);
         $builder->connect('/{controller}/{action}/*', []);
 

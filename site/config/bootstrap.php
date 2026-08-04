@@ -96,6 +96,35 @@ if (file_exists(CONFIG . 'app_local.php')) {
     Configure::load('app_local', 'default');
 }
 
+$imageUploadEnvironment = Configure::read('debug') ? 'homolog' : 'main';
+$imageUploadHost = strtolower((string)env('HTTP_HOST', env('SERVER_NAME', '')));
+$imageUploadHost = preg_replace('/:\d+$/', '', $imageUploadHost) ?? '';
+$isLocalImageHost = in_array($imageUploadHost, ['localhost', '127.0.0.1', '::1'], true)
+    || str_ends_with($imageUploadHost, '.localhost');
+$imageUploadDefaultBaseUrl = $isLocalImageHost
+    ? 'http://localhost:8763/uploads'
+    : 'https://imagens.morar.vip';
+$imageUploadBaseUrl = rtrim((string)env(
+    'IMAGE_UPLOAD_BASE_URL',
+    $imageUploadDefaultBaseUrl
+), '/');
+$imageUploadDefaultRoot = $isLocalImageHost
+    ? DS . 'mnt' . DS . '08B84889B84876EA' . DS . 'wwwroot' . DS . 'projetos' . DS . 'shared' . DS . 'uploads'
+    : dirname(ROOT, 2) . DS . 'shared' . DS . 'uploads';
+$imageUploadRoot = rtrim((string)env(
+    'IMAGE_UPLOAD_ROOT',
+    $imageUploadDefaultRoot
+), DS);
+
+defined('IMAGE_BASE_URL') || define(
+    'IMAGE_BASE_URL',
+    $imageUploadBaseUrl . '/' . $imageUploadEnvironment . '/images'
+);
+defined('IMAGE_UPLOAD_PATH') || define(
+    'IMAGE_UPLOAD_PATH',
+    $imageUploadRoot . DS . $imageUploadEnvironment . DS . 'images' . DS
+);
+
 /*
  * When debug = true the metadata cache should only last for a short time.
  */
