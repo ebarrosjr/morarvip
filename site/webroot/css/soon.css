@@ -1,0 +1,636 @@
+::selection {
+	background: rgba(0, 0, 0, 0.99);
+	color: #FFF;
+}
+.blackbg ::selection {
+  color: #000000;
+  background: rgba(255, 255, 255, 0.99);
+}
+
+body, html {
+	height: 100%;
+	margin: 0;
+}
+body {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	font: 1.5rem "PT Sans", sans-serif;
+	justify-content: center;
+	min-height: 100vh;
+	background-color: #ffffff;
+	padding: 30px 15px;
+}
+body.blackbg {
+	background-color: #000000;
+}
+body.imgbg {
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('../img/background-01.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+body.imgbg2 {
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('../img/background-02.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+body.imgbg3 {
+	background: url('../img/background-04.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+img {
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* --------- video background -------- */
+
+.videoContainer {
+    object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -100;
+}
+.videoContainer video {
+    position: relative;
+    z-index: 1;
+	object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+}
+.videoContainer .overlay {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+    background: black;
+    opacity: 0.6;
+}
+
+/* ----------------------------------- */
+
+.content {
+	text-align: center;
+    max-width: 980px;
+    width: 100%;
+    margin: 0 auto;
+	padding: 0 10px;
+}
+.content:after,.content:before{
+	content:"";
+	display:table;
+	clear:both;
+}
+.blackbg h1,.blackbg p {
+	color: #ffffff;
+}
+.imgbg h1,.imgbg p {
+	color: #ffffff;
+}
+.imgbg.imgbg3 h1,.imgbg.imgbg3 p {
+	color: #000000;
+}
+.videobg h1,.videobg p {
+	color: #ffffff;
+}
+
+/* ------- counter ------- */
+.countdown {
+	display: inline-block;
+}
+.countdown .container {
+    position: relative;
+    display: inline-block;
+}
+.countdown .container svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.countdown .container .label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -55%);
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.countdown .container .label span {
+	font-size: 20px;
+	color: #000;
+	line-height: 30px;
+	font-weight: bold;
+}
+.countdown .container .label .time-label {
+	font-size: 18px;
+}
+.blackbg .countdown .container .label span {
+	color: #ffffff;
+}
+.imgbg .countdown .container .label span {
+	color: #ffffff;
+}
+.imgbg.imgbg3 .countdown .container .label span {
+	color: #000000;
+}
+.videobg .countdown .container .label span {
+	color: #ffffff;
+}
+
+/* ------- subscribe form ------- */
+.subscribe {
+    margin-top: 30px;
+}
+.subscribe form{
+	display: flex;
+	grid-column: 2;
+	width: 450px;
+	margin: 0 auto;
+}
+.subscribe .email,.subscribe .btn, .pagelink .btn{
+	font: inherit;
+	border: 0;
+}
+.subscribe .email:focus,.subscribe .btn:focus{
+	outline: none;
+}
+.subscribe .email {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #000000;
+}
+.subscribe .btn{
+	padding: 10px;
+	background-color: #ffffff;
+	color: #000000;
+	border: 1px solid #000000;
+	border-left: 0;
+	cursor: pointer;
+	box-shadow: inset 0px 0px 0px #000000;
+	transition: all 0.5s;
+}
+.subscribe .btn:hover{
+	box-shadow: inset 150px 0px 0px #000000;
+	color: #ffffff;
+}
+
+.blackbg .email {
+    border: 1px solid #ffffff;
+	background-color: #000000;
+	color: #ffffff;
+}
+.blackbg .subscribe .btn{
+	background-color: #000000;
+	color: #ffffff;
+	border: 1px solid #ffffff;
+	border-left: 0;
+	box-shadow: inset 0px 0px 0px #ffffff;
+	transition: all 0.5s;
+}
+.blackbg .subscribe .btn:hover{
+	box-shadow: inset 150px 0px 0px #ffffff;
+	color: #000000;
+}
+
+.imgbg .email {
+    border: 1px solid #ffffff;
+	background-color: transparent;
+	color: #ffffff;
+}
+.imgbg .subscribe .btn{
+	background-color: transparent;
+	color: #ffffff;
+	border: 1px solid #ffffff;
+	border-left: 0;
+	box-shadow: inset 0px 0px 0px #ffffff;
+	transition: all 0.5s;
+}
+.imgbg .subscribe .btn:hover{
+	box-shadow: inset 150px 0px 0px #ffffff;
+	color: #000000;
+}
+
+.imgbg.imgbg3 .email {
+    border: 1px solid #000000;
+	background-color: transparent;
+	color: #000000;
+}
+.imgbg.imgbg3 .subscribe .btn{
+	background-color: transparent;
+	color: #000000;
+	border: 1px solid #000000;
+	border-left: 0;
+	box-shadow: inset 0px 0px 0px #000000;
+	transition: all 0.5s;
+}
+.imgbg.imgbg3 .subscribe .btn:hover{
+	box-shadow: inset 150px 0px 0px #000000;
+	color: #ffffff;
+}
+
+.videobg .email {
+    border: 1px solid #ffffff;
+	background-color: transparent;
+	color: #ffffff;
+}
+.videobg .subscribe .btn{
+	background-color: transparent;
+	color: #ffffff;
+	border: 1px solid #ffffff;
+	border-left: 0;
+	box-shadow: inset 0px 0px 0px #ffffff;
+	transition: all 0.5s;
+}
+.videobg .subscribe .btn:hover{
+	box-shadow: inset 150px 0px 0px #ffffff;
+	color: #000000;
+}
+
+/* ------- subscribe success ------- */
+.subscribe-success-true,.subscribe-success-false {
+    display: none;
+}
+.subscribe-success {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: #000000;
+	letter-spacing: 2px;
+}
+.subscribe-success .subscribe-success-sub {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #ffffff;
+	text-align: center;
+}
+.subscribe-success .subscribe-success-sub-2 {
+	position: fixed;
+	top: 3%;
+	left: 2%;
+	color: #ffffff;
+	cursor: pointer;
+}
+.subscribe-success .subscribe-success-sub i {
+    font-size: 100px;
+}
+
+/* ------- social media ------- */
+.sociallink {
+    margin-top: 50px;
+}
+.sociallink .buttons {
+    display: inline-block;
+}
+.sociallink a {
+    text-decoration: none !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 15px;
+    overflow: hidden;
+    position: relative;
+    color: #000000;
+    border: 2px solid #000000;
+    margin-right: 10px;
+}
+.sociallink a i {
+	position: relative;
+	z-index: 3;
+}
+.sociallink a:last-child {
+	margin-right: 0px;
+}
+.sociallink a:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+.sociallink a i {
+	display: inline-block;
+	vertical-align: middle;
+}
+.sociallink a {
+	transition: all 0.3s linear 0s;
+	display: inline-block;
+}
+.sociallink a:after {
+	content: "";
+	display: block;
+	width: 90%;
+	height: 90%;
+	top: -110%;
+	left: 0;
+	right: 0;
+	margin: auto;
+	position: absolute;
+	background-color: #000000;
+	border-radius: 50%;
+}
+.sociallink a:hover {
+	color: #ffffff;
+}
+.sociallink a:hover:after {
+	top: 5%;
+	transition: all 0.3s linear 0s;
+}
+
+.blackbg a {
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+.blackbg .sociallink a:after {
+	background-color: #ffffff;
+}
+.blackbg .sociallink a:hover {
+	color: #000000;
+}
+
+.imgbg a {
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+.imgbg .sociallink a:after {
+	background-color: #ffffff;
+}
+.imgbg .sociallink a:hover {
+	color: #000000;
+}
+
+.imgbg.imgbg3 a {
+    color: #000000;
+    border: 2px solid #000000;
+}
+.imgbg.imgbg3 .sociallink a:after {
+	background-color: #000000;
+}
+
+@media (max-width: 767px) {
+	body {
+		align-items: flex-start;
+		min-height: 100vh;
+		overflow-x: hidden;
+		overflow-y: auto;
+		padding: 24px 14px;
+	}
+
+	.content {
+		padding: 0;
+	}
+
+	.content img {
+		height: auto;
+		max-width: 220px;
+		width: 70%;
+	}
+
+	.content h1 {
+		font-size: 34px;
+		line-height: 1.1;
+		margin: 24px 0 14px;
+	}
+
+	.content p {
+		font-size: 20px;
+		line-height: 1.35;
+		margin: 0 auto 22px;
+		max-width: 340px;
+	}
+
+	.counter {
+		width: 100%;
+	}
+
+	.countdown {
+		display: grid;
+		gap: 18px 10px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		justify-items: center;
+		width: 100%;
+	}
+
+	.countdown .container {
+		height: 112px;
+		width: 112px;
+	}
+
+	.countdown .container canvas,
+	.countdown .container svg {
+		height: 112px;
+		width: 112px;
+	}
+
+	.countdown .container svg circle {
+		r: 42;
+	}
+
+	.countdown .container .label span {
+		font-size: 16px;
+		line-height: 22px;
+	}
+
+	.countdown .container .label .time-label {
+		font-size: 14px;
+		line-height: 18px;
+	}
+
+	.sociallink {
+		margin-top: 28px;
+		padding-bottom: 24px;
+	}
+}
+
+@media (max-width: 380px) {
+	.content h1 {
+		font-size: 30px;
+	}
+
+	.content p {
+		font-size: 18px;
+	}
+
+	.countdown .container,
+	.countdown .container canvas,
+	.countdown .container svg {
+		height: 100px;
+		width: 100px;
+	}
+}
+.imgbg.imgbg3 .sociallink a:hover {
+	color: #ffffff;
+}
+
+.videobg a {
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+.videobg .sociallink a:after {
+	background-color: #ffffff;
+}
+.videobg .sociallink a:hover {
+	color: #000000;
+}
+
+/* ------- page link -------- */
+.pagelink {
+    margin-top: 50px;
+}
+.pagelink .btn {
+    padding: 10px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+    cursor: pointer;
+    box-shadow: inset 0px 0px 0px #000000;
+    transition: all 0.5s;
+	text-decoration: unset;
+}
+.pagelink .btn:hover {
+    box-shadow: inset 150px 0px 0px #000000;
+    color: #ffffff;
+}
+.pagelink2 .btn{
+	background-color: transparent;
+	color: #ffffff;
+	border: 1px solid #ffffff;
+	box-shadow: inset 0px 0px 0px #ffffff;
+	transition: all 0.5s;
+}
+.pagelink2 .btn:hover{
+	box-shadow: inset 150px 0px 0px #ffffff;
+	color: #000000;
+}
+
+/* ------- loader ------- */
+.loader {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(../img/loader.gif) center no-repeat #000000;
+}
+
+/* ------- common ------- */
+.mr-20 {
+	margin-right: 20px;
+}
+.mt-0 {
+	margin-top: 0;
+}
+.mb-0 {
+	margin-bottom: 0;
+}
+.border-0 {
+	border: unset !important;
+}
+.container-fuil {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container-fuil {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container-fuil {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container-fuil {
+    width: 1170px;
+  }
+}
+
+
+/* ------- media mix ------- */
+@media screen and (max-width: 600px) {
+	.subscribe form {
+		display: inline-grid;
+		width: 90%;
+	}
+	.subscribe .email {
+		border: 1px solid #000000;
+	}
+	.subscribe .btn {
+		border: 1px solid #000000;
+	}
+	
+	.blackbg .email {
+		border: 1px solid #ffffff;
+		background-color: #000000;
+		color: #ffffff;
+	}
+	.blackbg .subscribe .btn{
+		background-color: #000000;
+		color: #ffffff;
+		border: 1px solid #ffffff;
+		box-shadow: inset 0px 0px 0px #ffffff;
+		transition: all 0.5s;
+	}
+	.blackbg .subscribe .btn:hover{
+		box-shadow: inset 150px 0px 0px #ffffff;
+		color: #000000;
+	}
+	
+	.imgbg .email {
+		border: 1px solid #ffffff;
+		background-color: transparent;
+		color: #ffffff;
+	}
+	.imgbg .subscribe .btn{
+		background-color: transparent;
+		color: #ffffff;
+		border: 1px solid #ffffff;
+		box-shadow: inset 0px 0px 0px #ffffff;
+		transition: all 0.5s;
+	}
+	.imgbg .subscribe .btn:hover{
+		box-shadow: inset 150px 0px 0px #ffffff;
+		color: #000000;
+	}
+	
+	.videobg .email {
+		border: 1px solid #ffffff;
+		background-color: transparent;
+		color: #ffffff;
+	}
+	.videobg .subscribe .btn{
+		background-color: transparent;
+		color: #ffffff;
+		border: 1px solid #ffffff;
+		box-shadow: inset 0px 0px 0px #ffffff;
+		transition: all 0.5s;
+	}
+	.videobg .subscribe .btn:hover{
+		box-shadow: inset 150px 0px 0px #ffffff;
+		color: #000000;
+	}
+}

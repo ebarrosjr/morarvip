@@ -12,6 +12,35 @@
         return null;
     };
 
+    const closeModal = function () {
+        const modal = getModal();
+        if (modal) {
+            modal.hide();
+            return;
+        }
+
+        if (window.jQuery) {
+            window.jQuery(modalElement).modal('hide');
+        }
+    };
+
+    const redirectAfterSuccess = function (redirect) {
+        closeModal();
+
+        const target = new URL(redirect, window.location.href);
+        if (
+            target.origin === window.location.origin
+            && target.pathname === window.location.pathname
+            && target.search === window.location.search
+        ) {
+            window.location.hash = target.hash;
+            window.location.reload();
+            return;
+        }
+
+        window.location.href = target.href;
+    };
+
     const applyModalSize = function () {
         const dialog = modalElement.querySelector('.modal-dialog');
         if (!dialog) {
@@ -65,7 +94,7 @@
             const payload = await response.json();
             if (payload.success) {
                 if (payload.redirect) {
-                    window.location.href = payload.redirect;
+                    redirectAfterSuccess(payload.redirect);
                 }
                 return;
             }
@@ -100,7 +129,7 @@
 
             if (payload.success) {
                 if (payload.redirect) {
-                    window.location.href = payload.redirect;
+                    redirectAfterSuccess(payload.redirect);
                     return;
                 }
 
