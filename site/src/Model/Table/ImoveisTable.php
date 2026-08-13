@@ -197,6 +197,11 @@ class ImoveisTable extends Table
             ->allowEmptyString('iptu');
 
         $validator
+            ->numeric('condominio')
+            ->greaterThanOrEqual('condominio', 0)
+            ->allowEmptyString('condominio');
+
+        $validator
             ->numeric('comissao')
             ->greaterThanOrEqual('comissao', 0)
             ->allowEmptyString('comissao');

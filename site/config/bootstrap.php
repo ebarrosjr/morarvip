@@ -96,7 +96,13 @@ if (file_exists(CONFIG . 'app_local.php')) {
     Configure::load('app_local', 'default');
 }
 
-$imageUploadEnvironment = Configure::read('debug') ? 'homolog' : 'main';
+$imageUploadEnvironment = (string)env(
+    'IMAGE_UPLOAD_ENVIRONMENT',
+    Configure::read('debug') ? 'homolog' : 'main'
+);
+if (!in_array($imageUploadEnvironment, ['homolog', 'main'], true)) {
+    $imageUploadEnvironment = Configure::read('debug') ? 'homolog' : 'main';
+}
 $imageUploadHost = strtolower((string)env('HTTP_HOST', env('SERVER_NAME', '')));
 $imageUploadHost = preg_replace('/:\d+$/', '', $imageUploadHost) ?? '';
 $isLocalImageHost = in_array($imageUploadHost, ['localhost', '127.0.0.1', '::1'], true)
