@@ -23156,3 +23156,19 @@ a.link-underline-dark {
 .legacy div img {
   display: none;
 }
+.social-media ul {
+  color: black;
+}
+.social-media  li {
+  display: inline-block;
+  margin-right: 10px;
+}
+.social-media  li a {
+  color: black;
+  text-decoration: none;
+  width: 30px;
+  height: 30px;
+  display: block;
+  font-size: 29px;
+  text-align: center;
+}

@@ -50,7 +50,7 @@ return function (RouteBuilder $routes): void {
     $routes->setRouteClass(DashedRoute::class);
 
     $routes->scope('/', function (RouteBuilder $builder): void {
-        $builder->connect('/', ['controller' => 'Index', 'action' => 'soon']);
+        $builder->connect('/', ['controller' => 'Index', 'action' => 'index']);
         $builder->connect('/consultoria-imobiliaria', ['controller' => 'Index', 'action' => 'consultoriaImobiliaria']);
         $builder->connect('/termos-de-uso', ['controller' => 'Index', 'action' => 'termosDeUso']);
         $builder->connect('/politica-de-privacidade', ['controller' => 'Index', 'action' => 'politicaDePrivacidade']);

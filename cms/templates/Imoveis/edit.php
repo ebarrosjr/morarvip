@@ -98,18 +98,29 @@
                         <span class="form-check-label">Aceita financiamento</span>
                     </label>
                 </div>
-                <div class="mb-3 col-md-3">
-                    <label class="form-label" for="valor">Valor</label>
-                    <div class="input-group">
-                        <span class="input-group-text">R$</span>
-                        <?= $this->Form->control('valor', ['type' => 'number', 'step' => '0.1', 'label' => false, 'class' => 'form-control']) ?>
-                    </div>
-                </div>
-                <div class="mb-3 col-md-3">
-                    <label class="form-label" for="iptu">IPTU</label>
-                    <div class="input-group">
-                        <span class="input-group-text">R$</span>
-                        <?= $this->Form->control('iptu', ['type' => 'number', 'step' => '0.1', 'label' => false, 'class' => 'form-control']) ?>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="valor">Valor</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <?= $this->Form->control('valor', ['type' => 'number', 'step' => '0.1', 'label' => false, 'class' => 'form-control']) ?>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="iptu">IPTU</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <?= $this->Form->control('iptu', ['type' => 'number', 'step' => '0.1', 'label' => false, 'class' => 'form-control']) ?>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="condominio">Condomínio</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <?= $this->Form->control('condominio', ['type' => 'number', 'step' => '0.1', 'label' => false, 'class' => 'form-control']) ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

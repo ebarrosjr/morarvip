@@ -9,9 +9,11 @@ foreach ($imovel->foto_imoveis ?? [] as $foto) {
         $fotos[] = IMAGE_BASE_URL . '/' . $foto->arquivo;
     }
 }
+
 if (!$fotos && !empty($imovel->foto_principal)) {
     $fotos[] = IMAGE_BASE_URL . '/' . $imovel->foto_principal;
 }
+
 if (!$fotos) {
     $fotos[] = $this->Url->build('/img/no-imovel-photo.png');
 }

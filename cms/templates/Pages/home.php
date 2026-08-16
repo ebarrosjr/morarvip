@@ -220,6 +220,13 @@ $brokerImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?aut
     <footer class="landing-footer">
         <div class="container">
             <span>&copy; <?= date('Y') ?> Morar.VIP. Todos os direitos reservados.</span>
+            <div class="social-media">
+                <ul>
+                    <li><a href="https://wa.me/5521983195552?text=Ol%C3%A1,%20vim%20do%20Morar.VIP" target="_blank" title="Call to inquiry"><i class="lab la-whatsapp"></i></a></li>
+                    <li><a href="https://www.facebook.com/profile.php?id=61592420873471" target="_blank" title="Join us on Facebook"><i class="lab la-facebook"></i></a></li>
+                    <li><a href="https://www.instagram.com/morarvip?igsh=eXc2ZmloY2t2YW5y" target="_blank" title="Join us on Instagram"><i class="lab la-instagram"></i></a></li>                        
+                </ul>
+            </div>            
             <a href="<?= h($loginUrl) ?>">Entrar no CRM</a>
         </div>
     </footer>

@@ -31,7 +31,7 @@
 	<div class="content">
 		<a href="index.html" class="border-0"><img src="img/logo-full-white.svg" width="300" alt="AD"></a>
 		<h1>Estamos chegando</h1>
-		<p>Estamos trabalhando duro para criar o mlehor site e estaremos prontos para lançar após</p>
+		<p>Estamos trabalhando duro para criar o melhor site e estaremos prontos para lançar após</p>
 		<div class="counter">
 			<div class="countdown">
 				<div class="container days">
@@ -82,6 +82,12 @@
 				<a href="https://www.facebook.com/profile.php?id=61592420873471" target="_blank" title="Join us on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
 				<a href="https://www.instagram.com/morarvip?igsh=eXc2ZmloY2t2YW5y" target="_blank" title="Join us on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
 			</div>
+		</div>
+		<div class="broker-cta">
+			<a href="https://cms.morar.vip" target="_blank" title="Corretores clique aqui" class="broker-cta-button">
+				<i class="fas fa-user me-3" aria-hidden="true"></i>
+				<span>É corretor? Clique aqui</span>
+			</a>
 		</div>
 	</div>
 	<!-- Document Content End -->

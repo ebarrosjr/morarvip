@@ -12,7 +12,7 @@
             $cidadeSelecionada = $filtros['cidade'] ?? '';
             $bairroSelecionado = $filtros['bairro'] ?? '';
             $corretorId = $corretorId ?? null;
-            $negocioSelecionado = $filtros['negocio'] ?? 'V';
+            $negocioSelecionado = $filtros['negocio'] ?? '';
             $tiposSelecionados = array_map('intval', $filtros['tipo_imovel'] ?? []);
             $todosTiposSelecionados = empty($tiposSelecionados);
             $filterActionUrl = $filterActionUrl ?? $this->Url->build('/');

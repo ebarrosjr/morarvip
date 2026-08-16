@@ -387,6 +387,36 @@ img {
 	background-color: #000000;
 }
 
+.broker-cta {
+    margin-top: 28px;
+}
+
+.broker-cta-button {
+    align-items: center;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    color: #ffffff;
+    display: inline-flex;
+    font-size: 15px;
+    font-weight: 700;
+    gap: 10px;
+    line-height: 1;
+    padding: 13px 22px;
+    text-decoration: none !important;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.broker-cta-button:hover {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+}
+
+.broker-cta-button i,
+.broker-cta-button span {
+    display: inline-block;
+}
+
 @media (max-width: 767px) {
 	body {
 		align-items: flex-start;

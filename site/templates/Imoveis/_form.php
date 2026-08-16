@@ -143,14 +143,14 @@ $formUrl = $isEdit
                     'class' => 'form-control',
                 ]) ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?= $this->Form->control('negocio', [
                     'options' => ['V' => 'Venda', 'L' => 'Locação', 'A' => 'Arrendamento'],
                     'label' => 'Negócio',
                     'class' => 'form-control',
                 ]) ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?= $this->Form->control('valor', [
                     'type' => 'number',
                     'step' => '0.01',
@@ -158,11 +158,19 @@ $formUrl = $isEdit
                     'class' => 'form-control',
                 ]) ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?= $this->Form->control('iptu', [
                     'type' => 'number',
                     'step' => '0.01',
                     'label' => 'IPTU',
+                    'class' => 'form-control',
+                ]) ?>
+            </div>
+            <div class="col-md-3">
+                <?= $this->Form->control('condominio', [
+                    'type' => 'number',
+                    'step' => '0.01',
+                    'label' => 'Condomínio',
                     'class' => 'form-control',
                 ]) ?>
             </div>

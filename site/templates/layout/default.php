@@ -64,9 +64,9 @@ $announceUrl = $isLoggedIn
                         <div class="col-md-7">
                             <div class="ltn__social-media">
                                 <ul>
-                                    <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>                                                
-                                    <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                                    <li><a href="https://wa.me/5521983195552?text=Ol%C3%A1,%20vim%20do%20Morar.VIP" target="_blank" title="Call to inquiry"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
+                                    <li><a href="https://www.facebook.com/profile.php?id=61592420873471" target="_blank" title="Join us on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
+                                    <li><a href="https://www.instagram.com/morarvip?igsh=eXc2ZmloY2t2YW5y" target="_blank" title="Join us on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>                        
                                 </ul>
                             </div>
                         </div>
@@ -237,10 +237,9 @@ $announceUrl = $isLoggedIn
                 </div>
                 <div class="ltn__social-media-2">
                     <ul>
-                        <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                        <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="https://wa.me/5521983195552?text=Ol%C3%A1,%20vim%20do%20Morar.VIP" target="_blank" title="Call to inquiry"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.facebook.com/profile.php?id=61592420873471" target="_blank" title="Join us on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.instagram.com/morarvip?igsh=eXc2ZmloY2t2YW5y" target="_blank" title="Join us on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>                        
                     </ul>
                 </div>
             </div>
@@ -321,5 +320,13 @@ $announceUrl = $isLoggedIn
     </div>
     <?=  $this->Html->script(['plugins', 'main', 'auth']) ?>
     <?= $this->fetch('script') ?>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VRZCF6FTVQ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-VRZCF6FTVQ');
+    </script>
 </body>
 </html>

@@ -34,6 +34,7 @@ use Cake\ORM\Entity;
  * @property string|null $situacao
  * @property float|null $valor
  * @property float|null $iptu
+ * @property float|null $condominio
  * @property float|null $comissao
  * @property int|null $show_site
  * @property int|null $show_preco_site
@@ -89,6 +90,7 @@ class Imovei extends Entity
         'situacao' => true,
         'valor' => true,
         'iptu' => true,
+        'condominio' => true,
         'comissao' => true,
         'show_site' => true,
         'show_preco_site' => true,

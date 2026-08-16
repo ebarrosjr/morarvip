@@ -201,7 +201,7 @@ class IndexController extends AppController
     private function getFiltros(array $queryParams): array
     {
         return [
-            'negocio' => $queryParams['negocio'] ?? 'V',
+            'negocio' => in_array(($queryParams['negocio'] ?? ''), ['V', 'A', 'L'], true) ? $queryParams['negocio'] : '',
             'tipo_imovel' => array_values(array_filter((array)($queryParams['tipo_imovel'] ?? []), 'is_numeric')),
             'quartos' => $this->normalizePositiveInteger($queryParams['quartos'] ?? null),
             'banheiros' => $this->normalizePositiveInteger($queryParams['banheiros'] ?? null),
